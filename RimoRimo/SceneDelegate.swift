@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window = UIWindow(windowScene: windowScene)
 
-        let marimoViewController = ViewController()
+        let marimoViewController = TabBarViewController()
         let navController = UINavigationController(rootViewController: marimoViewController)
         navController.navigationBar.isHidden = false
 

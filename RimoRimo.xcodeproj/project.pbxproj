@@ -12,6 +12,43 @@
 		0B1808272C19936B00081B2A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808262C19936B00081B2A /* ViewController.swift */; };
 		0B18082C2C19936D00081B2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B18082B2C19936D00081B2A /* Assets.xcassets */; };
 		0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */; };
+		0B1808382C19951A00081B2A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B1808372C19951A00081B2A /* SnapKit */; };
+		0B18083A2C19951A00081B2A /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 0B1808392C19951A00081B2A /* SnapKit-Dynamic */; };
+		0B18083D2C19952100081B2A /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18083C2C19952100081B2A /* FSCalendar */; };
+		0B1808402C19954C00081B2A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18083F2C19954C00081B2A /* FirebaseAnalytics */; };
+		0B18084B2C19956B00081B2A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18084A2C19956B00081B2A /* FirebaseAuth */; };
+		0B18084D2C19956B00081B2A /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18084C2C19956B00081B2A /* FirebaseDatabase */; };
+		0B18084F2C19956B00081B2A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18084E2C19956B00081B2A /* FirebaseFirestore */; };
+		0B1808512C19956B00081B2A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0B1808502C19956B00081B2A /* FirebaseStorage */; };
+		0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808562C19964C00081B2A /* TextFieldUIFactory.swift */; };
+		0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808572C19964D00081B2A /* AlertUIFactory.swift */; };
+		0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808582C19964D00081B2A /* TabButtonUIFactory.swift */; };
+		0B1808692C19965700081B2A /* Pretendard-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085D2C19965700081B2A /* Pretendard-Medium.ttf */; };
+		0B18086A2C19965700081B2A /* Pretendard-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085E2C19965700081B2A /* Pretendard-Black.ttf */; };
+		0B18086B2C19965700081B2A /* Pretendard-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085F2C19965700081B2A /* Pretendard-Regular.ttf */; };
+		0B18086C2C19965700081B2A /* Pretendard-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808602C19965700081B2A /* Pretendard-Thin.ttf */; };
+		0B18086D2C19965700081B2A /* Pretendard-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808612C19965700081B2A /* Pretendard-ExtraLight.ttf */; };
+		0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */; };
+		0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808632C19965700081B2A /* Pretendard-ExtraBold.ttf */; };
+		0B1808702C19965700081B2A /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808642C19965700081B2A /* Pretendard-Bold.ttf */; };
+		0B1808712C19965700081B2A /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808652C19965700081B2A /* UIFont.swift */; };
+		0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808662C19965700081B2A /* Pretendard-Light.ttf */; };
+		0B1808732C19965700081B2A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808682C19965700081B2A /* UIColor.swift */; };
+		0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */; };
+		0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
+		0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */; };
+		0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808792C19966D00081B2A /* CalenderViewController.swift */; };
+		0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */; };
+		0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B18087C2C19966D00081B2A /* AccountInfoViewController.swift */; };
+		0B18088D2C19966D00081B2A /* EditMyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B18087D2C19966D00081B2A /* EditMyPageViewController.swift */; };
+		0B18088E2C19966D00081B2A /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B18087E2C19966D00081B2A /* SetupViewController.swift */; };
+		0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808802C19966D00081B2A /* MyPageViewController.swift */; };
+		0B1808902C19966D00081B2A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808822C19966D00081B2A /* MainViewController.swift */; };
+		0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808842C19966D00081B2A /* SignUpViewController.swift */; };
+		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
+		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
+		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
+		0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808962C1996A100081B2A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +59,35 @@
 		0B18082B2C19936D00081B2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0B18082E2C19936D00081B2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0B1808302C19936D00081B2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0B1808562C19964C00081B2A /* TextFieldUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldUIFactory.swift; sourceTree = "<group>"; };
+		0B1808572C19964D00081B2A /* AlertUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertUIFactory.swift; sourceTree = "<group>"; };
+		0B1808582C19964D00081B2A /* TabButtonUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabButtonUIFactory.swift; sourceTree = "<group>"; };
+		0B18085D2C19965700081B2A /* Pretendard-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.ttf"; sourceTree = "<group>"; };
+		0B18085E2C19965700081B2A /* Pretendard-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.ttf"; sourceTree = "<group>"; };
+		0B18085F2C19965700081B2A /* Pretendard-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.ttf"; sourceTree = "<group>"; };
+		0B1808602C19965700081B2A /* Pretendard-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Thin.ttf"; sourceTree = "<group>"; };
+		0B1808612C19965700081B2A /* Pretendard-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraLight.ttf"; sourceTree = "<group>"; };
+		0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-SemiBold.ttf"; sourceTree = "<group>"; };
+		0B1808632C19965700081B2A /* Pretendard-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraBold.ttf"; sourceTree = "<group>"; };
+		0B1808642C19965700081B2A /* Pretendard-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.ttf"; sourceTree = "<group>"; };
+		0B1808652C19965700081B2A /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		0B1808662C19965700081B2A /* Pretendard-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.ttf"; sourceTree = "<group>"; };
+		0B1808682C19965700081B2A /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerModalViewController.swift; sourceTree = "<group>"; };
+		0B1808772C19966D00081B2A /* ToDoListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
+		0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalenderDeatailViewController.swift; sourceTree = "<group>"; };
+		0B1808792C19966D00081B2A /* CalenderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
+		0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoDetailViewController.swift; sourceTree = "<group>"; };
+		0B18087C2C19966D00081B2A /* AccountInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInfoViewController.swift; sourceTree = "<group>"; };
+		0B18087D2C19966D00081B2A /* EditMyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMyPageViewController.swift; sourceTree = "<group>"; };
+		0B18087E2C19966D00081B2A /* SetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
+		0B1808802C19966D00081B2A /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		0B1808822C19966D00081B2A /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		0B1808842C19966D00081B2A /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		0B1808852C19966D00081B2A /* FindPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
+		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		0B1808962C1996A100081B2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +95,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B18084D2C19956B00081B2A /* FirebaseDatabase in Frameworks */,
+				0B1808382C19951A00081B2A /* SnapKit in Frameworks */,
+				0B18084B2C19956B00081B2A /* FirebaseAuth in Frameworks */,
+				0B18083D2C19952100081B2A /* FSCalendar in Frameworks */,
+				0B1808402C19954C00081B2A /* FirebaseAnalytics in Frameworks */,
+				0B1808512C19956B00081B2A /* FirebaseStorage in Frameworks */,
+				0B18083A2C19951A00081B2A /* SnapKit-Dynamic in Frameworks */,
+				0B18084F2C19956B00081B2A /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +114,7 @@
 			children = (
 				0B1808212C19936B00081B2A /* RimoRimo */,
 				0B1808202C19936B00081B2A /* Products */,
+				0B1808492C19956B00081B2A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +129,138 @@
 		0B1808212C19936B00081B2A /* RimoRimo */ = {
 			isa = PBXGroup;
 			children = (
+				0B1808522C1995D300081B2A /* Resource */,
+				0B1808542C19961300081B2A /* Models */,
+				0B1808532C19960900081B2A /* Controllers */,
 				0B1808222C19936B00081B2A /* AppDelegate.swift */,
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
-				0B18082B2C19936D00081B2A /* Assets.xcassets */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
 				0B1808302C19936D00081B2A /* Info.plist */,
+				0B1808962C1996A100081B2A /* GoogleService-Info.plist */,
 			);
 			path = RimoRimo;
+			sourceTree = "<group>";
+		};
+		0B1808492C19956B00081B2A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0B1808522C1995D300081B2A /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808552C19963600081B2A /* UIFactory */,
+				0B1808672C19965700081B2A /* Color */,
+				0B18085C2C19965700081B2A /* Fonts */,
+				0B18082B2C19936D00081B2A /* Assets.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		0B1808532C19960900081B2A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808942C19968400081B2A /* TabBarViewController.swift */,
+				0B1808832C19966D00081B2A /* Auth */,
+				0B1808752C19966D00081B2A /* Calender */,
+				0B18087B2C19966D00081B2A /* Setup */,
+				0B18087F2C19966D00081B2A /* MyPage */,
+				0B1808812C19966D00081B2A /* Main */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0B1808542C19961300081B2A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0B1808552C19963600081B2A /* UIFactory */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808572C19964D00081B2A /* AlertUIFactory.swift */,
+				0B1808582C19964D00081B2A /* TabButtonUIFactory.swift */,
+				0B1808562C19964C00081B2A /* TextFieldUIFactory.swift */,
+			);
+			path = UIFactory;
+			sourceTree = "<group>";
+		};
+		0B18085C2C19965700081B2A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0B18085D2C19965700081B2A /* Pretendard-Medium.ttf */,
+				0B18085E2C19965700081B2A /* Pretendard-Black.ttf */,
+				0B18085F2C19965700081B2A /* Pretendard-Regular.ttf */,
+				0B1808602C19965700081B2A /* Pretendard-Thin.ttf */,
+				0B1808612C19965700081B2A /* Pretendard-ExtraLight.ttf */,
+				0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */,
+				0B1808632C19965700081B2A /* Pretendard-ExtraBold.ttf */,
+				0B1808642C19965700081B2A /* Pretendard-Bold.ttf */,
+				0B1808662C19965700081B2A /* Pretendard-Light.ttf */,
+				0B1808652C19965700081B2A /* UIFont.swift */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		0B1808672C19965700081B2A /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808682C19965700081B2A /* UIColor.swift */,
+			);
+			path = Color;
+			sourceTree = "<group>";
+		};
+		0B1808752C19966D00081B2A /* Calender */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
+				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
+				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
+				0B1808792C19966D00081B2A /* CalenderViewController.swift */,
+				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+			);
+			path = Calender;
+			sourceTree = "<group>";
+		};
+		0B18087B2C19966D00081B2A /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				0B18087C2C19966D00081B2A /* AccountInfoViewController.swift */,
+				0B18087D2C19966D00081B2A /* EditMyPageViewController.swift */,
+				0B18087E2C19966D00081B2A /* SetupViewController.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
+		0B18087F2C19966D00081B2A /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808802C19966D00081B2A /* MyPageViewController.swift */,
+			);
+			path = MyPage;
+			sourceTree = "<group>";
+		};
+		0B1808812C19966D00081B2A /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808822C19966D00081B2A /* MainViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		0B1808832C19966D00081B2A /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808842C19966D00081B2A /* SignUpViewController.swift */,
+				0B1808852C19966D00081B2A /* FindPasswordViewController.swift */,
+				0B1808862C19966D00081B2A /* LoginViewController.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -80,6 +279,16 @@
 			dependencies = (
 			);
 			name = RimoRimo;
+			packageProductDependencies = (
+				0B1808372C19951A00081B2A /* SnapKit */,
+				0B1808392C19951A00081B2A /* SnapKit-Dynamic */,
+				0B18083C2C19952100081B2A /* FSCalendar */,
+				0B18083F2C19954C00081B2A /* FirebaseAnalytics */,
+				0B18084A2C19956B00081B2A /* FirebaseAuth */,
+				0B18084C2C19956B00081B2A /* FirebaseDatabase */,
+				0B18084E2C19956B00081B2A /* FirebaseFirestore */,
+				0B1808502C19956B00081B2A /* FirebaseStorage */,
+			);
 			productName = RimoRimo;
 			productReference = 0B18081F2C19936B00081B2A /* RimoRimo.app */;
 			productType = "com.apple.product-type.application";
@@ -108,6 +317,11 @@
 				Base,
 			);
 			mainGroup = 0B1808162C19936A00081B2A;
+			packageReferences = (
+				0B1808362C19951A00081B2A /* XCRemoteSwiftPackageReference "SnapKit" */,
+				0B18083B2C19952100081B2A /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 0B1808202C19936B00081B2A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -122,8 +336,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
+				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
+				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
+				0B18086C2C19965700081B2A /* Pretendard-Thin.ttf in Resources */,
 				0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */,
+				0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */,
 				0B18082C2C19936D00081B2A /* Assets.xcassets in Resources */,
+				0B18086B2C19965700081B2A /* Pretendard-Regular.ttf in Resources */,
+				0B1808702C19965700081B2A /* Pretendard-Bold.ttf in Resources */,
+				0B18086D2C19965700081B2A /* Pretendard-ExtraLight.ttf in Resources */,
+				0B1808692C19965700081B2A /* Pretendard-Medium.ttf in Resources */,
+				0B18086A2C19965700081B2A /* Pretendard-Black.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,8 +358,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
+				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
+				0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */,
+				0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
+				0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */,
+				0B18088E2C19966D00081B2A /* SetupViewController.swift in Sources */,
+				0B1808712C19965700081B2A /* UIFont.swift in Sources */,
+				0B18088D2C19966D00081B2A /* EditMyPageViewController.swift in Sources */,
+				0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */,
+				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
+				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
+				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
+				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
+				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
+				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
+				0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */,
+				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
+				0B1808902C19966D00081B2A /* MainViewController.swift in Sources */,
+				0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */,
 				0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +592,76 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0B1808362C19951A00081B2A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		0B18083B2C19952100081B2A /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.4;
+			};
+		};
+		0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.27.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0B1808372C19951A00081B2A /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B1808362C19951A00081B2A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		0B1808392C19951A00081B2A /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B1808362C19951A00081B2A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
+		};
+		0B18083C2C19952100081B2A /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B18083B2C19952100081B2A /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
+		};
+		0B18083F2C19954C00081B2A /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		0B18084A2C19956B00081B2A /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		0B18084C2C19956B00081B2A /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		0B18084E2C19956B00081B2A /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		0B1808502C19956B00081B2A /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0B1808172C19936A00081B2A /* Project object */;
 }
