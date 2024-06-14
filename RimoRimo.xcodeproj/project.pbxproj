@@ -13,7 +13,6 @@
 		0B18082C2C19936D00081B2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B18082B2C19936D00081B2A /* Assets.xcassets */; };
 		0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */; };
 		0B1808382C19951A00081B2A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B1808372C19951A00081B2A /* SnapKit */; };
-		0B18083A2C19951A00081B2A /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 0B1808392C19951A00081B2A /* SnapKit-Dynamic */; };
 		0B18083D2C19952100081B2A /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18083C2C19952100081B2A /* FSCalendar */; };
 		0B1808402C19954C00081B2A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18083F2C19954C00081B2A /* FirebaseAnalytics */; };
 		0B18084B2C19956B00081B2A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18084A2C19956B00081B2A /* FirebaseAuth */; };
@@ -48,11 +47,27 @@
 		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
 		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
-		0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808962C1996A100081B2A /* GoogleService-Info.plist */; };
-		45011B872C1A995E00961E3F /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B852C1A995E00961E3F /* MyPageViewController.swift */; };
 		45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B882C1A999800961E3F /* PopupCalendarViewController.swift */; };
 		45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B892C1A999800961E3F /* SelectMarimoViewController.swift */; };
+		1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */; };
+		1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */; };
+		1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */; };
+		1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */; };
+		1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1B29691B2C1C2F3D00685F5E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0B1808222C19936B00081B2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,11 +104,14 @@
 		0B1808852C19966D00081B2A /* FindPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
 		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
-		0B1808962C1996A100081B2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		45011B852C1A995E00961E3F /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		45011B882C1A999800961E3F /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupCalendarViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/PopupCalendarViewController.swift; sourceTree = "<group>"; };
 		45011B892C1A999800961E3F /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectMarimoViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/SelectMarimoViewController.swift; sourceTree = "<group>"; };
+		1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyAccountTableViewCell.swift; path = RimoRimo/View/MyPage/MyAccountTableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingTableViewCell.swift; path = RimoRimo/View/MyPage/SettingTableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarimoCollectionButton.swift; path = RimoRimo/View/MyPage/MarimoCollectionButton.swift; sourceTree = SOURCE_ROOT; };
+		1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedUITableViewCell.swift; path = RimoRimo/View/MyPage/BlockedUITableViewCell.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +125,6 @@
 				0B18083D2C19952100081B2A /* FSCalendar in Frameworks */,
 				0B1808402C19954C00081B2A /* FirebaseAnalytics in Frameworks */,
 				0B1808512C19956B00081B2A /* FirebaseStorage in Frameworks */,
-				0B18083A2C19951A00081B2A /* SnapKit-Dynamic in Frameworks */,
 				0B18084F2C19956B00081B2A /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,7 +151,7 @@
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
 				0B1808302C19936D00081B2A /* Info.plist */,
-				0B1808962C1996A100081B2A /* GoogleService-Info.plist */,
+				1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */,
 			);
 			path = RimoRimo;
 			sourceTree = "<group>";
@@ -163,6 +180,7 @@
 				0B1808942C19968400081B2A /* TabBarViewController.swift */,
 				0B1808832C19966D00081B2A /* Auth */,
 				0B1808752C19966D00081B2A /* Calender */,
+				7844EF6C2C1B651C00F29A86 /* ToDo */,
 				0B18087B2C19966D00081B2A /* Setup */,
 				0B18087F2C19966D00081B2A /* MyPage */,
 				0B1808812C19966D00081B2A /* Main */,
@@ -208,11 +226,9 @@
 		0B1808752C19966D00081B2A /* Calender */ = {
 			isa = PBXGroup;
 			children = (
-				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
-				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
-				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
 				0B1808792C19966D00081B2A /* CalenderViewController.swift */,
-				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
+				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
 			);
 			path = Calender;
 			sourceTree = "<group>";
@@ -233,6 +249,10 @@
 		0B18087F2C19966D00081B2A /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */,
+				1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */,
+				1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */,
+				1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */,
 				0B1808802C19966D00081B2A /* MyPageViewController.swift */,
 			);
 			path = MyPage;
@@ -264,6 +284,15 @@
 			name = MyPage;
 			path = RimoRimo/Controllers/MyPage;
 			sourceTree = SOURCE_ROOT;
+    };
+		7844EF6C2C1B651C00F29A86 /* ToDo */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
+				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+			);
+			path = ToDo;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -275,6 +304,7 @@
 				0B18081B2C19936B00081B2A /* Sources */,
 				0B18081C2C19936B00081B2A /* Frameworks */,
 				0B18081D2C19936B00081B2A /* Resources */,
+				1B29691B2C1C2F3D00685F5E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -283,7 +313,6 @@
 			name = RimoRimo;
 			packageProductDependencies = (
 				0B1808372C19951A00081B2A /* SnapKit */,
-				0B1808392C19951A00081B2A /* SnapKit-Dynamic */,
 				0B18083C2C19952100081B2A /* FSCalendar */,
 				0B18083F2C19954C00081B2A /* FirebaseAnalytics */,
 				0B18084A2C19956B00081B2A /* FirebaseAuth */,
@@ -343,8 +372,8 @@
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
 				0B18086C2C19965700081B2A /* Pretendard-Thin.ttf in Resources */,
 				0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */,
-				0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */,
 				0B18082C2C19936D00081B2A /* Assets.xcassets in Resources */,
+				1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */,
 				0B18086B2C19965700081B2A /* Pretendard-Regular.ttf in Resources */,
 				0B1808702C19965700081B2A /* Pretendard-Bold.ttf in Resources */,
 				0B18086D2C19965700081B2A /* Pretendard-ExtraLight.ttf in Resources */,
@@ -363,8 +392,10 @@
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
 				0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */,
+				1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */,
 				0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
+				1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */,
 				0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */,
 				0B18088E2C19966D00081B2A /* SetupViewController.swift in Sources */,
 				0B1808712C19965700081B2A /* UIFont.swift in Sources */,
@@ -382,9 +413,11 @@
 				45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				0B1808902C19966D00081B2A /* MainViewController.swift in Sources */,
+				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,
 				0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */,
 				0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */,
 				45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */,
+				1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,11 +663,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B1808362C19951A00081B2A /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		0B1808392C19951A00081B2A /* SnapKit-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0B1808362C19951A00081B2A /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
 		};
 		0B18083C2C19952100081B2A /* FSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;
