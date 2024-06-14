@@ -173,6 +173,7 @@
 				0B1808942C19968400081B2A /* TabBarViewController.swift */,
 				0B1808832C19966D00081B2A /* Auth */,
 				0B1808752C19966D00081B2A /* Calender */,
+				7844EF6C2C1B651C00F29A86 /* ToDo */,
 				0B18087B2C19966D00081B2A /* Setup */,
 				0B18087F2C19966D00081B2A /* MyPage */,
 				0B1808812C19966D00081B2A /* Main */,
@@ -225,11 +226,11 @@
 		0B1808752C19966D00081B2A /* Calender */ = {
 			isa = PBXGroup;
 			children = (
-				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
-				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
-				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
 				0B1808792C19966D00081B2A /* CalenderViewController.swift */,
+				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
+				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
 				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
 			);
 			path = Calender;
 			sourceTree = "<group>";
@@ -287,6 +288,13 @@
 				119FEBA22C1C035200BCC845 /* SettingTableViewCell.swift */,
 			);
 			path = MyPage;
+		7844EF6C2C1B651C00F29A86 /* ToDo */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
+				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+			);
+			path = ToDo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
