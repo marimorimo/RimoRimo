@@ -63,7 +63,7 @@ class MyPageViewController: UIViewController {
 //        return imageView
 //    }()
 //    
-//    private var listener: ListenerRegistration?
+    private var listener: ListenerRegistration?
 //    
 //    override func viewDidLoad() {
 //        super.viewDidLoad()
@@ -119,52 +119,7 @@ class MyPageViewController: UIViewController {
 //        
 //        setupUserDataListener()
 //    }
-//    
-//    private func setupUserDataListener() {
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
-//        
-//        listener = Firestore.firestore().collection("user-info").document(uid).addSnapshotListener { [weak self] (documentSnapshot, error) in
-//            guard let self = self else { return }
-//            if let document = documentSnapshot, document.exists {
-//                let data = document.data()
-//                self.emailLabel.text = "Email: \(data?["email"] as? String ?? "N/A")"
-//                self.nicknameLabel.text = "Nickname: \(data?["nickname"] as? String ?? "N/A")"
-//                self.dDayTitleLabel.text = "D-day Title: \(data?["d-day-title"] as? String ?? "N/A")"
-//                self.dDayLabel.text = "D-day: \(data?["d-day"] as? String ?? "N/A")"
-//                self.targetTimeLabel.text = "Target Time: \(data?["target-time"] as? String ?? "N/A")"
-//                
-//                if let profileImageURLString = data?["profile-image"] as? String, !profileImageURLString.isEmpty {
-//                    if let profileImageURL = URL(string: profileImageURLString) {
-//                        URLSession.shared.dataTask(with: profileImageURL) { (data, response, error) in
-//                            if let data = data {
-//                                DispatchQueue.main.async {
-//                                    self.profileImageView.image = UIImage(data: data)
-//                                }
-//                            }
-//                        }.resume()
-//                    }
-//                } else {
-//                    self.profileImageView.image = UIImage(named: "Group 1")
-//                }
-//            } else {
-//                self.emailLabel.text = "Email: N/A"
-//                self.nicknameLabel.text = "Nickname: N/A"
-//                self.dDayTitleLabel.text = "D-day Title: N/A"
-//                self.dDayLabel.text = "D-day: N/A"
-//                self.targetTimeLabel.text = "Target Time: N/A"
-//                self.profileImageView.image = UIImage(named: "Group 1")
-//            }
-//        }
-//    }
-//    
-//    @objc private func setupButtonTapped() {
-//        let settingsVC = SetupViewController()
-//        navigationController?.pushViewController(settingsVC, animated: true)
-//    }
-//    
-//    deinit {
-//        listener?.remove()
-//    }
+//
     let marimoNameList = ["Group 1", "Group 2", "Group 3", "Group 4", "Group 5"]
 
     // MARK: - UI Elements
@@ -185,7 +140,7 @@ class MyPageViewController: UIViewController {
         return imageView
     }()
 
-    private let NicknameLabel: UILabel = {
+    private let nicknameLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
         label.font = .pretendard(style: .medium, size: 16)
@@ -195,7 +150,7 @@ class MyPageViewController: UIViewController {
         return label
     }()
 
-    private let EmailLabel: UILabel = {
+    private let emailLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
         label.font = .pretendard(style: .regular, size: 10)
@@ -207,7 +162,7 @@ class MyPageViewController: UIViewController {
     }()
 
     private lazy var profileInfoStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [NicknameLabel, EmailLabel])
+        let stackView = UIStackView(arrangedSubviews: [nicknameLabel, emailLabel])
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.spacing = 6
@@ -242,7 +197,7 @@ class MyPageViewController: UIViewController {
         return label
     }()
 
-    private let concentrationVariableLabel: UILabel = {
+    private let concentrationTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "07hr"
         label.font = .pretendard(style: .semiBold, size: 40)
@@ -252,7 +207,7 @@ class MyPageViewController: UIViewController {
     }()
 
     private lazy var concentrationContainerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [concentrationGuideLabel, concentrationVariableLabel])
+        let stackView = UIStackView(arrangedSubviews: [concentrationGuideLabel, concentrationTimeLabel])
         stackView.alignment = .center
         stackView.axis = .vertical
         stackView.spacing = 8
@@ -261,7 +216,7 @@ class MyPageViewController: UIViewController {
         return stackView
     }()
 
-    private let goalGuideLabel: UILabel = {
+    private let goalLabel: UILabel = {
         let label = UILabel()
         label.text = "토익 시험"
         label.font = .pretendard(style: .regular, size: 16)
@@ -270,7 +225,7 @@ class MyPageViewController: UIViewController {
         return label
     }()
 
-    private let goalVariableLabel: UILabel = {
+    private let goalDdayLabel: UILabel = {
         let label = UILabel()
         label.text = "D-37"
         label.font = .pretendard(style: .semiBold, size: 40)
@@ -280,7 +235,7 @@ class MyPageViewController: UIViewController {
     }()
 
     private lazy var goalContainerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [goalGuideLabel, goalVariableLabel])
+        let stackView = UIStackView(arrangedSubviews: [goalLabel, goalDdayLabel])
         stackView.alignment = .center
         stackView.axis = .vertical
         stackView.spacing = 8
@@ -320,7 +275,8 @@ class MyPageViewController: UIViewController {
         button.setImage(UIImage(named: "mypageIcon2"), for: .normal)
         button.tintColor = MySpecialColors.Gray2
         button.semanticContentAttribute = .forceRightToLeft
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        button.contentMode = .scaleToFill
+        button.imageEdgeInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 4)
         button.setPreferredSymbolConfiguration(.init(scale: .large), forImageIn: .normal)
         button.addTarget(self, action: #selector(showCollectionButtonTapped), for: .touchUpInside)
 
@@ -410,6 +366,7 @@ class MyPageViewController: UIViewController {
         setupViews()
         configureCollection()
         setupConstraints()
+        setupUserDataListener()
     }
 
     //navibar 나오면서 애니메이션이 부자연스러움 -> 설정의 viewWillAppear에서 적용하거나 네비바 그림자 삭제
@@ -515,8 +472,6 @@ class MyPageViewController: UIViewController {
             let imageView = animatingMarimoImageViews.removeLast()
             imageView.removeFromSuperview()
         }
-
-
     }
 
     @objc
@@ -532,7 +487,52 @@ class MyPageViewController: UIViewController {
         setupDynamics()
         setupTapGesture()
     }
+
+    deinit {
+        listener?.remove()
+    }
 }
+
+extension MyPageViewController {
+    private func setupUserDataListener() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        listener = Firestore.firestore().collection("user-info").document(uid).addSnapshotListener { [weak self] (documentSnapshot, error) in
+            guard let self = self else { return }
+            if let document = documentSnapshot, document.exists {
+                let data = document.data()
+
+                self.nicknameLabel.text = "Nickname: \(data?["nickname"] as? String ?? "N/A")"
+                self.emailLabel.text = "Email: \(data?["email"] as? String ?? "N/A")"
+                self.goalLabel.text = "\(data?["d-day-title"] as? String ?? "N/A")"
+                self.goalDdayLabel.text = "D-\(data?["d-day"] as? String ?? "N/A")"
+                self.concentrationTimeLabel.text = "Target Time: \(data?["target-time"] as? String ?? "N/A")"
+
+//                if let profileImageURLString = data?["profile-image"] as? String, !profileImageURLString.isEmpty {
+//                    if let profileImageURL = URL(string: profileImageURLString) {
+//                        URLSession.shared.dataTask(with: profileImageURL) { (data, response, error) in
+//                            if let data = data {
+//                                DispatchQueue.main.async {
+//                                    self.profileImageView.image = UIImage(data: data)
+//                                }
+//                            }
+//                        }.resume()
+//                    }
+//                } else {
+//                    self.profileImageView.image = UIImage(named: "Group 1")
+//                }
+            } else {
+                self.nicknameLabel.text = "Nickname: N/A"
+                self.emailLabel.text = "Email: N/A"
+                self.goalLabel.text = "D-day Title: N/A"
+                self.goalDdayLabel.text = "D-day: N/A"
+                self.concentrationTimeLabel.text = "Target Time: N/A"
+//                self.profileImageView.image = UIImage(named: "Group 1")
+            }
+        }
+    }
+}
+
 
 // MARK: - configure Animating Marimo
 
