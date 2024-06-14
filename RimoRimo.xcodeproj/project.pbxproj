@@ -50,6 +50,7 @@
 		0BCCC9B62C1C695900ADB451 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCCC9B52C1C695900ADB451 /* Color.swift */; };
 		0BCCC9B92C1C697700ADB451 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCCC9B82C1C697700ADB451 /* UserDefaults+.swift */; };
 		0BCCC9BA2C1C697700ADB451 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCCC9B82C1C697700ADB451 /* UserDefaults+.swift */; };
+		0BCCC9BC2C1C6EAD00ADB451 /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -84,6 +85,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				0BCCC9BC2C1C6EAD00ADB451 /* RimoWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
