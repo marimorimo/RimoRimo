@@ -401,7 +401,7 @@ class EditMyPageViewController: UIViewController {
                     // Update ProfileImage
                     if let profileImageName = data?["profile-image"] as? String, !profileImageName.isEmpty {
                         DispatchQueue.main.async {
-                            self.changeProfile.setImage(UIImage(named: profileImageName), for: .normal)
+                            self.changeProfile.setImage(UIImage(named: profileImageName) ?? UIImage(named: "Group 5"), for: .normal)
                             self.changeProfile.imageView?.contentMode = .scaleAspectFit
                         }
                     } else {
