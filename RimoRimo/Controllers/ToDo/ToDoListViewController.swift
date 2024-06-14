@@ -399,13 +399,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Swipe to Delete
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let todo = todos[indexPath.row]
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
+            guard let self = self else { return }
+            let todo = self.todos[indexPath.row]
             guard let documentId = todo["id"] as? String else { return }
             guard let uid = Auth.auth().currentUser?.uid else {
                 print("User not authenticated")
@@ -414,13 +411,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            let day = formatter.string(from: datePicker.date)
-            
-            // 먼저 UI 업데이트를 수행합니다.
-            tableView.beginUpdates()
-            todos.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.endUpdates()
+            let day = formatter.string(from: self.datePicker.date)
             
             // Firestore에서 데이터를 삭제합니다.
             Firestore.firestore()
@@ -433,11 +424,21 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 .delete { error in
                     if let error = error {
                         print("Error deleting todo: \(error.localizedDescription)")
+                        completionHandler(false)
                     } else {
+                        // UI 업데이트를 수행합니다.
+                        self.todos.remove(at: indexPath.row)
+                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
                         print("ToDo가 성공적으로 삭제되었습니다.")
+                        completionHandler(true)
                     }
                 }
         }
+        
+        deleteAction.backgroundColor = MySpecialColors.MainColor
+        
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
     
     // MARK: - UIViewController Lifecycle
