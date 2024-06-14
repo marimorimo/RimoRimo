@@ -197,7 +197,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         let dateString = formatDate(date: date)
         if let data = sessionData[dateString] as? [String: Any] {
-            let detailVC = CalenderDeatailViewController()
+            let detailVC = CalendarDetailViewController()
             detailVC.data = data
             navigationController?.pushViewController(detailVC, animated: true)
         }

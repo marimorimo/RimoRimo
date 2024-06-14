@@ -47,13 +47,13 @@
 		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
 		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
-		45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B882C1A999800961E3F /* PopupCalendarViewController.swift */; };
-		45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B892C1A999800961E3F /* SelectMarimoViewController.swift */; };
 		1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */; };
 		1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */; };
 		1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */; };
 		1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */; };
 		1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */; };
+		45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B882C1A999800961E3F /* PopupCalendarViewController.swift */; };
+		45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B892C1A999800961E3F /* SelectMarimoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -104,14 +104,14 @@
 		0B1808852C19966D00081B2A /* FindPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
 		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
-		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		45011B882C1A999800961E3F /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupCalendarViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/PopupCalendarViewController.swift; sourceTree = "<group>"; };
-		45011B892C1A999800961E3F /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectMarimoViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/SelectMarimoViewController.swift; sourceTree = "<group>"; };
 		1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyAccountTableViewCell.swift; path = RimoRimo/View/MyPage/MyAccountTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingTableViewCell.swift; path = RimoRimo/View/MyPage/SettingTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarimoCollectionButton.swift; path = RimoRimo/View/MyPage/MarimoCollectionButton.swift; sourceTree = SOURCE_ROOT; };
 		1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedUITableViewCell.swift; path = RimoRimo/View/MyPage/BlockedUITableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45011B882C1A999800961E3F /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupCalendarViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/PopupCalendarViewController.swift; sourceTree = "<group>"; };
+		45011B892C1A999800961E3F /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectMarimoViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/SelectMarimoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,12 +279,11 @@
 		45011B862C1A995E00961E3F /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				45011B852C1A995E00961E3F /* MyPageViewController.swift */,
 			);
 			name = MyPage;
 			path = RimoRimo/Controllers/MyPage;
 			sourceTree = SOURCE_ROOT;
-    };
+		};
 		7844EF6C2C1B651C00F29A86 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
@@ -404,7 +403,6 @@
 				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
-				45011B872C1A995E00961E3F /* MyPageViewController.swift in Sources */,
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
 				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
@@ -568,6 +566,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -595,6 +594,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
