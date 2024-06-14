@@ -53,6 +53,9 @@ enum MySpecialColors {
     static let Blue = UIColor(hex: "#77CFC8")
     static let DayBlue = UIColor(hex: "#C5F4E2")
 
+    static let GearGray = UIColor(hex: "#C5C5C5")
+    static let Mint = UIColor(hex: "#DFF4F1")
+
     //color asset
     static let customColor  = UIColor(named: "")
 }
