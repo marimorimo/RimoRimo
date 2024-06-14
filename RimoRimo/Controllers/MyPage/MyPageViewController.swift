@@ -2,6 +2,7 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
+import WidgetKit
 
 class MyPageViewController: UIViewController {
 
@@ -461,6 +462,14 @@ class MyPageViewController: UIViewController {
     // MARK: - move to Setting page
     @objc private func moveToSetting() {
         let settingsVC = SetupViewController()
+
+        //Test for widget Data setting
+        UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: -20, to: Date()), forKey: "startDate")
+        UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: 10, to: Date()), forKey: "endDate")
+        UserDefaults.shared.set(["아침", "점심"], forKey: "todo")
+        UserDefaults.shared.set("토익 시험", forKey: "goal")
+        WidgetCenter.shared.reloadAllTimelines()
+
         navigationController?.pushViewController(settingsVC, animated: true)
     }
 

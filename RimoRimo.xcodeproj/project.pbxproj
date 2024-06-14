@@ -47,7 +47,19 @@
 		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
 		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
-		1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */; };
+		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
+		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
+		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
+		119FEBBC2C1C21E700BCC845 /* RimoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBBB2C1C21E700BCC845 /* RimoWidget.swift */; };
+		119FEBC22C1C21E800BCC845 /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		119FEBC72C1C227000BCC845 /* Pretendard-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085F2C19965700081B2A /* Pretendard-Regular.ttf */; };
+		119FEBC82C1C227300BCC845 /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */; };
+		119FEBC92C1C227500BCC845 /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808642C19965700081B2A /* Pretendard-Bold.ttf */; };
+		119FEBCB2C1C228B00BCC845 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */; };
+		119FEBCC2C1C228B00BCC845 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */; };
+		119FEBCF2C1C22B500BCC845 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBCD2C1C22B500BCC845 /* Color.swift */; };
+		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
+    1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */; };
 		1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */; };
 		1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */; };
 		1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */; };
@@ -56,15 +68,26 @@
 		45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B892C1A999800961E3F /* SelectMarimoViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		119FEBC02C1C21E800BCC845 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1808172C19936A00081B2A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 119FEBB22C1C21E600BCC845;
+			remoteInfo = RimoWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		1B29691B2C1C2F3D00685F5E /* Embed Frameworks */ = {
+		119FEBC32C1C21E800BCC845 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolderSpec = 13;
 			files = (
+				119FEBC22C1C21E800BCC845 /* RimoWidgetExtension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed Frameworks";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -104,6 +127,17 @@
 		0B1808852C19966D00081B2A /* FindPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
 		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RimoWidgetBundle.swift; sourceTree = "<group>"; };
+		119FEBBB2C1C21E700BCC845 /* RimoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RimoWidget.swift; sourceTree = "<group>"; };
+		119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+.swift"; sourceTree = "<group>"; };
+		119FEBCD2C1C22B500BCC845 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		119FEBD02C1C22C300BCC845 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		119FEBD22C1C231000BCC845 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoWidgetExtension.entitlements; sourceTree = "<group>"; };
+		119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoRimo.entitlements; sourceTree = "<group>"; };
 		1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyAccountTableViewCell.swift; path = RimoRimo/View/MyPage/MyAccountTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingTableViewCell.swift; path = RimoRimo/View/MyPage/SettingTableViewCell.swift; sourceTree = SOURCE_ROOT; };
@@ -129,21 +163,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		119FEBB02C1C21E600BCC845 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */,
+				119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0B1808162C19936A00081B2A = {
 			isa = PBXGroup;
 			children = (
+				119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */,
 				0B1808212C19936B00081B2A /* RimoRimo */,
+				119FEBB82C1C21E700BCC845 /* RimoWidget */,
+				0B1808202C19936B00081B2A /* Products */,
 				0B1808492C19956B00081B2A /* Frameworks */,
 				45011B842C1A93AF00961E3F /* RimoRimo.app */,
 			);
 			sourceTree = "<group>";
 		};
+    
+		0B1808202C19936B00081B2A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0B18081F2C19936B00081B2A /* RimoRimo.app */,
+				119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+
 		0B1808212C19936B00081B2A /* RimoRimo */ = {
 			isa = PBXGroup;
 			children = (
+				119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */,
 				0B1808522C1995D300081B2A /* Resource */,
 				0B1808532C19960900081B2A /* Controllers */,
 				0B1808222C19936B00081B2A /* AppDelegate.swift */,
@@ -159,6 +217,8 @@
 		0B1808492C19956B00081B2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				119FEBB42C1C21E600BCC845 /* WidgetKit.framework */,
+				119FEBB62C1C21E700BCC845 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -188,6 +248,16 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+    
+		0B1808542C19961300081B2A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+
 		0B1808552C19963600081B2A /* UIFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,6 +346,25 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
+		119FEBB82C1C21E700BCC845 /* RimoWidget */ = {
+			isa = PBXGroup;
+			children = (
+				119FEBCE2C1C22B500BCC845 /* Color */,
+				119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */,
+				119FEBBB2C1C21E700BCC845 /* RimoWidget.swift */,
+				119FEBD22C1C231000BCC845 /* Info.plist */,
+				119FEBD02C1C22C300BCC845 /* Assets.xcassets */,
+			);
+			path = RimoWidget;
+			sourceTree = "<group>";
+		};
+		119FEBCE2C1C22B500BCC845 /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				119FEBCD2C1C22B500BCC845 /* Color.swift */,
+			);
+			path = Color;
+    };
 		45011B862C1A995E00961E3F /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,11 +392,13 @@
 				0B18081B2C19936B00081B2A /* Sources */,
 				0B18081C2C19936B00081B2A /* Frameworks */,
 				0B18081D2C19936B00081B2A /* Resources */,
+				119FEBC32C1C21E800BCC845 /* Embed Foundation Extensions */,
 				1B29691B2C1C2F3D00685F5E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				119FEBC12C1C21E800BCC845 /* PBXTargetDependency */,
 			);
 			name = RimoRimo;
 			packageProductDependencies = (
@@ -323,6 +414,23 @@
 			productReference = 45011B842C1A93AF00961E3F /* RimoRimo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		119FEBB22C1C21E600BCC845 /* RimoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 119FEBC62C1C21E800BCC845 /* Build configuration list for PBXNativeTarget "RimoWidgetExtension" */;
+			buildPhases = (
+				119FEBAF2C1C21E600BCC845 /* Sources */,
+				119FEBB02C1C21E600BCC845 /* Frameworks */,
+				119FEBB12C1C21E600BCC845 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RimoWidgetExtension;
+			productName = RimoWidgetExtension;
+			productReference = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -330,11 +438,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1510;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					0B18081E2C19936B00081B2A = {
 						CreatedOnToolsVersion = 15.1;
+					};
+					119FEBB22C1C21E600BCC845 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -357,6 +468,7 @@
 			projectRoot = "";
 			targets = (
 				0B18081E2C19936B00081B2A /* RimoRimo */,
+				119FEBB22C1C21E600BCC845 /* RimoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -381,6 +493,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		119FEBB12C1C21E600BCC845 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				119FEBC82C1C227300BCC845 /* Pretendard-SemiBold.ttf in Resources */,
+				119FEBC72C1C227000BCC845 /* Pretendard-Regular.ttf in Resources */,
+				119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */,
+				119FEBC92C1C227500BCC845 /* Pretendard-Bold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -402,6 +525,7 @@
 				0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */,
 				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
+				119FEBCB2C1C228B00BCC845 /* UserDefaults+.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
 				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
@@ -419,7 +543,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		119FEBAF2C1C21E600BCC845 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				119FEBBC2C1C21E700BCC845 /* RimoWidget.swift in Sources */,
+				119FEBCF2C1C22B500BCC845 /* Color.swift in Sources */,
+				119FEBCC2C1C228B00BCC845 /* UserDefaults+.swift in Sources */,
+				119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		119FEBC12C1C21E800BCC845 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 119FEBB22C1C21E600BCC845 /* RimoWidgetExtension */;
+			targetProxy = 119FEBC02C1C21E800BCC845 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */ = {
@@ -555,11 +698,14 @@
 		0B1808342C19936D00081B2A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = RimoRimo/RimoRimo.entitlements;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3RF4FYY3M9;
+				DEVELOPMENT_TEAM = "";
+
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -574,6 +720,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.RimoRimo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -583,11 +730,14 @@
 		0B1808352C19936D00081B2A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = RimoRimo/RimoRimo.entitlements;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3RF4FYY3M9;
+				DEVELOPMENT_TEAM = "";
+
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -602,6 +752,65 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.RimoRimo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		119FEBC42C1C21E800BCC845 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = RimoWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KWVJ99C465;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RimoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RimoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.RimoRimo.RimoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		119FEBC52C1C21E800BCC845 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = RimoWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KWVJ99C465;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RimoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RimoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.RimoRimo.RimoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -625,6 +834,15 @@
 			buildConfigurations = (
 				0B1808342C19936D00081B2A /* Debug */,
 				0B1808352C19936D00081B2A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		119FEBC62C1C21E800BCC845 /* Build configuration list for PBXNativeTarget "RimoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				119FEBC42C1C21E800BCC845 /* Debug */,
+				119FEBC52C1C21E800BCC845 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
