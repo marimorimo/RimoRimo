@@ -47,7 +47,6 @@
 		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
 		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
-		0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808962C1996A100081B2A /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -60,6 +59,13 @@
 		119FEBCC2C1C228B00BCC845 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */; };
 		119FEBCF2C1C22B500BCC845 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBCD2C1C22B500BCC845 /* Color.swift */; };
 		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
+    1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */; };
+		1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */; };
+		1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */; };
+		1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */; };
+		1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */; };
+		45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B882C1A999800961E3F /* PopupCalendarViewController.swift */; };
+		45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B892C1A999800961E3F /* SelectMarimoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,7 +93,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B18081F2C19936B00081B2A /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B1808222C19936B00081B2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B1808242C19936B00081B2A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0B1808262C19936B00081B2A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -122,7 +127,6 @@
 		0B1808852C19966D00081B2A /* FindPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
 		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
-		0B1808962C1996A100081B2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -134,6 +138,14 @@
 		119FEBD22C1C231000BCC845 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoRimo.entitlements; sourceTree = "<group>"; };
+		1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyAccountTableViewCell.swift; path = RimoRimo/View/MyPage/MyAccountTableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingTableViewCell.swift; path = RimoRimo/View/MyPage/SettingTableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarimoCollectionButton.swift; path = RimoRimo/View/MyPage/MarimoCollectionButton.swift; sourceTree = SOURCE_ROOT; };
+		1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedUITableViewCell.swift; path = RimoRimo/View/MyPage/BlockedUITableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45011B882C1A999800961E3F /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupCalendarViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/PopupCalendarViewController.swift; sourceTree = "<group>"; };
+		45011B892C1A999800961E3F /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectMarimoViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/SelectMarimoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,9 +183,11 @@
 				119FEBB82C1C21E700BCC845 /* RimoWidget */,
 				0B1808202C19936B00081B2A /* Products */,
 				0B1808492C19956B00081B2A /* Frameworks */,
+				45011B842C1A93AF00961E3F /* RimoRimo.app */,
 			);
 			sourceTree = "<group>";
 		};
+    
 		0B1808202C19936B00081B2A /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -183,19 +197,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+
 		0B1808212C19936B00081B2A /* RimoRimo */ = {
 			isa = PBXGroup;
 			children = (
 				119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */,
 				0B1808522C1995D300081B2A /* Resource */,
-				0B1808542C19961300081B2A /* Models */,
 				0B1808532C19960900081B2A /* Controllers */,
 				0B1808222C19936B00081B2A /* AppDelegate.swift */,
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
 				0B1808302C19936D00081B2A /* Info.plist */,
-				0B1808962C1996A100081B2A /* GoogleService-Info.plist */,
+				1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */,
 			);
 			path = RimoRimo;
 			sourceTree = "<group>";
@@ -226,6 +240,7 @@
 				0B1808942C19968400081B2A /* TabBarViewController.swift */,
 				0B1808832C19966D00081B2A /* Auth */,
 				0B1808752C19966D00081B2A /* Calender */,
+				7844EF6C2C1B651C00F29A86 /* ToDo */,
 				0B18087B2C19966D00081B2A /* Setup */,
 				0B18087F2C19966D00081B2A /* MyPage */,
 				0B1808812C19966D00081B2A /* Main */,
@@ -233,6 +248,7 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+    
 		0B1808542C19961300081B2A /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -241,6 +257,7 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+
 		0B1808552C19963600081B2A /* UIFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,11 +296,9 @@
 		0B1808752C19966D00081B2A /* Calender */ = {
 			isa = PBXGroup;
 			children = (
-				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
-				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
-				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
 				0B1808792C19966D00081B2A /* CalenderViewController.swift */,
-				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+				0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */,
+				0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */,
 			);
 			path = Calender;
 			sourceTree = "<group>";
@@ -291,8 +306,11 @@
 		0B18087B2C19966D00081B2A /* Setup */ = {
 			isa = PBXGroup;
 			children = (
+				45011B862C1A995E00961E3F /* MyPage */,
 				0B18087C2C19966D00081B2A /* AccountInfoViewController.swift */,
 				0B18087D2C19966D00081B2A /* EditMyPageViewController.swift */,
+				45011B882C1A999800961E3F /* PopupCalendarViewController.swift */,
+				45011B892C1A999800961E3F /* SelectMarimoViewController.swift */,
 				0B18087E2C19966D00081B2A /* SetupViewController.swift */,
 			);
 			path = Setup;
@@ -301,6 +319,10 @@
 		0B18087F2C19966D00081B2A /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */,
+				1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */,
+				1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */,
+				1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */,
 				0B1808802C19966D00081B2A /* MyPageViewController.swift */,
 			);
 			path = MyPage;
@@ -342,6 +364,22 @@
 				119FEBCD2C1C22B500BCC845 /* Color.swift */,
 			);
 			path = Color;
+    };
+		45011B862C1A995E00961E3F /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = MyPage;
+			path = RimoRimo/Controllers/MyPage;
+			sourceTree = SOURCE_ROOT;
+		};
+		7844EF6C2C1B651C00F29A86 /* ToDo */ = {
+			isa = PBXGroup;
+			children = (
+				0B1808772C19966D00081B2A /* ToDoListViewController.swift */,
+				0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */,
+			);
+			path = ToDo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -355,6 +393,7 @@
 				0B18081C2C19936B00081B2A /* Frameworks */,
 				0B18081D2C19936B00081B2A /* Resources */,
 				119FEBC32C1C21E800BCC845 /* Embed Foundation Extensions */,
+				1B29691B2C1C2F3D00685F5E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -372,7 +411,7 @@
 				0B1808502C19956B00081B2A /* FirebaseStorage */,
 			);
 			productName = RimoRimo;
-			productReference = 0B18081F2C19936B00081B2A /* RimoRimo.app */;
+			productReference = 45011B842C1A93AF00961E3F /* RimoRimo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		119FEBB22C1C21E600BCC845 /* RimoWidgetExtension */ = {
@@ -424,7 +463,7 @@
 				0B18083B2C19952100081B2A /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
-			productRefGroup = 0B1808202C19936B00081B2A /* Products */;
+			productRefGroup = 0B1808162C19936A00081B2A;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -444,8 +483,8 @@
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
 				0B18086C2C19965700081B2A /* Pretendard-Thin.ttf in Resources */,
 				0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */,
-				0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */,
 				0B18082C2C19936D00081B2A /* Assets.xcassets in Resources */,
+				1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */,
 				0B18086B2C19965700081B2A /* Pretendard-Regular.ttf in Resources */,
 				0B1808702C19965700081B2A /* Pretendard-Bold.ttf in Resources */,
 				0B18086D2C19965700081B2A /* Pretendard-ExtraLight.ttf in Resources */,
@@ -475,8 +514,10 @@
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
 				0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */,
+				1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */,
 				0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
+				1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */,
 				0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */,
 				0B18088E2C19966D00081B2A /* SetupViewController.swift in Sources */,
 				0B1808712C19965700081B2A /* UIFont.swift in Sources */,
@@ -491,10 +532,14 @@
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
 				0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */,
+				45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				0B1808902C19966D00081B2A /* MainViewController.swift in Sources */,
+				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,
 				0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */,
 				0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */,
+				45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */,
+				1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,12 +705,14 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
+
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -690,12 +737,14 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
+
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
