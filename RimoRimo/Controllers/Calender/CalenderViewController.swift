@@ -174,7 +174,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         let dateString = formatDate(date: date)
         return sessionData[dateString] != nil ? 1 : 0
     }
-    
+
     func calendar(_ calendar: FSCalendar, titleFor date: Date) -> String? {
         let dateString = formatDate(date: date)
         let day = Calendar.current.component(.day, from: date)
