@@ -49,10 +49,12 @@
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
 		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		0B1808972C1996A100081B2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808962C1996A100081B2A /* GoogleService-Info.plist */; };
+		45011B872C1A995E00961E3F /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B852C1A995E00961E3F /* MyPageViewController.swift */; };
+		45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B882C1A999800961E3F /* PopupCalendarViewController.swift */; };
+		45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45011B892C1A999800961E3F /* SelectMarimoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0B18081F2C19936B00081B2A /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B1808222C19936B00081B2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B1808242C19936B00081B2A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0B1808262C19936B00081B2A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -88,6 +90,10 @@
 		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		0B1808962C1996A100081B2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45011B852C1A995E00961E3F /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		45011B882C1A999800961E3F /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupCalendarViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/PopupCalendarViewController.swift; sourceTree = "<group>"; };
+		45011B892C1A999800961E3F /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectMarimoViewController.swift; path = ../../../../Marimo/Marimo/Marimo/Controllers/MyPage/Settings/EditProfile/SelectMarimoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,24 +119,15 @@
 			isa = PBXGroup;
 			children = (
 				0B1808212C19936B00081B2A /* RimoRimo */,
-				0B1808202C19936B00081B2A /* Products */,
 				0B1808492C19956B00081B2A /* Frameworks */,
+				45011B842C1A93AF00961E3F /* RimoRimo.app */,
 			);
-			sourceTree = "<group>";
-		};
-		0B1808202C19936B00081B2A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0B18081F2C19936B00081B2A /* RimoRimo.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		0B1808212C19936B00081B2A /* RimoRimo */ = {
 			isa = PBXGroup;
 			children = (
 				0B1808522C1995D300081B2A /* Resource */,
-				0B1808542C19961300081B2A /* Models */,
 				0B1808532C19960900081B2A /* Controllers */,
 				0B1808222C19936B00081B2A /* AppDelegate.swift */,
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
@@ -171,13 +168,6 @@
 				0B1808812C19966D00081B2A /* Main */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		0B1808542C19961300081B2A /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		0B1808552C19963600081B2A /* UIFactory */ = {
@@ -230,8 +220,11 @@
 		0B18087B2C19966D00081B2A /* Setup */ = {
 			isa = PBXGroup;
 			children = (
+				45011B862C1A995E00961E3F /* MyPage */,
 				0B18087C2C19966D00081B2A /* AccountInfoViewController.swift */,
 				0B18087D2C19966D00081B2A /* EditMyPageViewController.swift */,
+				45011B882C1A999800961E3F /* PopupCalendarViewController.swift */,
+				45011B892C1A999800961E3F /* SelectMarimoViewController.swift */,
 				0B18087E2C19966D00081B2A /* SetupViewController.swift */,
 			);
 			path = Setup;
@@ -263,6 +256,15 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
+		45011B862C1A995E00961E3F /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+				45011B852C1A995E00961E3F /* MyPageViewController.swift */,
+			);
+			name = MyPage;
+			path = RimoRimo/Controllers/MyPage;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -290,7 +292,7 @@
 				0B1808502C19956B00081B2A /* FirebaseStorage */,
 			);
 			productName = RimoRimo;
-			productReference = 0B18081F2C19936B00081B2A /* RimoRimo.app */;
+			productReference = 45011B842C1A93AF00961E3F /* RimoRimo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -322,7 +324,7 @@
 				0B18083B2C19952100081B2A /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
-			productRefGroup = 0B1808202C19936B00081B2A /* Products */;
+			productRefGroup = 0B1808162C19936A00081B2A;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -371,15 +373,18 @@
 				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
+				45011B872C1A995E00961E3F /* MyPageViewController.swift in Sources */,
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
 				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
 				0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */,
+				45011B8A2C1A999800961E3F /* PopupCalendarViewController.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				0B1808902C19966D00081B2A /* MainViewController.swift in Sources */,
 				0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */,
 				0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */,
+				45011B8B2C1A999800961E3F /* SelectMarimoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,7 +528,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KWVJ99C465;
+				DEVELOPMENT_TEAM = 3RF4FYY3M9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -550,7 +555,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KWVJ99C465;
+				DEVELOPMENT_TEAM = 3RF4FYY3M9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

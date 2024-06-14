@@ -157,7 +157,7 @@ extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDe
         if let date = Calendar.current.date(from: dateComponents) {
             let dateString = formatDate(date: date)
             if let data = sessionData[dateString] as? [String: Any] {
-                let detailVC = CalenderDeatailViewController()
+                let detailVC = CalendarDetailViewController()
                 detailVC.data = data
                 navigationController?.pushViewController(detailVC, animated: true)
             }
