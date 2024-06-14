@@ -204,7 +204,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     subview.removeFromSuperview()
                 }
             }
-            cell.backgroundColor = .white // 셀의 배경색을 원래 색으로 되돌림
+            cell.backgroundColor = MySpecialColors.Gray1 // 셀의 배경색을 원래 색으로 되돌림
         }
         
         editingIndexPath = nil
@@ -351,6 +351,16 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let previousIndexPath = editingIndexPath {
+            guard let previousCell = tableView.cellForRow(at: previousIndexPath) else { return }
+            // Clear previous edit mode
+            previousCell.textLabel?.isHidden = false
+            previousCell.contentView.subviews.forEach { subview in
+                subview.removeFromSuperview()
+            }
+            tableView.reloadRows(at: [previousIndexPath], with: .automatic)
+        }
+        
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         let todo = todos[indexPath.row]
         guard let todoText = todo["todo"] as? String else { return }
