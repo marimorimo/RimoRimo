@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 
 class SetupViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
+    private let saveAutoLoginInfo = "userEmail"
     private let options = ["프로필 수정", "계정 관리", "비밀번호 변경하기"]
     private let tableView = UITableView()
     
@@ -63,6 +63,8 @@ class SetupViewController: UIViewController, UITableViewDataSource, UITableViewD
     private func performLogout() {
         do {
             try Auth.auth().signOut()
+            // 로그아웃 후 저장된 로그인 정보 삭제
+            UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
             // 로그아웃 후 처리 (예: 로그인 화면으로 이동)
             let loginViewController = LoginViewController()
             loginViewController.modalPresentationStyle = .fullScreen
