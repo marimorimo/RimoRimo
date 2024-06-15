@@ -12,23 +12,37 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 첫 번째 탭
-        let firstViewController = MainViewController()
-        firstViewController.tabBarItem = UITabBarItem(title: "Main", image: UIImage(systemName: "1.circle"), tag: 0)
+        setUpTabBar()
+        setUpVCs()
+    }
 
-        // 두 번째 탭
-        let secondViewController = CalendarViewController()
-        secondViewController.tabBarItem = UITabBarItem(title: "Calender", image: UIImage(systemName: "2.circle"), tag: 1)
-        
-        // 세 번째 탭
-        let thirdViewController = ToDoListViewController()
-        thirdViewController.tabBarItem = UITabBarItem(title: "ToDo", image: UIImage(systemName: "3.circle"), tag: 2)
-        
-        // 네 번째 탭
-        let fourViewController = MyPageViewController()
-        fourViewController.tabBarItem = UITabBarItem(title: "MyPage", image: UIImage(systemName: "4.circle"), tag: 3)
-        
-        // 탭 바 컨트롤러에 뷰 컨트롤러들을 추가
-        self.viewControllers = [firstViewController, secondViewController, thirdViewController, fourViewController]
+    func setUpTabBar() {
+        tabBar.unselectedItemTintColor = MySpecialColors.Gray3
+        tabBar.tintColor = MySpecialColors.MainColor
+        tabBar.backgroundColor = .white
+        //        tabBar.backgroundImage = UIImage()
+//        tabBar.shadowImage = UIImage()
+//        tabBar.clipsToBounds = true
+    }
+
+    func setUpVCs() {
+        viewControllers = [
+            createNavController(for: MainViewController(), title: NSLocalizedString("Main", comment: ""), image: UIImage(systemName: "1.circle")!),
+            createNavController(for: CalendarViewController(), title: NSLocalizedString("Calender", comment: ""), image: UIImage(systemName: "2.circle")!),
+            createNavController(for: ToDoListViewController(), title: NSLocalizedString("ToDo", comment: ""), image: UIImage(systemName: "3.circle")!),
+            createNavController(for: MyPageViewController(), title: NSLocalizedString("MyPage", comment: ""), image: UIImage(systemName: "4.circle")!)
+        ]
+    }
+
+    private func createNavController(for rootViewController: UIViewController,
+                                     title: String,
+                                     image: UIImage) -> UIViewController {
+        let navController = UINavigationController(rootViewController: rootViewController)
+        navController.tabBarItem.title = title
+        navController.tabBarItem.image = image
+        //        navController.navigationBar.backgroundColor = MySpecialColors.cellGray
+        //        navController.navigationBar.prefersLargeTitles = true
+        //        rootViewController.navigationItem.title = title
+        return navController
     }
 }

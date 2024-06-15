@@ -277,7 +277,7 @@ class MyPageViewController: UIViewController {
         button.tintColor = MySpecialColors.Gray2
         button.semanticContentAttribute = .forceRightToLeft
         button.contentMode = .scaleToFill
-        button.imageEdgeInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 4)
+        button.imageEdgeInsets = UIEdgeInsets(top: 2, left: 80, bottom: 2, right: 56)
         button.setPreferredSymbolConfiguration(.init(scale: .large), forImageIn: .normal)
         button.addTarget(self, action: #selector(showCollectionButtonTapped), for: .touchUpInside)
 
@@ -457,6 +457,10 @@ class MyPageViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(28)
             make.top.equalTo(buttonStackView.snp.bottom).offset(4)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        }
+
+        showCollectionButton.snp.makeConstraints { make in
+            make.width.equalTo(100)
         }
     }
     // MARK: - move to Setting page
