@@ -301,6 +301,14 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let todoText = todo["todo"] as? String ?? ""
         let isCompleted = todo["completed"] as? Bool ?? false
         cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
+        
+        // Cell Background color gray
+        cell.backgroundColor = MySpecialColors.Gray1
+        
+        // Cell Selection color gray
+        let bgColorView = UIView()
+        bgColorView.backgroundColor = MySpecialColors.Gray1
+        cell.selectedBackgroundView = bgColorView
         return cell
     }
     
