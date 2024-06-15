@@ -34,7 +34,6 @@
 		0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808662C19965700081B2A /* Pretendard-Light.ttf */; };
 		0B1808732C19965700081B2A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808682C19965700081B2A /* UIColor.swift */; };
 		0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808762C19966D00081B2A /* DatePickerModalViewController.swift */; };
-		0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
 		0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808782C19966D00081B2A /* CalenderDeatailViewController.swift */; };
 		0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808792C19966D00081B2A /* CalenderViewController.swift */; };
 		0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B18087A2C19966D00081B2A /* ToDoDetailViewController.swift */; };
@@ -46,7 +45,6 @@
 		0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808842C19966D00081B2A /* SignUpViewController.swift */; };
 		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
-		0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -67,6 +65,8 @@
 		7863C0D52C1C6BAE00D91E8C /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7863C0D32C1C6BAE00D91E8C /* UserDefaults+.swift */; };
 		7863C0D62C1C6D6B00D91E8C /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
 		7863C0D72C1C6E3100D91E8C /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
+		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -504,9 +504,9 @@
 			files = (
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
-				0B1808952C19968400081B2A /* TabBarViewController.swift in Sources */,
 				1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */,
 				0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */,
+				7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
 				1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */,
 				0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */,
@@ -516,6 +516,7 @@
 				0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */,
 				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */,
+				7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
@@ -523,7 +524,6 @@
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
 				7863C0D42C1C6BAE00D91E8C /* UserDefaults+.swift in Sources */,
-				0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				0B1808902C19966D00081B2A /* MainViewController.swift in Sources */,
 				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,

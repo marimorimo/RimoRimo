@@ -351,11 +351,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                         print("Error deleting todo: \(error.localizedDescription)")
                         completionHandler(false) // 삭제 실패 시
                     } else {
-                        // UI 업데이트를 수행합니다.
-                        DispatchQueue.main.async {
-                            self.todos.remove(at: indexPath.row)
-                            self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                        }
                         print("ToDo가 성공적으로 삭제되었습니다.")
                         completionHandler(true) // 삭제 성공 시
                     }
