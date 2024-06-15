@@ -56,16 +56,16 @@
 		119FEBC82C1C227300BCC845 /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */; };
 		119FEBC92C1C227500BCC845 /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808642C19965700081B2A /* Pretendard-Bold.ttf */; };
 		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
-		11F835FC2C1C5D9A00711581 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F835FA2C1C5D9A00711581 /* Color.swift */; };
-		11F835FF2C1C5DB100711581 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F835FD2C1C5DB100711581 /* UserDefaults+.swift */; };
 		11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */; };
 		11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */; };
-		11F836052C1C5F7500711581 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F835FD2C1C5DB100711581 /* UserDefaults+.swift */; };
 		1B2969112C1C2EB300685F5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */; };
 		1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */; };
 		1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */; };
 		1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */; };
 		1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */; };
+		4500E9C12C1C6B44005BB8DF /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9C02C1C6B44005BB8DF /* Color.swift */; };
+		4500E9C62C1C6BFA005BB8DF /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9C52C1C6BFA005BB8DF /* UserDefaults+.swift */; };
+		4500E9C72C1C6BFA005BB8DF /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9C52C1C6BFA005BB8DF /* UserDefaults+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,13 +132,10 @@
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RimoWidgetBundle.swift; sourceTree = "<group>"; };
 		119FEBBB2C1C21E700BCC845 /* RimoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RimoWidget.swift; sourceTree = "<group>"; };
-		119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+.swift"; sourceTree = "<group>"; };
 		119FEBD02C1C22C300BCC845 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		119FEBD22C1C231000BCC845 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoRimo.entitlements; sourceTree = "<group>"; };
-		11F835FA2C1C5D9A00711581 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		11F835FD2C1C5DB100711581 /* UserDefaults+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+.swift"; sourceTree = "<group>"; };
 		11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupCalendarViewController.swift; sourceTree = "<group>"; };
 		11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectMarimoViewController.swift; sourceTree = "<group>"; };
 		1B2969102C1C2EB300685F5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -146,6 +143,8 @@
 		1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingTableViewCell.swift; path = RimoRimo/Views/SettingTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarimoCollectionButton.swift; path = RimoRimo/Views/MarimoCollectionButton.swift; sourceTree = SOURCE_ROOT; };
 		1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedUITableViewCell.swift; path = RimoRimo/Views/BlockedUITableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		4500E9C02C1C6B44005BB8DF /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		4500E9C52C1C6BFA005BB8DF /* UserDefaults+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+.swift"; sourceTree = "<group>"; };
 		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -185,7 +184,6 @@
 				0B1808202C19936B00081B2A /* Products */,
 				0B1808492C19956B00081B2A /* Frameworks */,
 				45011B842C1A93AF00961E3F /* RimoRimo.app */,
-				11F835F92C1C5D8B00711581 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -200,8 +198,8 @@
 		0B1808212C19936B00081B2A /* RimoRimo */ = {
 			isa = PBXGroup;
 			children = (
+				4500E9B72C1C68D3005BB8DF /* Models */,
 				119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */,
-				11F835FE2C1C5DB100711581 /* Models */,
 				0B1808522C1995D300081B2A /* Resource */,
 				11F836072C1C611E00711581 /* Views */,
 				0B1808532C19960900081B2A /* Controllers */,
@@ -335,39 +333,13 @@
 		119FEBB82C1C21E700BCC845 /* RimoWidget */ = {
 			isa = PBXGroup;
 			children = (
-				11F835FB2C1C5D9A00711581 /* Color */,
+				4500E9BC2C1C6AFB005BB8DF /* Color */,
 				119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */,
 				119FEBBB2C1C21E700BCC845 /* RimoWidget.swift */,
 				119FEBD22C1C231000BCC845 /* Info.plist */,
 				119FEBD02C1C22C300BCC845 /* Assets.xcassets */,
 			);
 			path = RimoWidget;
-			sourceTree = "<group>";
-		};
-		11F835F92C1C5D8B00711581 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				119FEBCA2C1C228B00BCC845 /* UserDefaults+.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		11F835FB2C1C5D9A00711581 /* Color */ = {
-			isa = PBXGroup;
-			children = (
-				11F835FA2C1C5D9A00711581 /* Color.swift */,
-			);
-			name = Color;
-			path = ../../../../Downloads/Color;
-			sourceTree = "<group>";
-		};
-		11F835FE2C1C5DB100711581 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				11F835FD2C1C5DB100711581 /* UserDefaults+.swift */,
-			);
-			name = Models;
-			path = ../../../../Downloads/Models;
 			sourceTree = "<group>";
 		};
 		11F836072C1C611E00711581 /* Views */ = {
@@ -379,6 +351,23 @@
 				1B2969132C1C2EF400685F5E /* SettingTableViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4500E9B72C1C68D3005BB8DF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4500E9C52C1C6BFA005BB8DF /* UserDefaults+.swift */,
+			);
+			name = Models;
+			path = ../../Models;
+			sourceTree = "<group>";
+		};
+		4500E9BC2C1C6AFB005BB8DF /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				4500E9C02C1C6B44005BB8DF /* Color.swift */,
+			);
+			path = Color;
 			sourceTree = "<group>";
 		};
 		7844EF6C2C1B651C00F29A86 /* ToDo */ = {
@@ -538,8 +527,8 @@
 				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
+				4500E9C62C1C6BFA005BB8DF /* UserDefaults+.swift in Sources */,
 				0B1808882C19966D00081B2A /* ToDoListViewController.swift in Sources */,
-				11F835FF2C1C5DB100711581 /* UserDefaults+.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				0B1808902C19966D00081B2A /* MainViewController.swift in Sources */,
 				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,
@@ -554,9 +543,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11F836052C1C5F7500711581 /* UserDefaults+.swift in Sources */,
+				4500E9C72C1C6BFA005BB8DF /* UserDefaults+.swift in Sources */,
+				4500E9C12C1C6B44005BB8DF /* Color.swift in Sources */,
 				119FEBBC2C1C21E700BCC845 /* RimoWidget.swift in Sources */,
-				11F835FC2C1C5D9A00711581 /* Color.swift in Sources */,
 				119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

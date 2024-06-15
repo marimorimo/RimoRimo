@@ -9,7 +9,7 @@ class SettingTableViewCell: UITableViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
-        label.font = .pretendard(style: .medium, size: 12)
+        label.font = .pretendard(style: .medium, size: 14)
         label.textColor = MySpecialColors.Black
 
         return label
@@ -18,7 +18,7 @@ class SettingTableViewCell: UITableViewCell {
     let descriptionLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
-        label.font = .pretendard(style: .medium, size: 10)
+        label.font = .pretendard(style: .medium, size: 12)
         label.textColor = MySpecialColors.Gray4
 
         return label

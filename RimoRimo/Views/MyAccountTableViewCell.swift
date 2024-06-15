@@ -2,14 +2,19 @@
 import UIKit
 import SnapKit
 
+protocol MyAccountTableViewCellDelegate: AnyObject {
+    func didTapResetPasswordButton(withEmail email: String)
+}
+
 class MyAccountTableViewCell: UITableViewCell {
 
     static let cellId = "MyAccountCellId"
+    weak var delegate: MyAccountTableViewCellDelegate?
 
     let titleLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
-        label.font = .pretendard(style: .medium, size: 12)
+        label.font = .pretendard(style: .medium, size: 14)
         label.textColor = MySpecialColors.Black
 
         return label
@@ -19,10 +24,18 @@ class MyAccountTableViewCell: UITableViewCell {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
         label.font = .pretendard(style: .medium, size: 12)
-        label.textAlignment = .right
+        label.textAlignment = .left
         label.textColor = MySpecialColors.Gray4
 
         return label
+    }()
+    
+    let resetPasswordButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(MySpecialColors.MainColor, for: .normal)
+        button.titleLabel?.font = UIFont.pretendard(style: .regular, size: 12)
+        button.addTarget(nil, action: #selector(resetPasswordButtonTapped), for: .touchUpInside)
+        return button
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -39,6 +52,7 @@ class MyAccountTableViewCell: UITableViewCell {
     private func setupViews() {
         contentView.addSubview(titleLabel)
         contentView.addSubview(descriptionLabel)
+        contentView.addSubview(resetPasswordButton)
     }
 
     private func setupLayout() {
@@ -50,11 +64,24 @@ class MyAccountTableViewCell: UITableViewCell {
         }
 
         descriptionLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
             make.height.equalTo(18)
-            make.trailing.equalToSuperview().inset(28)
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.leading.equalTo(titleLabel)
             make.width.equalTo(200)
+        }
+        
+        resetPasswordButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(28)
         }
     }
 
+    @objc private func resetPasswordButtonTapped() {
+        guard let email = descriptionLabel.text, !email.isEmpty else {
+            delegate?.didTapResetPasswordButton(withEmail: "")
+            return
+        }
+        delegate?.didTapResetPasswordButton(withEmail: email)
+        print("taptap")
+    }
 }
