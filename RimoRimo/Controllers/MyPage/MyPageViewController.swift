@@ -537,9 +537,9 @@ extension MyPageViewController {
             } else {
                 self.nicknameLabel.text = "Nickname: N/A"
                 self.emailLabel.text = "Email: N/A"
-                self.goalLabel.text = "D-day Title: N/A"
-                self.goalDdayLabel.text = "D-day: N/A"
-                self.concentrationTimeLabel.text = "Target Time: N/A"
+                self.goalLabel.text = "N/A"
+                self.goalDdayLabel.text = "N/A"
+                self.concentrationTimeLabel.text = "N/A"
 //                self.profileImageView.image = UIImage(named: "Group 1")
             }
         }
