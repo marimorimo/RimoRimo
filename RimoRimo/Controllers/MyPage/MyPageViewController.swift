@@ -378,7 +378,7 @@ class MyPageViewController: UIViewController {
     }
 
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = MySpecialColors.Gray1
 
         view.addSubview(profileBackgroundView)
         profileBackgroundView.addSubview(settingButton)
