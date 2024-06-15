@@ -67,8 +67,8 @@ class SetupViewController: UIViewController, UITableViewDataSource, UITableViewD
             UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
             // 로그아웃 후 처리 (예: 로그인 화면으로 이동)
             let loginViewController = LoginViewController()
-            loginViewController.modalPresentationStyle = .fullScreen
-            present(loginViewController, animated: true, completion: nil)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginViewController)
+
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
             

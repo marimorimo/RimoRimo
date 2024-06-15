@@ -54,10 +54,10 @@ class TabBarViewController: UITabBarController {
 
     func setUpVCs() {
         viewControllers = [
-            createNavController(for: MainViewController(), title: NSLocalizedString("Main", comment: ""), image: UIImage(systemName: "1.circle")!),
-            createNavController(for: CalendarViewController(), title: NSLocalizedString("Calender", comment: ""), image: UIImage(systemName: "2.circle")!),
-            createNavController(for: ToDoListViewController(), title: NSLocalizedString("ToDo", comment: ""), image: UIImage(systemName: "3.circle")!),
-            createNavController(for: MyPageViewController(), title: NSLocalizedString("MyPage", comment: ""), image: UIImage(systemName: "4.circle")!)
+            createNavController(for: MainViewController(), title: NSLocalizedString("Main", comment: ""), image: UIImage(systemName: "house.circle")!),
+            createNavController(for: CalendarViewController(), title: NSLocalizedString("Calender", comment: ""), image: UIImage(systemName: "calendar.circle")!),
+            createNavController(for: ToDoListViewController(), title: NSLocalizedString("ToDo", comment: ""), image: UIImage(systemName: "list.bullet.circle")!),
+            createNavController(for: MyPageViewController(), title: NSLocalizedString("MyPage", comment: ""), image: UIImage(systemName: "person.circle")!)
         ]
     }
 

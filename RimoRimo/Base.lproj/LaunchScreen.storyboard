@@ -17,11 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo-image" translatesAutoresizingMaskIntoConstraints="NO" id="7tS-M2-aV3">
-                                <rect key="frame" x="72" y="148" width="249" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Group 5" translatesAutoresizingMaskIntoConstraints="NO" id="RWU-b9-sHX">
-                                <rect key="frame" x="72" y="341" width="249" height="258"/>
+                                <rect key="frame" x="72" y="334" width="249" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -36,7 +32,6 @@
     </scenes>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
-        <image name="Group 5" width="80" height="80"/>
         <image name="logo-image" width="224" height="34"/>
     </resources>
 </document>
