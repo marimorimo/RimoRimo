@@ -10,7 +10,7 @@ import UIKit
 class AlertUIFactory: UIViewController {
     static func alertBackView() -> UIView {
         let view = UIView()
-        view.backgroundColor = MySpecialColors.Gray2.withAlphaComponent(0.5)
+        view.backgroundColor = MySpecialColors.Gray3.withAlphaComponent(0.5)
         return view
     }
     
