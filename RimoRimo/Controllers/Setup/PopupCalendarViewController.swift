@@ -10,8 +10,8 @@ import SnapKit
 import FSCalendar
 import Firebase
 
-class PopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCalendarDelegateAppearance, FSCalendarDataSource {
-    
+class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDelegateAppearance, FSCalendarDataSource {
+
     
     let backgroundView: UIView = {
        let view = UIView()

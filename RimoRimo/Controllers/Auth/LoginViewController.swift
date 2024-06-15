@@ -492,6 +492,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     private func navigateToMainScreen() {
         let vc = TabBarViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(vc)
     }
 }
