@@ -6,7 +6,7 @@ import SnapKit
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     // UI Components
-    var datePicker: UIDatePicker!
+//    var datePicker: UIDatePicker!
     var textField: UITextField!
     var saveButton: UIButton!
     var tableView: UITableView!
@@ -20,14 +20,44 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedDate: Date = Date()
     var listener: ListenerRegistration?
     
+    
+    // PickDate Setup
+    let dateStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        return stack
+    }()
+    let calendarButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "calendar")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.tintColor = MySpecialColors.MainColor
+        return button
+    }()
+
+    let editDate: UITextField = {
+        let date = UITextField()
+        date.font = UIFont.pretendard(style: .regular, size: 14)
+        date.textColor = MySpecialColors.Gray4
+        date.tintColor = .clear
+        date.borderStyle = .none
+        date.backgroundColor = .clear
+        date.clearButtonMode = .never
+        date.textAlignment = .right
+        return date
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         setupConstraints()
         setupActions()
+        setupEditDateTapGesture()
         
         addSnapshotListener(for: selectedDate)
+        fetchDateData()
     }
     
     // MARK: - UI Setup
@@ -35,15 +65,21 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     func setupUI() {
         view.backgroundColor = MySpecialColors.Gray1
         
-        // DatePicker Setup
-        datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        datePicker.setDate(Date(), animated: false)
-        datePicker.minimumDate = Date()
-        let calendar = Calendar.current
-        let nextYear = calendar.date(byAdding: .year, value: 1, to: Date())
-        datePicker.maximumDate = nextYear
-        view.addSubview(datePicker)
+//        // DatePicker Setup
+//        datePicker = UIDatePicker()
+//        datePicker.datePickerMode = .date
+//        datePicker.setDate(Date(), animated: false)
+//        datePicker.minimumDate = Date()
+//        let calendar = Calendar.current
+//        let nextYear = calendar.date(byAdding: .year, value: 1, to: Date())
+//        datePicker.maximumDate = nextYear
+//        view.addSubview(datePicker)
+
+        view.addSubview(dateStack)
+        [calendarButton, editDate].forEach {
+            dateStack.addArrangedSubview($0)
+        }
+        
         
         // TextField Setup
         textField = UITextField()
@@ -84,10 +120,18 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Constraints Setup
     
     func setupConstraints() {
-        datePicker.snp.makeConstraints { make in
+//        datePicker.snp.makeConstraints { make in
+//            make.top.equalTo(view).offset(100)
+//            make.leading.equalTo(view).offset(20)
+//            make.trailing.equalTo(view).offset(-20)
+//        }
+//        calendarButton.snp.makeConstraints { make in
+//            make.top.equalTo(view).offset(100)
+//            make.trailing.equalTo(editDate).inset(5)
+//        }
+        dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            make.leading.equalTo(view).offset(246)
         }
         
         textFieldStack.snp.makeConstraints { make in
@@ -117,7 +161,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(datePicker.snp.bottom).offset(20)
+            make.top.equalTo(editDate.snp.bottom).offset(20)
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
             make.bottom.equalTo(textFieldStack.snp.top).offset(-20)
@@ -127,15 +171,35 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Actions Setup
     
     func setupActions() {
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         saveButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
+    }
+    
+    // Edit Date
+    private func setupEditDateTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
+        let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
+        editDate.addGestureRecognizer(tapGesture)
+        calendarButton.addGestureRecognizer(tapGesture2)
     }
     
     // MARK: - Actions
     
-    @objc func datePickerValueChanged() {
-        selectedDate = datePicker.date
+    @objc private func editDateTapped() {
+        print("taptap")
+        showCalendarPopup()
+    }
+    private func showCalendarPopup() {
+        let popupCalendarVC = ToDoPopupCalendarViewController()
+        popupCalendarVC.didSelectDate = { [weak self] selectedDate, formattedDate in
+            DispatchQueue.main.async {
+                self?.editDate.text = formattedDate
+                self?.selectedDate = selectedDate
+                self?.addSnapshotListener(for: selectedDate)
+            }
+        }
         addSnapshotListener(for: selectedDate)
+        popupCalendarVC.modalPresentationStyle = .overCurrentContext
+        present(popupCalendarVC, animated: true, completion: nil)
     }
     
     @objc func saveToDo() {
@@ -146,7 +210,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: datePicker.date)
+        let day = formatter.string(from: selectedDate)
         
         let todoText = textField.text ?? ""
         
@@ -180,7 +244,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: datePicker.date)
+        let day = formatter.string(from: selectedDate)
         
         Firestore.firestore()
             .collection("user-info")
@@ -227,31 +291,32 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         listener?.remove()
         
-        listener = Firestore.firestore()
+        let collectionRef = Firestore.firestore()
             .collection("user-info")
             .document(uid)
             .collection("todo-list")
             .document(day)
             .collection("sub-collection")
             .order(by: "date", descending: false)
-            .addSnapshotListener { [weak self] (querySnapshot, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                } else {
-                    self.todos.removeAll()
-                    for document in querySnapshot!.documents {
-                        var todoData = document.data()
-                        todoData["id"] = document.documentID
-                        self.todos.append(todoData)
-                    }
-                    self.tableView.reloadData()
+        
+        self.listener = collectionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                self.todos.removeAll()
+                for document in querySnapshot!.documents {
+                    var todoData = document.data()
+                    todoData["id"] = document.documentID
+                    self.todos.append(todoData)
                 }
+                self.tableView.reloadData()
             }
+        }
     }
     
     func loadTodos(for date: Date) {
-        addSnapshotListener(for: date)
+        addSnapshotListener(for: selectedDate)
     }
     
     func updateCompletionStatus(todoIndex: Int, isCompleted: Bool) {
@@ -262,7 +327,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: datePicker.date)
+        let day = formatter.string(from: selectedDate)
         
         let todo = todos[todoIndex]
         guard let documentId = todo["id"] as? String else {
@@ -285,6 +350,31 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     self?.loadTodos(for: self?.selectedDate ?? Date())
                 }
             }
+    }
+    
+    private func fetchDateData() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Firestore.firestore().collection("user-info").document(uid).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                
+                // Update Date
+                if let timestamp = data?["day"] as? Timestamp {
+                    let date = timestamp.dateValue()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "ko_KR")
+                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    self.editDate.text = dateFormatter.string(from: date)
+                } else {
+                    let currentDate = Date()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "ko_KR")
+                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    self.editDate.text = dateFormatter.string(from: currentDate)
+                }
+            }
+        }
     }
     
     // MARK: - UITableViewDataSource
@@ -343,7 +433,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            let day = formatter.string(from: self.datePicker.date)
+            let day = formatter.string(from: self.selectedDate)
             
             // Firestore에서 데이터를 삭제합니다.
             Firestore.firestore()
