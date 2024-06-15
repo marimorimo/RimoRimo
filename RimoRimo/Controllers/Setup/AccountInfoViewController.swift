@@ -66,7 +66,106 @@ class AccountInfoViewController: UIViewController {
     }
     
     @objc private func withdrawButtonTapped() {
-        debugPrint(#function)
+        let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원 탈퇴하시겠습니까?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
+            self.promptForPassword()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func promptForPassword() {
+        let passwordPrompt = UIAlertController(title: "비밀번호 확인", message: "계속 진행하려면 비밀번호를 입력하세요.", preferredStyle: .alert)
+        passwordPrompt.addTextField { textField in
+            textField.placeholder = "비밀번호"
+            textField.isSecureTextEntry = true
+        }
+        passwordPrompt.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        passwordPrompt.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak self] _ in
+            if let password = passwordPrompt.textFields?.first?.text {
+                self?.reauthenticateUserAndDeleteAccount(withPassword: password)
+            }
+        }))
+        present(passwordPrompt, animated: true, completion: nil)
+    }
+    
+    private func reauthenticateUserAndDeleteAccount(withPassword password: String) {
+        guard let user = Auth.auth().currentUser else {
+            print("No user logged in")
+            return
+        }
+        
+        guard let email = user.email else {
+            print("User email is nil")
+            return
+        }
+        
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        
+        user.reauthenticate(with: credential) { authResult, error in
+            if let error = error {
+                print("Error reauthenticating user: \(error.localizedDescription)")
+                // 재인증 실패 처리
+                DispatchQueue.main.async {
+                    let errorAlert = UIAlertController(title: "인증 실패", message: "비밀번호가 올바르지 않습니다. 다시 시도하세요.", preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                    self.present(errorAlert, animated: true, completion: nil)
+                }
+                return
+            }
+            
+            // 재인증 성공 시 사용자 계정 삭제
+            self.deleteUserFromFirebase()
+            self.deleteUserDocumentFromFirestore()
+        }
+    }
+    
+    private func deleteUserFromFirebase() {
+        let user = Auth.auth().currentUser
+        
+        user?.delete { error in
+            if let error = error {
+                print("Error deleting user: \(error.localizedDescription)")
+                // 계정 삭제 오류 처리
+                DispatchQueue.main.async {
+                    let errorAlert = UIAlertController(title: "계정 삭제 오류", message: "계정을 삭제하는 중 오류가 발생했습니다.", preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                    self.present(errorAlert, animated: true, completion: nil)
+                }
+            } else {
+                print("User deleted successfully from Firebase Authentication")
+            }
+        }
+    }
+    
+    private func deleteUserDocumentFromFirestore() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("No user logged in")
+            return
+        }
+        
+        let userRef = Firestore.firestore().collection("user-info").document(uid)
+        
+        userRef.delete { error in
+            if let error = error {
+                print("Error removing document from Firestore: \(error.localizedDescription)")
+                // Firestore 문서 삭제 오류 처리
+                DispatchQueue.main.async {
+                    let errorAlert = UIAlertController(title: "문서 삭제 오류", message: "사용자 정보를 삭제하는 중 오류가 발생했습니다.", preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                    self.present(errorAlert, animated: true, completion: nil)
+                }
+            } else {
+                print("Document successfully removed from Firestore")
+                self.navigateToLoginScreen()
+            }
+        }
+    }
+    
+    private func navigateToLoginScreen() {
+        let loginViewController = LoginViewController()
+        loginViewController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(loginViewController, animated: true)
     }
     
     private func showResetPasswordAlert(forEmail email: String) {

@@ -39,7 +39,6 @@ class SetupViewController: UIViewController {
         button.addTarget(nil, action: #selector(logoutButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
-    
     @objc private func logoutButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController(title: "Log Out", message: "로그아웃", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -48,6 +47,20 @@ class SetupViewController: UIViewController {
         }))
         present(alert, animated: true, completion: nil)
     }
+    
+    private lazy var loginButton: UIButton = {
+        let button = TabButtonUIFactory.tapButton(buttonTitle: "로그인",
+                                                  textColor: .white,
+                                                  cornerRadius: 24,
+                                                  backgroundColor: MySpecialColors.MainColor)
+        button.addTarget(nil, action: #selector(loginButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+    @objc private func loginButtonTapped(_ sender: UIButton) {
+        let loginViewController = LoginViewController()
+        self.navigationController?.pushViewController(loginViewController, animated: true)
+    }
+
    
     private let saveAutoLoginInfo = "userEmail"
     private func performLogout() {
@@ -72,6 +85,20 @@ class SetupViewController: UIViewController {
         setupUI()
         setupViews()
         setupLayout()
+        
+        updateUIBasedOnAuthState()
+    }
+    
+    private func updateUIBasedOnAuthState() {
+        if let _ = Auth.auth().currentUser {
+            // 사용자가 로그인되어 있는 경우
+            logoutButton.isHidden = false
+            loginButton.isHidden = true
+        } else {
+            // 사용자가 로그인되어 있지 않은 경우
+            logoutButton.isHidden = true
+            loginButton.isHidden = false
+        }
     }
     
     private func setupUI() {
@@ -87,6 +114,7 @@ class SetupViewController: UIViewController {
     private func setupViews() {
         view.addSubview(settingTableView)
         view.addSubview(logoutButton)
+        view.addSubview(loginButton)
     }
     
     private func setupLayout() {
@@ -96,6 +124,12 @@ class SetupViewController: UIViewController {
         }
         
         logoutButton.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(28)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(26)
+            make.height.greaterThanOrEqualTo(46)
+        }
+        
+        loginButton.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(28)
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(26)
             make.height.greaterThanOrEqualTo(46)
