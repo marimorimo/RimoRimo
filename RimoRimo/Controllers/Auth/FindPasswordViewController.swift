@@ -7,10 +7,13 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class FindPasswordViewController: UIViewController, UITextFieldDelegate {
     
     var emailCheck: Bool = false
+    
+    private var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Email View
     private let EmailView: UIView = {
@@ -54,9 +57,24 @@ class FindPasswordViewController: UIViewController, UITextFieldDelegate {
         cornerRadius: 24,
         backgroundColor: MySpecialColors.Gray2)
     
+    let alertBack = AlertUIFactory.alertBackView()
+    let alertView = AlertUIFactory.alertView()
+    
+    let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
+    let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+    
+    let widthLine = AlertUIFactory.widthLine()
+
+    let checkView = AlertUIFactory.checkView()
+    let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+    
     // MARK: - Setup Views
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+       
         setupUI()
         
         emailAlertTextLabel.isHidden = true
@@ -66,6 +84,7 @@ class FindPasswordViewController: UIViewController, UITextFieldDelegate {
         emailTextField.keyboardType = UIKeyboardType.emailAddress
         emailTextField.returnKeyType = .done
         
+        setupActivityIndicator()
         setupNavigationBar()
         setupButtons()
         setupEmailDeleteIcon()
@@ -83,7 +102,19 @@ class FindPasswordViewController: UIViewController, UITextFieldDelegate {
         }
         return true
     }
-
+    
+    //MARK: - setupActivityIndicator
+    private func setupActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .gray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
     
     //MARK: - setupNavigationBar
     private func setupNavigationBar() {
@@ -150,7 +181,71 @@ class FindPasswordViewController: UIViewController, UITextFieldDelegate {
             CheckButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
             CheckButton.heightAnchor.constraint(equalToConstant: 46)
         ])
-
+    }
+    
+    @objc private func setAlertView(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+        
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        alertView.addSubview(alertTitle)
+        alertView.addSubview(alertSubTitle)
+        alertView.addSubview(widthLine)
+        alertView.addSubview(checkView)
+        checkView.addSubview(checkLabel)
+        
+        alertBack.translatesAutoresizingMaskIntoConstraints = false
+        alertView.translatesAutoresizingMaskIntoConstraints = false
+        alertTitle.translatesAutoresizingMaskIntoConstraints = false
+        alertSubTitle.translatesAutoresizingMaskIntoConstraints = false
+        widthLine.translatesAutoresizingMaskIntoConstraints = false
+        checkView.translatesAutoresizingMaskIntoConstraints = false
+        checkLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            alertBack.topAnchor.constraint(equalTo: view.topAnchor),
+            alertBack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            alertBack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            alertBack.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            alertView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            alertView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 46),
+            alertView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -46),
+            alertView.heightAnchor.constraint(equalToConstant: 140),
+            
+            alertTitle.topAnchor.constraint(equalTo: alertView.topAnchor, constant: 24),
+            alertTitle.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            
+            alertSubTitle.topAnchor.constraint(equalTo: alertTitle.bottomAnchor, constant: 10),
+            alertSubTitle.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            
+            widthLine.topAnchor.constraint(equalTo: alertSubTitle.bottomAnchor, constant: 20),
+            widthLine.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            widthLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 46),
+            widthLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -46),
+            widthLine.heightAnchor.constraint(equalToConstant: 0.5),
+            
+            checkView.topAnchor.constraint(equalTo: widthLine.bottomAnchor),
+            checkView.trailingAnchor.constraint(equalTo: alertView.trailingAnchor),
+            checkView.leadingAnchor.constraint(equalTo: alertView.leadingAnchor),
+            checkView.bottomAnchor.constraint(equalTo: alertView.bottomAnchor),
+            
+            checkLabel.topAnchor.constraint(equalTo: checkView.topAnchor, constant: 14),
+            checkLabel.centerXAnchor.constraint(equalTo: checkView.centerXAnchor),
+        ])
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+                
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(checkLabelTapped)))
     }
     
     private func setupButtons() {
@@ -180,36 +275,73 @@ class FindPasswordViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Actions
     @objc private func sendPasswordResetEmail() {
+        activityIndicator.startAnimating()
+        
         // 이메일 공백 예외 처리
         guard let email = emailTextField.text, !email.isEmpty else {
             self.emailAlertTextLabel.isHidden = false
             self.emailAlertTextLabel.text = "이메일을 입력해 주세요."
+            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             return
         }
-
-        Auth.auth().sendPasswordReset(withEmail: email) { error in
-            if let error = error {
-                print("이메일 전송 실패: \(error.localizedDescription)")
-                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                
+        
+        checkIfEmailExists(email: email) { [weak self] exists in
+            guard let self = self else { return }
+            
+            if exists {
+                Auth.auth().sendPasswordReset(withEmail: email) { error in
+                    self.activityIndicator.stopAnimating()
+                    
+                    if let error = error {
+                        print("이메일 전송 실패: \(error.localizedDescription)")
+                        self.emailAlertTextLabel.isHidden = false
+                        self.emailAlertTextLabel.text = "등록되지 않은 이메일입니다. 다시 확인해 주세요."
+                        return
+                    }
+                    
+                    print("비밀번호 재설정 이메일을 보냈습니다.")
+                    self.emailAlertTextLabel.isHidden = false
+                    self.emailAlertTextLabel.text = "비밀번호 재설정 이메일이 \(email)로 전송되었습니다."
+                    self.emailAlertTextLabel.textColor = MySpecialColors.MainColor
+                    
+                    self.setAlertView(title: "비밀번호 찾기", subTitle: "재설정 이메일이 전송되었습니다.")
+                }
+            } else {
                 self.emailAlertTextLabel.isHidden = false
                 self.emailAlertTextLabel.text = "등록되지 않은 이메일입니다. 다시 확인해 주세요."
+                self.activityIndicator.stopAnimating()
+            }
+        }
+    }
+
+    private func checkIfEmailExists(email: String, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        db.collection("user-info").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error checking email existence: \(error.localizedDescription)")
+                completion(false)
                 return
             }
             
-            let alert = UIAlertController(title: "Password Reset", message: "비밀번호 재설정 이메일이 \(email)로 전송되었습니다. 받은편지함을 확인하세요.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            
-            print("비밀번호 재설정 이메일을 보냈습니다.")
-            self.emailAlertTextLabel.isHidden = false
-            self.emailAlertTextLabel.text = "비밀번호 재설정 이메일을 보냈습니다."
-            self.emailAlertTextLabel.textColor = MySpecialColors.MainColor
+            if let documents = querySnapshot?.documents, !documents.isEmpty {
+                completion(true) // Email 있음
+            } else {
+                completion(false) // Email 없음
+            }
         }
- 
     }
+    
+    func saveUserEmailToFirestore(uid: String, email: String) {
+        let db = Firestore.firestore()
+        db.collection("users").document(uid).setData(["email": email]) { error in
+            if let error = error {
+                print("Error saving user email: \(error.localizedDescription)")
+            } else {
+                print("User email saved successfully")
+            }
+        }
+    }
+
     
     // MARK: - Email Delete Button
     private func setupEmailDeleteIcon() {
@@ -221,11 +353,26 @@ class FindPasswordViewController: UIViewController, UITextFieldDelegate {
     @objc private func clearEmailTextField() {
         emailTextField.text = ""
     }
+    
+    // MARK: - Keyboard Dimiss
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 
     // MARK: - Helper Methods
-    private func showAlert(message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+    @objc private func checkLabelTapped() {
+        print("완료")
+        removeAlertView()
+        let logVC = LoginViewController()
+        navigationController?.popViewController(animated: true)
+    }
+    
+    // MARK: - Alert 삭제
+    private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+        }
     }
 }
