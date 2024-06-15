@@ -392,7 +392,10 @@ class EditMyPageViewController: UIViewController {
                         dateFormatter.dateFormat = "yyyy년 MM월 dd일"
                         self.editDate.text = dateFormatter.string(from: date)
                     } else {
-                        self.editDate.text = ""
+                        let currentDate = Date()
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+                        self.editDate.text = dateFormatter.string(from: currentDate)
                     }
                     
                     // Update FocusTime
