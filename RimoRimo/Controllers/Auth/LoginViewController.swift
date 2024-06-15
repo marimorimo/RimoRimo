@@ -10,8 +10,10 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    let saveAutoLoginInfo: String = "userEmail"
+    private let saveAutoLoginInfo: String = "userEmail"
 
+    private var activityIndicator: UIActivityIndicatorView!
+    
     // MARK: - HeaderView
     private let HeaderView: UIView = {
         let view = UIView()
@@ -119,6 +121,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = MySpecialColors.Gray1
         alertTextLabel.isHidden = true
         
+        setupActivityIndicator()
         setupHeaderView()
         setupMiddleView()
         setupBottomView()
@@ -126,10 +129,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         setupButtons()
         
         // 탭 제스처 생성
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(findPasswordTapped))
+        let findTapGesture = UITapGestureRecognizer(target: self, action: #selector(findPasswordTapped))
         // 제스처를 레이블에 추가
-        findPasswordLabel.addGestureRecognizer(tapGesture)
+        findPasswordLabel.addGestureRecognizer(findTapGesture)
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -158,21 +163,33 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-          switch textField {
-          case emailTextField:
-              passwordTextField.becomeFirstResponder()
-          case passwordTextField:
-              textField.resignFirstResponder()
-              loginButtonTapped()
-          default:
-              break
-          }
-          return true
-      }
-
+        switch textField {
+        case emailTextField:
+            passwordTextField.becomeFirstResponder()
+        case passwordTextField:
+            textField.resignFirstResponder()
+            loginButtonTapped()
+        default:
+            break
+        }
+        return true
+    }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         setupLoginButton()
+    }
+    
+    //MARK: - setupActivityIndicator
+    private func setupActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .gray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     //MARK: - setupHeaderView
@@ -376,16 +393,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Actions
     @objc private func loginButtonTapped() {
+        activityIndicator.startAnimating()  
         // 로그인, 비밀번호 공백 예외처리
         guard let email = emailTextField.text, let password = passwordTextField.text,
               !email.isEmpty, !password.isEmpty else {
             alertTextLabel.isHidden = false
             alertTextLabel.text = "이메일과 비밀번호를 모두 입력해주세요."
+            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             return
         }
         
         // 예외처리 이후 로그인 진행
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            self?.activityIndicator.stopAnimating() // 완료 시 로딩 인디케이터를 멈춤
             if let error = error {
                 // 로그인 실패 시 에러 메시지를 alertTextLabel에 표시
                 self?.alertTextLabel.isHidden = false
@@ -401,7 +421,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 self?.saveUserEmail(email)
                 self?.navigateToMainScreen()
             }
-        }
+        } 
     }
     
     // MARK: - UserDefaults에 로그인 정보 저장
@@ -456,6 +476,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @objc private func findPasswordTapped() {
         let findVC = FindPasswordViewController()
         navigationController?.pushViewController(findVC, animated: true)
+    }
+    
+    // MARK: - Keyboard Dimiss
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     // MARK: - Helper Methods

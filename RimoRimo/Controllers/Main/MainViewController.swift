@@ -29,6 +29,7 @@ class MainViewController: UIViewController {
     private var totalTimeElapsed: TimeInterval = 0
     private var isStudy = false
     private var currentSessionID: String?
+    
     private var uid: String? {
         return Auth.auth().currentUser?.uid
     }
@@ -57,7 +58,7 @@ class MainViewController: UIViewController {
     
     private let dayTitleLabel: UILabel = {
         let text = UILabel()
-        text.text = "토익 시험" // 데이터
+        text.text = "토익 시험"
         text.textColor = MySpecialColors.Black
         text.font = UIFont.pretendard(style: .medium, size: 16, isScaled: true)
         return text
@@ -65,7 +66,7 @@ class MainViewController: UIViewController {
     
     private let dayLabel: UILabel = {
         let text = UILabel()
-        text.text = "D-30" // Placeholder text
+        text.text = "D-30"
         text.textColor = MySpecialColors.MainColor
         if #available(iOS 13.0, *) {
             let monospacedFont = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .bold)
@@ -78,7 +79,7 @@ class MainViewController: UIViewController {
     
     private let timeLabel: UILabel = {
         let text = UILabel()
-        text.text = "00:00:00" // Placeholder text
+        text.text = "00:00:00"
         text.textColor = MySpecialColors.Black
         if #available(iOS 13.0, *) {
             let monospacedFont = UIFont.monospacedDigitSystemFont(ofSize: 72, weight: .semibold)
@@ -108,23 +109,402 @@ class MainViewController: UIViewController {
         return button
     }()
     
+    // MARK: - SuccessView
+    private let successView: UIView = {
+        let view = UIView()
+        view.backgroundColor = MySpecialColors.Blue.withAlphaComponent(0.6)
+        view.layer.cornerRadius = 24
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    private let successStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        return stackView
+    }()
+    
+    private let successTitleLabel: UILabel = {
+        let text = UILabel()
+        text.text = "마리모의 성장이 완료되었어요!"
+        text.textColor = MySpecialColors.Black
+        text.font = UIFont.pretendard(style: .bold, size: 18, isScaled: true)
+        return text
+    }()
+    
+    private let goDetailButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(goDetailButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private let goDetailImage: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(systemName: "chevron.right")
+        image.tintColor = MySpecialColors.Black
+        return image
+    }()
+    
+    private let successTextLabel: UILabel = {
+        let text = UILabel()
+        text.text = """
+        마리모가 생성되었습니다!
+        성장이 완료된 마리모를 확인해 보세요.
+        """
+        text.textColor = MySpecialColors.Black
+        text.font = UIFont.pretendard(style: .regular, size: 14, isScaled: true)
+        text.numberOfLines = 0
+        text.lineBreakMode = .byWordWrapping
+        return text
+    }()
+    
+    // MARK: - AlertUIFactory
+    let alertBack = AlertUIFactory.alertBackView()
+    let alertView = AlertUIFactory.alertView()
+    
+    let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
+    let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+    
+    let widthLine = AlertUIFactory.widthLine()
+    let heightLine = AlertUIFactory.heightLine()
+    
+    let cancleView = AlertUIFactory.checkView()
+    let cancleLabel = AlertUIFactory.checkLabel(cancleText: "취소", textColor: MySpecialColors.Red, fontSize: 14)
+
+    let checkView = AlertUIFactory.checkView()
+    let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+    
+    // MARK: - Onboarding Alert
+    let onboardingBackView = AlertUIFactory.alertBackView()
+    let onboardingView = AlertUIFactory.alertView()
+    let onboardingText = AlertUIFactory.alertSubTitle(subTitleText: "자정(12시) 전에 꼭 집중 모드를 중단해 주세요!", textColor: MySpecialColors.Black, fontSize: 14)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = MySpecialColors.Gray1
-        
         // Load saved data
         startTime = userDefaults.object(forKey: START_TIME_KEY) as? Date
         stopTime = userDefaults.object(forKey: STOP_TIME_KEY) as? Date
         timerIsCounting = userDefaults.bool(forKey: COUNTING_KEY)
+        
+        hideSuccessView()
+        cheeringLabel.isHidden = false
         
         setupBackground()
         setupBubbleEmitter()
         setupHeaderView()
         setupTapButton()
         setupResetButton()
+        setSuccessView()
         
         fetchUserDataAndBindUI()
         
+        if timerIsCounting {
+            // Timer start
+            startTimer()
+            updateMarimoImage()
+
+            if let startTime = startTime, let timerInterval = timerInterval {
+                let elapsedTime = Date().timeIntervalSince(startTime)
+                let delay = timerInterval - (elapsedTime.truncatingRemainder(dividingBy: timerInterval))
+                startMarimoTimer(withDelay: delay)
+            } else {
+                print("Error: startTime or timerInterval is nil")
+            }
+        } else {
+            // Timer stop
+            stopTimer()
+            stopMarimoTimer()
+            
+            if let start = startTime, let stop = stopTime {
+                let time = calcRestartTime(start: start, stop: stop)
+                let difference = Date().timeIntervalSince(time)
+                setTimeLabel(Int(difference))
+                updateMarimoImage()
+            } else {
+                setTimeLabel(0)
+            }
+        }
+        
+        if let processedTime = timerInterval {
+            print("마리모 변환 시간 간격: \(processedTime)")
+        } else {
+            print("마리모 변환 시간 간격 없음")
+        }
+        
+        checkAndResetTimerIfNeeded()
+    }
+    
+    // MARK: - Setup HeaderView
+    private func setupHeaderView() {
+        view.addSubview(HeaderView)
+        HeaderView.addSubview(dayView)
+        dayView.addSubview(dayStackView)
+        dayStackView.addArrangedSubview(dayTitleLabel)
+        dayStackView.addArrangedSubview(dayLabel)
+        
+        HeaderView.addSubview(timeLabel)
+        HeaderView.addSubview(cheeringLabel)
+        
+        HeaderView.translatesAutoresizingMaskIntoConstraints = false
+        dayView.translatesAutoresizingMaskIntoConstraints = false
+        dayStackView.translatesAutoresizingMaskIntoConstraints = false
+        dayTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        dayLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        cheeringLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            HeaderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 106),
+            HeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            HeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            HeaderView.heightAnchor.constraint(equalToConstant: 200),
+            
+            dayView.topAnchor.constraint(equalTo: HeaderView.topAnchor),
+            dayView.centerXAnchor.constraint(equalTo: HeaderView.centerXAnchor),
+            dayView.heightAnchor.constraint(equalToConstant: 26),
+            
+            dayStackView.topAnchor.constraint(equalTo: dayView.topAnchor),
+            dayStackView.leadingAnchor.constraint(equalTo: dayView.leadingAnchor, constant: 8),
+            dayStackView.trailingAnchor.constraint(equalTo: dayView.trailingAnchor, constant: -8),
+            dayStackView.bottomAnchor.constraint(equalTo: dayView.bottomAnchor),
+            dayStackView.widthAnchor.constraint(greaterThanOrEqualTo: dayTitleLabel.widthAnchor, constant: 12),
+            dayStackView.widthAnchor.constraint(greaterThanOrEqualTo: dayLabel.widthAnchor, constant: 12),
+            
+            dayTitleLabel.centerYAnchor.constraint(equalTo: dayStackView.centerYAnchor),
+            
+            dayLabel.centerYAnchor.constraint(equalTo: dayStackView.centerYAnchor),
+            
+            timeLabel.topAnchor.constraint(equalTo: dayView.bottomAnchor, constant: 18),
+            timeLabel.centerXAnchor.constraint(equalTo: HeaderView.centerXAnchor),
+            
+            cheeringLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 40),
+            cheeringLabel.centerXAnchor.constraint(equalTo: HeaderView.centerXAnchor),
+        ])
+    }
+    
+    // MARK: - Setup TapButton
+    private func setupTapButton() {
+        view.addSubview(startTimerButton)
+        
+        startTimerButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            startTimerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -142),
+            startTimerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 84),
+            startTimerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -84),
+            startTimerButton.heightAnchor.constraint(equalToConstant: 46),
+        ])
+        
+        startTimerButton.addTarget(self, action: #selector(startStopAction), for: .touchUpInside)
+    }
+    
+    private func setupResetButton() {
+        view.addSubview(resetButton)
+        
+        resetButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            resetButton.topAnchor.constraint(equalTo: startTimerButton.bottomAnchor, constant: 6),
+            resetButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 84),
+            resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -84),
+        ])
+        
+        resetButton.addTarget(self, action: #selector(resetAction), for: .touchUpInside)
+    }
+    
+    // MARK: - setSuccessView
+    private func setSuccessView() {
+        view.addSubview(successView)
+        view.addSubview(goDetailButton)
+        goDetailButton.addSubview(successStackView)
+        successStackView.addArrangedSubview(successTitleLabel)
+        successStackView.addArrangedSubview(goDetailImage)
+        goDetailButton.addSubview(successTextLabel)
+        
+        successView.translatesAutoresizingMaskIntoConstraints = false
+        successStackView.translatesAutoresizingMaskIntoConstraints = false
+        successTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        goDetailButton.translatesAutoresizingMaskIntoConstraints = false
+        goDetailImage.translatesAutoresizingMaskIntoConstraints = false
+        successTextLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            successView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            successView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 14),
+            successView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            successView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            successView.heightAnchor.constraint(equalToConstant: 100),
+            
+            goDetailButton.topAnchor.constraint(equalTo: successView.topAnchor, constant: 20),
+            goDetailButton.leadingAnchor.constraint(equalTo: successView.leadingAnchor, constant: 24),
+            goDetailButton.trailingAnchor.constraint(equalTo: successView.trailingAnchor, constant: -24),
+            goDetailButton.bottomAnchor.constraint(equalTo: successView.bottomAnchor, constant: -20),
+            
+            successStackView.topAnchor.constraint(equalTo: goDetailButton.topAnchor),
+            successStackView.leadingAnchor.constraint(equalTo: goDetailButton.leadingAnchor),
+            successStackView.trailingAnchor.constraint(equalTo: goDetailButton.trailingAnchor),
+            successStackView.heightAnchor.constraint(equalToConstant: 18),
+            
+            successTitleLabel.centerYAnchor.constraint(equalTo: successStackView.centerYAnchor),
+            successTitleLabel.leadingAnchor.constraint(equalTo: successStackView.leadingAnchor),
+            
+            goDetailImage.centerYAnchor.constraint(equalTo: successStackView.centerYAnchor),
+            goDetailImage.trailingAnchor.constraint(equalTo: successStackView.trailingAnchor),
+            goDetailImage.widthAnchor.constraint(equalToConstant: 14),
+            goDetailImage.heightAnchor.constraint(equalToConstant: 18),
+            
+            successTextLabel.topAnchor.constraint(equalTo: successStackView.bottomAnchor, constant: 8),
+            successTextLabel.leadingAnchor.constraint(equalTo: successView.leadingAnchor, constant: 24),
+            successTextLabel.trailingAnchor.constraint(equalTo: successView.trailingAnchor, constant: -24),
+            successTextLabel.bottomAnchor.constraint(equalTo: successView.bottomAnchor, constant: -20)
+        ])
+    }
+
+    
+    // MARK: - hideSuccessView
+    private func hideSuccessView() {
+        successView.isHidden = true
+        goDetailButton.isHidden = true
+        successStackView.isHidden = true
+        successTitleLabel.isHidden = true
+        goDetailImage.isHidden = true
+        successTextLabel.isHidden = true
+    }
+    
+    // MARK: - showSuccessView
+    private func showSuccessView() {
+        successView.isHidden = false
+        goDetailButton.isHidden = false
+        successStackView.isHidden = false
+        successTitleLabel.isHidden = false
+        goDetailImage.isHidden = false
+        successTextLabel.isHidden = false
+    }
+    
+    // MARK: - setAlertView
+    @objc private func setAlertView(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+        
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        alertView.addSubview(alertTitle)
+        alertView.addSubview(alertSubTitle)
+        alertView.addSubview(widthLine)
+        alertView.addSubview(heightLine)
+        alertView.addSubview(cancleView)
+        alertView.addSubview(cancleLabel)
+        alertView.addSubview(checkView)
+        checkView.addSubview(checkLabel)
+        
+        alertBack.translatesAutoresizingMaskIntoConstraints = false
+        alertView.translatesAutoresizingMaskIntoConstraints = false
+        alertTitle.translatesAutoresizingMaskIntoConstraints = false
+        alertSubTitle.translatesAutoresizingMaskIntoConstraints = false
+        widthLine.translatesAutoresizingMaskIntoConstraints = false
+        heightLine.translatesAutoresizingMaskIntoConstraints = false
+        cancleView.translatesAutoresizingMaskIntoConstraints = false
+        cancleLabel.translatesAutoresizingMaskIntoConstraints = false
+        checkView.translatesAutoresizingMaskIntoConstraints = false
+        checkLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            alertBack.topAnchor.constraint(equalTo: view.topAnchor),
+            alertBack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            alertBack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            alertBack.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            alertView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            alertView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 46),
+            alertView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -46),
+            alertView.heightAnchor.constraint(equalToConstant: 140),
+            
+            alertTitle.topAnchor.constraint(equalTo: alertView.topAnchor, constant: 24),
+            alertTitle.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            
+            alertSubTitle.topAnchor.constraint(equalTo: alertTitle.bottomAnchor, constant: 10),
+            alertSubTitle.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            
+            widthLine.topAnchor.constraint(equalTo: alertSubTitle.bottomAnchor, constant: 20),
+            widthLine.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            widthLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 46),
+            widthLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -46),
+            widthLine.heightAnchor.constraint(equalToConstant: 0.5),
+            
+            heightLine.topAnchor.constraint(equalTo: widthLine.bottomAnchor),
+            heightLine.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
+            heightLine.widthAnchor.constraint(equalToConstant: 0.5),
+            heightLine.heightAnchor.constraint(equalToConstant: 80),
+            
+            cancleView.topAnchor.constraint(equalTo: widthLine.bottomAnchor),
+            cancleView.leadingAnchor.constraint(equalTo: alertView.leadingAnchor),
+            cancleView.trailingAnchor.constraint(equalTo: heightLine.leadingAnchor, constant: -4),
+            cancleView.bottomAnchor.constraint(equalTo: alertView.bottomAnchor),
+            
+            cancleLabel.topAnchor.constraint(equalTo: cancleView.topAnchor, constant: 14),
+            cancleLabel.centerXAnchor.constraint(equalTo: cancleView.centerXAnchor),
+            
+            checkView.topAnchor.constraint(equalTo: widthLine.bottomAnchor),
+            checkView.leadingAnchor.constraint(equalTo: heightLine.trailingAnchor, constant: 4),
+            checkView.trailingAnchor.constraint(equalTo: alertView.trailingAnchor),
+            checkView.bottomAnchor.constraint(equalTo: alertView.bottomAnchor),
+            
+            checkLabel.topAnchor.constraint(equalTo: checkView.topAnchor, constant: 14),
+            checkLabel.centerXAnchor.constraint(equalTo: checkView.centerXAnchor),
+        ])
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(deleteTodayStudySessionData)))
+        cancleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+    }
+    
+    // MARK: - setOnboardingUI
+    private func setOnboardingUI() {
+        view.addSubview(onboardingBackView)
+        onboardingBackView.addSubview(onboardingView)
+        onboardingView.addSubview(onboardingText)
+        
+        onboardingBackView.translatesAutoresizingMaskIntoConstraints = false
+        onboardingView.translatesAutoresizingMaskIntoConstraints = false
+        onboardingText.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            onboardingBackView.topAnchor.constraint(equalTo: view.topAnchor),
+            onboardingBackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            onboardingBackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            onboardingBackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            onboardingView.centerYAnchor.constraint(equalTo: onboardingBackView.centerYAnchor),
+            onboardingView.leadingAnchor.constraint(equalTo: onboardingBackView.leadingAnchor, constant: 46),
+            onboardingView.trailingAnchor.constraint(equalTo: onboardingBackView.trailingAnchor, constant: -46),
+            
+            onboardingText.topAnchor.constraint(equalTo: onboardingView.topAnchor, constant: 16),
+            onboardingText.bottomAnchor.constraint(equalTo: onboardingView.bottomAnchor, constant: -16),
+            onboardingText.centerXAnchor.constraint(equalTo: onboardingView.centerXAnchor)
+        ])
+    }
+    
+    // MARK: - viewWillAppear
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    // MARK: - viewDidAppear
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         if timerIsCounting {
             // Timer start
             startTimer()
@@ -160,13 +540,8 @@ class MainViewController: UIViewController {
         
         checkAndResetTimerIfNeeded()
     }
-
-    private lazy var formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
     
+    // MARK: - checkAndResetTimerIfNeeded
     func checkAndResetTimerIfNeeded() {
         guard let uid = uid else {
             print("유저 정보를 찾을 수 없음")
@@ -211,6 +586,7 @@ class MainViewController: UIViewController {
         updateMarimoImage()
     }
     
+    // MARK: - fetchUserDataAndBindUI
     private func fetchUserDataAndBindUI() {
         guard let uid = uid else {
             print("유저 정보를 찾을 수 없음")
@@ -249,8 +625,8 @@ class MainViewController: UIViewController {
                         let processedTimeInSeconds = (Double(hours) * 3600) / 5
                         print("Processed time seconds: \(processedTimeInSeconds)")
                         
-//                        self.timerInterval = processedTimeInSeconds
-                        self.timerInterval = 5
+                        self.timerInterval = processedTimeInSeconds
+//                        self.timerInterval = 3
                     } else {
                         print("No target-time")
                     }
@@ -265,6 +641,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    // MARK: - bindUIData
     private func bindUIData(with data: [String: Any]) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -276,7 +653,7 @@ class MainViewController: UIViewController {
                 self.dayTitleLabel.text = "D-day는"
                 dayView.backgroundColor = .clear
             }
-
+            
             if let dDayText = data["d-day"] as? String, !dDayText.isEmpty {
                 self.dayLabel.text = dDayText
             } else {
@@ -301,91 +678,7 @@ class MainViewController: UIViewController {
         let components = calendar.dateComponents([.day], from: currentDate, to: targetDate)
         return components.day ?? 0
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
-    // MARK: - Setup HeaderView
-    private func setupHeaderView() {
-        view.addSubview(HeaderView)
-        HeaderView.addSubview(dayView)
-        dayView.addSubview(dayStackView)
-        dayStackView.addArrangedSubview(dayTitleLabel)
-        dayStackView.addArrangedSubview(dayLabel)
-        
-        HeaderView.addSubview(timeLabel)
-        HeaderView.addSubview(cheeringLabel)
-        
-        HeaderView.translatesAutoresizingMaskIntoConstraints = false
-        dayView.translatesAutoresizingMaskIntoConstraints = false
-        dayStackView.translatesAutoresizingMaskIntoConstraints = false
-        dayTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        dayLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        timeLabel.translatesAutoresizingMaskIntoConstraints = false
-        cheeringLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            HeaderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 106),
-            HeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
-            HeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            HeaderView.heightAnchor.constraint(equalToConstant: 200),
-            
-            dayView.topAnchor.constraint(equalTo: HeaderView.topAnchor),
-            dayView.centerXAnchor.constraint(equalTo: HeaderView.centerXAnchor),
-            dayView.heightAnchor.constraint(equalToConstant: 26),
-            
-            dayStackView.topAnchor.constraint(equalTo: dayView.topAnchor),
-            dayStackView.leadingAnchor.constraint(equalTo: dayView.leadingAnchor, constant: 8),
-            dayStackView.trailingAnchor.constraint(equalTo: dayView.trailingAnchor, constant: -8),
-            dayStackView.bottomAnchor.constraint(equalTo: dayView.bottomAnchor),
-            dayStackView.widthAnchor.constraint(greaterThanOrEqualTo: dayTitleLabel.widthAnchor, constant: 12),
-            dayStackView.widthAnchor.constraint(greaterThanOrEqualTo: dayLabel.widthAnchor, constant: 12),
-            
-            dayTitleLabel.centerYAnchor.constraint(equalTo: dayStackView.centerYAnchor),
-            
-            dayLabel.centerYAnchor.constraint(equalTo: dayStackView.centerYAnchor),
-            
-            timeLabel.topAnchor.constraint(equalTo: dayView.bottomAnchor, constant: 22),
-            timeLabel.centerXAnchor.constraint(equalTo: HeaderView.centerXAnchor),
-            
-            cheeringLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 40),
-            cheeringLabel.centerXAnchor.constraint(equalTo: HeaderView.centerXAnchor),
-        ])
-    }
-    
-    // MARK: - Setup TapButton
-    private func setupTapButton() {
-        view.addSubview(startTimerButton)
-        
-        startTimerButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            startTimerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -142),
-            startTimerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 84),
-            startTimerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -84),
-            startTimerButton.heightAnchor.constraint(equalToConstant: 46),
-        ])
-        
-        startTimerButton.addTarget(self, action: #selector(startStopAction), for: .touchUpInside)
-    }
-    
-    private func setupResetButton() {
-        view.addSubview(resetButton)
-        
-        resetButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            resetButton.topAnchor.constraint(equalTo: startTimerButton.bottomAnchor, constant: 6),
-            resetButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 84),
-            resetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -84),
-        ])
-        
-        resetButton.addTarget(self, action: #selector(resetAction), for: .touchUpInside)
-    }
-    
+
     // MARK: - Setup Marimo Images
     private func setupMarimoImages() {
         var imageNames = ["Group 1", "Group 2", "Group 3", "Group 4"]
@@ -424,21 +717,22 @@ class MainViewController: UIViewController {
         updateMarimoImage()
     }
     
+    // MARK: - bottomConstraintConstant
     private func bottomConstraintConstant(for index: Int) -> CGFloat {
         var constant: CGFloat = 0
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
             if UIScreen.main.nativeBounds.height == 2436 {
-                constant = -244 - CGFloat(index * 40) // iPhone X, XS, 11 Pro, 12 Mini
+                constant = -244 - CGFloat(index * 20) // iPhone X, XS, 11 Pro, 12 Mini
             } else if UIScreen.main.nativeBounds.height == 2796 || UIScreen.main.nativeBounds.height == 1792 {
-                constant = -244 - CGFloat(index * 60) // iPhone XS Max, 11 Pro Max, 12, 12 Pro
+                constant = -244 - CGFloat(index * 50) // iPhone XS Max, 11 Pro Max, 12, 12 Pro
             } else if UIScreen.main.nativeBounds.height == 2556 { // iPhone 15Pro
-                constant = -244 - CGFloat(index * 44)
+                constant = -244 - CGFloat(index * 34)
             } else {
-                constant = -244 - CGFloat(index * 30) // Other iPhones
+                constant = -244 - CGFloat(index * 20) // Other iPhones
             }
         default:
-            constant = -244 - CGFloat(index * 40)
+            constant = -244 - CGFloat(index * 30)
         }
         return constant
     }
@@ -482,15 +776,27 @@ class MainViewController: UIViewController {
         
         showMarimoImage(at: currentIndex)
     }
-    
+        
     private func showMarimoImage(at index: Int) {
+        let group = DispatchGroup()
+        
         for (i, imageView) in marimoImages.enumerated() {
-            UIView.animate(withDuration: 0.5) {
+            group.enter()
+            UIView.animate(withDuration: 0.5, animations: {
                 imageView.alpha = i == index ? 1 : 0
+            }) { _ in
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if index == self.marimoImages.count - 1 {
+                self.showSuccessView()
+                self.cheeringLabel.isHidden = true
             }
         }
     }
-    
+
     private func updateMarimoImagesPosition() {
         for (index, imageView) in marimoImages.enumerated() {
             let newBottomConstraint = -244 - CGFloat(index * 40)
@@ -507,7 +813,7 @@ class MainViewController: UIViewController {
     }
     
     private func animateImageAppearance(_ imageView: UIImageView) {
-        let moveDistance: CGFloat = 40 // 이동 거리
+        let moveDistance: CGFloat = 30 // 이동 거리
         let duration: TimeInterval = 1.6
         let damping: CGFloat = 1
         let velocity: CGFloat = 0
@@ -577,17 +883,17 @@ class MainViewController: UIViewController {
     }
     
     // MARK: - Timer
-    func setStartTime(date: Date?) {
+    private func setStartTime(date: Date?) {
         startTime = date
         userDefaults.set(startTime, forKey: START_TIME_KEY)
     }
     
-    func setStopTime(date: Date?) {
+    private func setStopTime(date: Date?) {
         stopTime = date
         userDefaults.set(stopTime, forKey: STOP_TIME_KEY)
     }
     
-    func setTimerCounting(_ value: Bool) {
+    private func setTimerCounting(_ value: Bool) {
         timerIsCounting = value
         userDefaults.set(timerIsCounting, forKey: COUNTING_KEY)
     }
@@ -602,20 +908,20 @@ class MainViewController: UIViewController {
         }
     }
     
-    func setTimeLabel(_ value: Int) {
+    private func setTimeLabel(_ value: Int) {
         let time = secToHoursMinSec(value)
         let timeString = makeTimeString(hour: time.0, min: time.1, sec: time.2)
         timeLabel.text = timeString
     }
     
-    func secToHoursMinSec(_ ms: Int) -> (Int, Int, Int) {
+    private func secToHoursMinSec(_ ms: Int) -> (Int, Int, Int) {
         let hour = ms / 3600
         let min = (ms % 3600) / 60
         let sec = (ms % 3600) % 60
         return (hour, min, sec)
     }
     
-    func makeTimeString(hour: Int, min: Int, sec: Int) -> String {
+    private func makeTimeString(hour: Int, min: Int, sec: Int) -> String {
         var timeString = ""
         timeString += String(format: "%02d", hour)
         timeString += ":"
@@ -625,7 +931,7 @@ class MainViewController: UIViewController {
         return timeString
     }
     
-    func stopTimer() {
+    private func stopTimer() {
         if scheduledTimer != nil { scheduledTimer.invalidate() }
         setTimerCounting(false)
         
@@ -638,7 +944,7 @@ class MainViewController: UIViewController {
         }
     }
     
-    func calcRestartTime(start: Date, stop: Date) -> Date {
+    private func calcRestartTime(start: Date, stop: Date) -> Date {
         let difference = start.timeIntervalSince(stop)
         return Date().addingTimeInterval(difference)
     }
@@ -652,7 +958,8 @@ class MainViewController: UIViewController {
         // Start main timer
         scheduledTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(refreshValue), userInfo: nil, repeats: true)
         setTimerCounting(true)
-        
+        showOnboardingView()
+
         // Update marimo image
         updateMarimoImage()
         
@@ -674,13 +981,12 @@ class MainViewController: UIViewController {
         
         let delay = timerInterval - (elapsedTime.truncatingRemainder(dividingBy: timerInterval))
         startMarimoTimer(withDelay: delay)
-       
         
         return 0.1
     }
     
-    //MARK: - Actions
-    @objc func startStopAction(_ sender: Any) {
+    //MARK: - startStopAction
+    @objc private func startStopAction(_ sender: Any) {
         if timerIsCounting {
             setStopTime(date: Date())
             stopTimer()
@@ -701,7 +1007,113 @@ class MainViewController: UIViewController {
             startTimerButtonTapped()
         }
     }
+
+    // MARK: - resetAction
+    @objc private func resetAction(_ sender: Any) {
+        self.setAlertView(title: "Reset Timer", subTitle: "공부 시간을 초기화하시겠습니까?")
+    }
     
+    @objc private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+        }
+    }
+    
+    // MARK: - startFocusModeButtonTapped
+    @objc private func startFocusModeButtonTapped() {
+        showOnboardingView()
+    }
+    
+    // MARK: - goDetailButtonTapped
+    @objc private func goDetailButtonTapped(_ sender: UIButton) {
+        guard let uid = uid else {
+            print("Detail Page 이동 / 사용자 정보를 확인할 수 없음")
+            return
+        }
+        
+        let currentDate = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let day = formatter.string(from: currentDate)
+        
+        let db = Firestore.firestore()
+        let docRef = db.collection("user-info").document(uid).collection("study-sessions").document(day)
+        
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                
+                let calendarDetailVC = CalendarDetailViewController()
+                calendarDetailVC.data = data
+                CalendarDetailViewController()
+                
+                self.navigationController?.pushViewController(calendarDetailVC, animated: true)
+            } else {
+                print("도큐먼트 데이터 없음")
+            }
+        }
+    }
+    
+    // MARK: - deleteTodayStudySessionData
+    @objc private func deleteTodayStudySessionData() {
+        guard let uid = uid else {
+            print("집중 모드 데이터 삭제 실패: deleteTodayStudySessionData / 사용자 정보를 확인할 수 없음")
+            return
+        }
+        
+        let currentDate = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let day = formatter.string(from: currentDate)
+        
+        Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .collection("study-sessions")
+            .document(day)
+            .delete { error in
+                if let error = error {
+                    print("집중 모드 데이터 삭제 오류: \(error.localizedDescription)")
+                } else {
+                    print("집중 모드 데이터 삭제")
+                    self.setStopTime(date: nil)
+                    self.setStartTime(date: nil)
+                    self.timeLabel.text = self.makeTimeString(hour: 0, min: 0, sec: 0)
+                    self.stopTimer()
+                    self.stopMarimoTimer()
+                    
+                    self.marimoImages.forEach { $0.removeFromSuperview() }
+                    self.marimoImages.removeAll()
+                    self.setupMarimoImages()
+                    
+                    self.currentSessionID = nil
+                    self.hideSuccessView()
+                    self.cheeringLabel.isHidden = false 
+                    self.removeAlertView()
+                }
+            }
+    }
+    
+    // MARK: - formatter > "yyyy-MM-dd"
+    private lazy var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    // MARK: - formatTime > "00:00:00"
+    private func formatTime(_ timeInterval: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        
+        return formatter.string(from: timeInterval) ?? "00:00:00"
+    }
+    
+    // MARK: - Firebase Data
     private func startTimerButtonTapped() {
         guard let uid = uid else {
             print("집중 모드 데이터 저장 실패: startTimerButtonTapped / 사용자 정보를 확인할 수 없음")
@@ -801,7 +1213,7 @@ class MainViewController: UIViewController {
                 if let error = error {
                     print("상태를 업데이트하는 중에 오류 발생: \(error.localizedDescription)")
                 } else {
-                    print("상태 업데이트 성공")
+                    print("상태 업데이트 성공", self.currentMarimoIndex)
                 }
             }
     }
@@ -834,59 +1246,22 @@ class MainViewController: UIViewController {
             }
     }
     
-    private func formatTime(_ timeInterval: TimeInterval) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .positional
-        formatter.allowedUnits = [.hour, .minute, .second]
-        formatter.zeroFormattingBehavior = .pad
+    private func showOnboardingView() {
+        setOnboardingUI()
         
-        return formatter.string(from: timeInterval) ?? "00:00:00"
-    }
-    
-    @objc func resetAction(_ sender: Any) {
-        let alertController = UIAlertController(title: "Reset Timer", message: "하루 동안 공부한 시간이 삭제됩니다. 정말 진행하시겠습니까?", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { _ in
-            self.deleteTodayStudySessionData()
-        }))
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    private func deleteTodayStudySessionData() {
-        guard let uid = uid else {
-            print("집중 모드 데이터 삭제 실패: deleteTodayStudySessionData / 사용자 정보를 확인할 수 없음")
-            return
-        }
+        onboardingBackView.alpha = 0.0
         
-        let currentDate = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: currentDate)
-        
-        Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .collection("study-sessions")
-            .document(day)
-            .delete { error in
-                if let error = error {
-                    print("집중 모드 데이터 삭제 오류: \(error.localizedDescription)")
-                } else {
-                    print("집중 모드 데이터 삭제")
-                    
-                    self.setStopTime(date: nil)
-                    self.setStartTime(date: nil)
-                    self.timeLabel.text = self.makeTimeString(hour: 0, min: 0, sec: 0)
-                    self.stopTimer()
-                    self.stopMarimoTimer()
-                    
-                    self.marimoImages.forEach { $0.removeFromSuperview() }
-                    self.marimoImages.removeAll()
-                    self.setupMarimoImages()
-                    
-                    self.currentSessionID = nil
+        UIView.animate(withDuration: 0.5, animations: {
+            self.onboardingBackView.alpha = 1.0
+        }) { _ in
+            Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.onboardingBackView.alpha = 0.0
+                }) { _ in
+                    self.onboardingBackView.removeFromSuperview()
                 }
             }
+        }
     }
 }
 
