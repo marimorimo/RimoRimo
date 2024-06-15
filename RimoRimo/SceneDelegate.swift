@@ -23,13 +23,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if let userEmail = UserDefaults.standard.string(forKey: saveAutoLoginInfo), !userEmail.isEmpty {
             marimoViewController = TabBarViewController()
+            window?.rootViewController = marimoViewController
         } else {
             marimoViewController = LoginViewController()
+            let navController = UINavigationController(rootViewController: marimoViewController)
+
+            window?.rootViewController = navController
         }
-        
-        let navController = UINavigationController(rootViewController: marimoViewController)
-        
-        window?.rootViewController = navController
         
         window?.makeKeyAndVisible()
     }

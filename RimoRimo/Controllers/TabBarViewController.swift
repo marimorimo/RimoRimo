@@ -50,9 +50,6 @@ class TabBarViewController: UITabBarController {
         tabBar.layer.cornerRadius = tabBar.frame.height * 0.41
         tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         tabBar.sizeThatFits(CGSize())
-        //        tabBar.backgroundImage = UIImage()
-//        tabBar.shadowImage = UIImage()
-//        tabBar.clipsToBounds = true
     }
 
     func setUpVCs() {
@@ -70,9 +67,8 @@ class TabBarViewController: UITabBarController {
         let navController = UINavigationController(rootViewController: rootViewController)
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image
-        //        navController.navigationBar.backgroundColor = MySpecialColors.cellGray
-        //        navController.navigationBar.prefersLargeTitles = true
-        //        rootViewController.navigationItem.title = title
+        navController.setNavigationBarHidden(true, animated: false)
+
         return navController
     }
 }
