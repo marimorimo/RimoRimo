@@ -277,7 +277,7 @@ class MyPageViewController: UIViewController {
         button.tintColor = MySpecialColors.Gray2
         button.semanticContentAttribute = .forceRightToLeft
         button.contentMode = .scaleToFill
-        button.imageEdgeInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 4)
+        button.imageEdgeInsets = UIEdgeInsets(top: 2, left: 80, bottom: 2, right: 56)
         button.setPreferredSymbolConfiguration(.init(scale: .large), forImageIn: .normal)
         button.addTarget(self, action: #selector(showCollectionButtonTapped), for: .touchUpInside)
 
@@ -357,7 +357,7 @@ class MyPageViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     // MARK: - Setup Views
@@ -374,11 +374,11 @@ class MyPageViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = MySpecialColors.Gray1
 
         view.addSubview(profileBackgroundView)
         profileBackgroundView.addSubview(settingButton)
@@ -458,6 +458,10 @@ class MyPageViewController: UIViewController {
             make.top.equalTo(buttonStackView.snp.bottom).offset(4)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
+
+        showCollectionButton.snp.makeConstraints { make in
+            make.width.equalTo(100)
+        }
     }
     // MARK: - move to Setting page
     @objc private func moveToSetting() {
@@ -533,9 +537,9 @@ extension MyPageViewController {
             } else {
                 self.nicknameLabel.text = "Nickname: N/A"
                 self.emailLabel.text = "Email: N/A"
-                self.goalLabel.text = "D-day Title: N/A"
-                self.goalDdayLabel.text = "D-day: N/A"
-                self.concentrationTimeLabel.text = "Target Time: N/A"
+                self.goalLabel.text = "N/A"
+                self.goalDdayLabel.text = "N/A"
+                self.concentrationTimeLabel.text = "N/A"
 //                self.profileImageView.image = UIImage(named: "Group 1")
             }
         }

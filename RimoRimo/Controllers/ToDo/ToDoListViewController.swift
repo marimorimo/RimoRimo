@@ -51,6 +51,8 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "todo"
+
         setupUI()
         setupConstraints()
         setupActions()

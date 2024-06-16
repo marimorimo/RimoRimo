@@ -23,15 +23,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if let userEmail = UserDefaults.standard.string(forKey: saveAutoLoginInfo), !userEmail.isEmpty {
             marimoViewController = TabBarViewController()
+            window?.rootViewController = marimoViewController
         } else {
             marimoViewController = LoginViewController()
+            let navController = UINavigationController(rootViewController: marimoViewController)
+
+            window?.rootViewController = navController
         }
         
-        let navController = UINavigationController(rootViewController: marimoViewController)
-        
-        window?.rootViewController = navController
-        
         window?.makeKeyAndVisible()
+    }
+
+    func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
+        guard let window = self.window else {
+            return
+        }
+
+        // change the root view controller to your specific view controller
+        window.rootViewController = vc
     }
 
 
