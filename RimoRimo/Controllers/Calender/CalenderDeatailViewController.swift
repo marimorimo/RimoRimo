@@ -70,6 +70,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         label.text = "오늘 하루의 기분을 남겨 보세요 :>"
         label.font = UIFont.pretendard(style: .regular, size: 14)
         label.textColor = MySpecialColors.Gray3
+        label.isHidden = false
         return label
     }()
     let characterCountLabel: UILabel = {
@@ -218,7 +219,6 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     // Update memoTextView with day-memo
                     if let dayMemo = memoData["day-memo"] as? String {
                         self.memoTextView.text = dayMemo
-                        self.memoPlaceholderLabel.isHidden = true
                     }
                     
                     // Update timeLabel with total-time
@@ -227,6 +227,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     }
                 } else {
                     print("No document found for day: \(day)")
+                    self.memoPlaceholderLabel.isHidden = false
                 }
             }
     }
