@@ -5,8 +5,8 @@ import SnapKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-    // UI Components
-//    var datePicker: UIDatePicker!
+//MARK: - UI Components
+
     var textField: UITextField!
     var saveButton: UIButton!
     var tableView: UITableView!
@@ -64,17 +64,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     func setupUI() {
         view.backgroundColor = MySpecialColors.Gray1
-        
-//        // DatePicker Setup
-//        datePicker = UIDatePicker()
-//        datePicker.datePickerMode = .date
-//        datePicker.setDate(Date(), animated: false)
-//        datePicker.minimumDate = Date()
-//        let calendar = Calendar.current
-//        let nextYear = calendar.date(byAdding: .year, value: 1, to: Date())
-//        datePicker.maximumDate = nextYear
-//        view.addSubview(datePicker)
-
         view.addSubview(dateStack)
         [calendarButton, editDate].forEach {
             dateStack.addArrangedSubview($0)
