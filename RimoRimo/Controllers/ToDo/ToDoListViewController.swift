@@ -5,8 +5,8 @@ import SnapKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-    // UI Components
-    var datePicker: UIDatePicker!
+//MARK: - UI Components
+
     var textField: UITextField!
     var saveButton: UIButton!
     var tableView: UITableView!
@@ -20,6 +20,34 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedDate: Date = Date()
     var listener: ListenerRegistration?
     
+    
+    // PickDate Setup
+    let dateStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        return stack
+    }()
+    let calendarButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "calendar")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.tintColor = MySpecialColors.MainColor
+        return button
+    }()
+
+    let editDate: UITextField = {
+        let date = UITextField()
+        date.font = UIFont.pretendard(style: .regular, size: 14)
+        date.textColor = MySpecialColors.Gray4
+        date.tintColor = .clear
+        date.borderStyle = .none
+        date.backgroundColor = .clear
+        date.clearButtonMode = .never
+        date.textAlignment = .right
+        return date
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,24 +56,21 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         setupUI()
         setupConstraints()
         setupActions()
+        setupEditDateTapGesture()
         
         addSnapshotListener(for: selectedDate)
+        fetchDateData()
     }
     
     // MARK: - UI Setup
     
     func setupUI() {
         view.backgroundColor = MySpecialColors.Gray1
+        view.addSubview(dateStack)
+        [calendarButton, editDate].forEach {
+            dateStack.addArrangedSubview($0)
+        }
         
-        // DatePicker Setup
-        datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        datePicker.setDate(Date(), animated: false)
-        datePicker.minimumDate = Date()
-        let calendar = Calendar.current
-        let nextYear = calendar.date(byAdding: .year, value: 1, to: Date())
-        datePicker.maximumDate = nextYear
-        view.addSubview(datePicker)
         
         // TextField Setup
         textField = UITextField()
@@ -78,7 +103,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = MySpecialColors.Gray1
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(ToDoTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.separatorStyle = .none
         view.addSubview(tableView)
     }
@@ -86,10 +111,18 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Constraints Setup
     
     func setupConstraints() {
-        datePicker.snp.makeConstraints { make in
+//        datePicker.snp.makeConstraints { make in
+//            make.top.equalTo(view).offset(100)
+//            make.leading.equalTo(view).offset(20)
+//            make.trailing.equalTo(view).offset(-20)
+//        }
+//        calendarButton.snp.makeConstraints { make in
+//            make.top.equalTo(view).offset(100)
+//            make.trailing.equalTo(editDate).inset(5)
+//        }
+        dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            make.leading.equalTo(view).offset(246)
         }
         
         textFieldStack.snp.makeConstraints { make in
@@ -119,7 +152,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(datePicker.snp.bottom).offset(20)
+            make.top.equalTo(editDate.snp.bottom).offset(20)
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
             make.bottom.equalTo(textFieldStack.snp.top).offset(-20)
@@ -129,15 +162,35 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Actions Setup
     
     func setupActions() {
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         saveButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
+    }
+    
+    // Edit Date
+    private func setupEditDateTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
+        let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
+        editDate.addGestureRecognizer(tapGesture)
+        calendarButton.addGestureRecognizer(tapGesture2)
     }
     
     // MARK: - Actions
     
-    @objc func datePickerValueChanged() {
-        selectedDate = datePicker.date
+    @objc private func editDateTapped() {
+        print("taptap")
+        showCalendarPopup()
+    }
+    private func showCalendarPopup() {
+        let popupCalendarVC = ToDoPopupCalendarViewController()
+        popupCalendarVC.didSelectDate = { [weak self] selectedDate, formattedDate in
+            DispatchQueue.main.async {
+                self?.editDate.text = formattedDate
+                self?.selectedDate = selectedDate
+                self?.addSnapshotListener(for: selectedDate)
+            }
+        }
         addSnapshotListener(for: selectedDate)
+        popupCalendarVC.modalPresentationStyle = .overCurrentContext
+        present(popupCalendarVC, animated: true, completion: nil)
     }
     
     @objc func saveToDo() {
@@ -148,7 +201,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: datePicker.date)
+        let day = formatter.string(from: selectedDate)
         
         let todoText = textField.text ?? ""
         
@@ -173,7 +226,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         guard let indexPath = editingIndexPath else { return }
         let todo = todos[indexPath.row]
         guard let documentId = todo["id"] as? String else { return }
-        let updatedText = (tableView.cellForRow(at: indexPath)?.contentView.subviews.first { $0 is UITextField } as? UITextField)?.text ?? ""
+        let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
         
         guard let uid = Auth.auth().currentUser?.uid else {
             print("사용자가 인증되지 않았습니다.")
@@ -182,7 +235,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: datePicker.date)
+        let day = formatter.string(from: selectedDate)
         
         Firestore.firestore()
             .collection("user-info")
@@ -200,13 +253,8 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         
-        if let cell = tableView.cellForRow(at: indexPath) {
-            for subview in cell.contentView.subviews {
-                if subview is UITextField || subview is UIButton {
-                    subview.removeFromSuperview()
-                }
-            }
-            cell.backgroundColor = .white // 셀의 배경색을 원래 색으로 되돌림
+        if let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell {
+            cell.resetContent()
         }
         
         editingIndexPath = nil
@@ -234,31 +282,32 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         listener?.remove()
         
-        listener = Firestore.firestore()
+        let collectionRef = Firestore.firestore()
             .collection("user-info")
             .document(uid)
             .collection("todo-list")
             .document(day)
             .collection("sub-collection")
             .order(by: "date", descending: false)
-            .addSnapshotListener { [weak self] (querySnapshot, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                } else {
-                    self.todos.removeAll()
-                    for document in querySnapshot!.documents {
-                        var todoData = document.data()
-                        todoData["id"] = document.documentID
-                        self.todos.append(todoData)
-                    }
-                    self.tableView.reloadData()
+        
+        self.listener = collectionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                self.todos.removeAll()
+                for document in querySnapshot!.documents {
+                    var todoData = document.data()
+                    todoData["id"] = document.documentID
+                    self.todos.append(todoData)
                 }
+                self.tableView.reloadData()
             }
+        }
     }
     
     func loadTodos(for date: Date) {
-        addSnapshotListener(for: date)
+        addSnapshotListener(for: selectedDate)
     }
     
     func updateCompletionStatus(todoIndex: Int, isCompleted: Bool) {
@@ -269,7 +318,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: datePicker.date)
+        let day = formatter.string(from: selectedDate)
         
         let todo = todos[todoIndex]
         guard let documentId = todo["id"] as? String else {
@@ -294,6 +343,31 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             }
     }
     
+    private func fetchDateData() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Firestore.firestore().collection("user-info").document(uid).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                
+                // Update Date
+                if let timestamp = data?["day"] as? Timestamp {
+                    let date = timestamp.dateValue()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "ko_KR")
+                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    self.editDate.text = dateFormatter.string(from: date)
+                } else {
+                    let currentDate = Date()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "ko_KR")
+                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    self.editDate.text = dateFormatter.string(from: currentDate)
+                }
+            }
+        }
+    }
+    
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -301,100 +375,37 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ToDoTableViewCell else {
+            return UITableViewCell()
+        }
         let todo = todos[indexPath.row]
         let todoText = todo["todo"] as? String ?? ""
         let isCompleted = todo["completed"] as? Bool ?? false
+        cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
         
-        // Clear existing subviews to avoid duplication
-        cell.contentView.subviews.forEach { subview in
-            subview.removeFromSuperview()
-        }
-        
-        let textLabel = UILabel()
-        textLabel.text = todoText
-        
-        let toggleButton = UIButton()
-        toggleButton.setImage(UIImage(named: isCompleted ? "Group 583" : "Group 582"), for: .normal)
-        toggleButton.addTarget(self, action: #selector(toggleButtonTapped(_:)), for: .touchUpInside)
-        toggleButton.tag = indexPath.row
-        
-        cell.contentView.addSubview(toggleButton)
-        cell.contentView.addSubview(textLabel)
+        // Cell Background color gray
         cell.backgroundColor = MySpecialColors.Gray1
         
-        toggleButton.snp.makeConstraints { make in
-            make.leading.equalTo(cell.contentView).offset(10)
-            make.centerY.equalTo(cell.contentView)
-            make.width.height.equalTo(30)
-        }
-        
-        textLabel.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.trailing.equalTo(cell.contentView).offset(-10)
-            make.centerY.equalTo(cell.contentView)
-        }
-        
-        // Add underline to the cell
-        let cellUnderline = UIView()
-        cellUnderline.backgroundColor = MySpecialColors.Gray2
-        cell.contentView.addSubview(cellUnderline)
-        
-        cellUnderline.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.trailing.equalTo(cell.contentView).offset(-10)
-            make.bottom.equalTo(cell.contentView.snp.bottom).offset(-1)
-            make.height.equalTo(1)
-        }
-        
+        // Cell Selection color gray
+        let bgColorView = UIView()
+        bgColorView.backgroundColor = MySpecialColors.Gray1
+        cell.selectedBackgroundView = bgColorView
         return cell
     }
     
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        if let previousIndexPath = editingIndexPath {
+            guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? ToDoTableViewCell else { return }
+            previousCell.resetContent()
+            tableView.reloadRows(at: [previousIndexPath], with: .automatic)
+        }
+        
+        guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
         let todo = todos[indexPath.row]
         guard let todoText = todo["todo"] as? String else { return }
-        cell.textLabel?.isHidden = true
-        
-        // Remove all existing subviews from the cell's content view to avoid duplicates
-        cell.contentView.subviews.forEach { subview in
-            subview.removeFromSuperview()
-        }
-        
-        // 셀의 배경색을 변경
-        let textField = UITextField(frame: CGRect(x: 40, y: 0, width: cell.contentView.bounds.width - 80, height: cell.contentView.bounds.height))
-        textField.text = todoText
-        textField.borderStyle = .none
-        textField.delegate = self
-        textField.tag = indexPath.row
-        cell.contentView.addSubview(textField)
-        
-        let saveButton = UIButton(type: .system)
-        saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
-        saveButton.tintColor = MySpecialColors.MainColor
-        saveButton.addTarget(self, action: #selector(saveEditedText(_:)), for: .touchUpInside)
-        saveButton.tag = indexPath.row
-        
-        cell.contentView.addSubview(saveButton)
-        
-        saveButton.snp.makeConstraints { make in
-            make.leading.equalTo(cell.contentView).offset(10)
-            make.centerY.equalTo(cell.contentView)
-            make.width.height.equalTo(30)
-        }
-        
-        let cellUnderline = UIView()
-        cellUnderline.backgroundColor = MySpecialColors.Gray2
-        cell.contentView.addSubview(cellUnderline)
-        
-        cellUnderline.snp.makeConstraints { make in
-            make.leading.equalTo(saveButton.snp.trailing).offset(10)
-            make.trailing.equalTo(cell.contentView).offset(-10)
-            make.bottom.equalTo(cell.contentView.snp.bottom).offset(-1)
-            make.height.equalTo(1)
-        }
+        cell.setEditMode(todoText: todoText, target: self)
         
         editingIndexPath = indexPath
     }
@@ -413,7 +424,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            let day = formatter.string(from: self.datePicker.date)
+            let day = formatter.string(from: self.selectedDate)
             
             // Firestore에서 데이터를 삭제합니다.
             Firestore.firestore()
@@ -423,16 +434,14 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 .document(day)
                 .collection("sub-collection")
                 .document(documentId)
-                .delete { error in
+                .delete { [weak self] error in
+                    guard let self = self else { return }
                     if let error = error {
                         print("Error deleting todo: \(error.localizedDescription)")
-                        completionHandler(false)
+                        completionHandler(false) // 삭제 실패 시
                     } else {
-                        // UI 업데이트를 수행합니다.
-                        self.todos.remove(at: indexPath.row)
-                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
                         print("ToDo가 성공적으로 삭제되었습니다.")
-                        completionHandler(true)
+                        completionHandler(true) // 삭제 성공 시
                     }
                 }
         }
@@ -448,5 +457,99 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         listener?.remove()
+    }
+}
+
+class ToDoTableViewCell: UITableViewCell {
+    
+    var toggleButton: UIButton!
+    var todoTextLabel: UILabel!
+    var underline: UIView!
+    var textField: UITextField!
+    var saveButton: UIButton!
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupCellUI()
+        setupCellConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupCellUI() {
+        toggleButton = UIButton()
+        todoTextLabel = UILabel()
+        underline = UIView()
+        underline.backgroundColor = MySpecialColors.Gray2
+        
+        contentView.addSubview(toggleButton)
+        contentView.addSubview(todoTextLabel)
+        contentView.addSubview(underline)
+    }
+    
+    func setupCellConstraints() {
+        toggleButton.snp.makeConstraints { make in
+            make.leading.equalTo(contentView).offset(10)
+            make.centerY.equalTo(contentView)
+            make.width.height.equalTo(30)
+        }
+        
+        todoTextLabel.snp.makeConstraints { make in
+            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
+            make.trailing.equalTo(contentView).offset(-10)
+            make.centerY.equalTo(contentView)
+        }
+        
+        underline.snp.makeConstraints { make in
+            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
+            make.trailing.equalTo(contentView).offset(-10)
+            make.bottom.equalTo(contentView.snp.bottom).offset(-1)
+            make.height.equalTo(1)
+        }
+    }
+    
+    func configure(with todoText: String, isCompleted: Bool, index: Int, target: Any) {
+        todoTextLabel.text = todoText
+        toggleButton.setImage(UIImage(named: isCompleted ? "Group 583" : "Group 582"), for: .normal)
+        toggleButton.tag = index
+        toggleButton.addTarget(target, action: #selector(ToDoListViewController.toggleButtonTapped(_:)), for: .touchUpInside)
+    }
+    
+    func setEditMode(todoText: String, target: Any) {
+        todoTextLabel.isHidden = true
+        
+        textField = UITextField()
+        textField.text = todoText
+        textField.borderStyle = .none
+        textField.tag = toggleButton.tag
+        contentView.addSubview(textField)
+        
+        saveButton = UIButton(type: .system)
+        saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
+        saveButton.tintColor = MySpecialColors.MainColor
+        saveButton.addTarget(target, action: #selector(ToDoListViewController.saveEditedText(_:)), for: .touchUpInside)
+        saveButton.tag = toggleButton.tag
+        contentView.addSubview(saveButton)
+        
+        textField.snp.makeConstraints { make in
+            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
+            make.centerY.equalTo(contentView)
+            make.trailing.equalTo(saveButton.snp.leading).offset(-10)
+            make.height.equalTo(30)
+        }
+        
+        saveButton.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView).offset(-10)
+            make.centerY.equalTo(contentView)
+            make.width.height.equalTo(30)
+        }
+    }
+    
+    func resetContent() {
+        textField?.removeFromSuperview()
+        saveButton?.removeFromSuperview()
+        todoTextLabel.isHidden = false
     }
 }
