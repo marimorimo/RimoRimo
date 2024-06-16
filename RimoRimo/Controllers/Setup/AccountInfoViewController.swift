@@ -58,7 +58,7 @@ class AccountInfoViewController: UIViewController {
         }
         
         withdrawButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(40)
+            make.bottom.equalToSuperview().inset(100)
             make.centerX.equalToSuperview()
             make.height.equalTo(16)
             make.width.equalTo(56)

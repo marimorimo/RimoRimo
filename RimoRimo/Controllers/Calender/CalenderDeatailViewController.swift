@@ -224,8 +224,12 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     // Update memoTextView with day-memo
                     if let dayMemo = memoData["day-memo"] as? String {
                         self.memoTextView.text = dayMemo
+                        if dayMemo == "" {
+                            self.memoPlaceholderLabel.isHidden = false
+                        } else {
+                            self.memoPlaceholderLabel.isHidden = true
+                        }
                     }
-                    self.memoPlaceholderLabel.isHidden = true
                     
                     // Update timeLabel with total-time
                     if let totalTime = memoData["total-time"] as? String {
