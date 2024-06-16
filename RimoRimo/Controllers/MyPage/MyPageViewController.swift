@@ -280,15 +280,15 @@ class MyPageViewController: UIViewController {
         let marimoCollectionButtonTitles = ["그룹 내 1등", "첫 투두 완료", "첫 목표시간 달성", "2시간 이상 집중", "그룹 만들기", "모든 목표 달성", "100 마리모 획득", "일주일 달려", "첫 채팅하기", "투두 5개 이상 완료", "리뷰 작성 완료"]
 
         for i in 0...3 {
-            marimoCollectionStackView1.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "CollectionMarimo-\(i+1)") ?? UIImage()))
+            marimoCollectionStackView1.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "gray-marimo") ?? UIImage()))
         }
 
         for i in 4...6 {
-            marimoCollectionStackView2.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "CollectionMarimo-\(i+1)") ?? UIImage()))
+            marimoCollectionStackView2.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "gray-marimo") ?? UIImage()))
         }
 
         for i in 7...10 {
-            marimoCollectionStackView3.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "CollectionMarimo-\(i+1)") ?? UIImage()))
+            marimoCollectionStackView3.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "gray-marimo") ?? UIImage()))
         }
     }
 
