@@ -66,10 +66,13 @@ class SetupViewController: UIViewController {
     private func performLogout() {
         do {
             try Auth.auth().signOut()
+            // 로그아웃 후 저장된 로그인 정보 삭제
             UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
+            // 로그아웃 후 처리 (예: 로그인 화면으로 이동)
             let loginViewController = LoginViewController()
-            loginViewController.modalPresentationStyle = .fullScreen
-            present(loginViewController, animated: true, completion: nil)
+            // MARK: - 네비게이션으로 이동하기!
+            let navController = UINavigationController(rootViewController: loginViewController)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(navController)
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
             

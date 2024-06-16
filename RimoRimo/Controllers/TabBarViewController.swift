@@ -14,7 +14,7 @@ class TabBarViewController: UITabBarController {
 
         // 첫 번째 탭
         let firstViewController = MainViewController()
-        firstViewController.tabBarItem = UITabBarItem(title: "Main", image: UIImage(systemName: "1.circle"), tag: 0)
+        firstViewController.tabBarItem = UITabBarItem(title: "Main", image: UIImage(named: "home"), tag: 0)
 
         // 두 번째 탭
         let secondViewController = CalendarViewController()
