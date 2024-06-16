@@ -26,7 +26,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     private let monthLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.font = UIFont(name: "Pretendard-Medium", size: 16)
         label.textColor = MySpecialColors.Black
         label.textAlignment = .left
         return label
@@ -116,9 +116,10 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             make.top.equalTo(monthLabel.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
-            make.bottom.equalToSuperview().offset(-89)
+            make.bottom.equalToSuperview().offset(-100) // 캘린더 높이 조절
         }
         mainCalendar.appearance.weekdayTextColor = MySpecialColors.MainColor
+        mainCalendar.appearance.weekdayFont = UIFont(name: "Pretendard-SemiBold", size: 14)
         mainCalendar.locale = Locale(identifier: "ko_KR")
     }
     
@@ -142,11 +143,13 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 self.sessionData.removeAll()
                 for document in querySnapshot!.documents {
                     self.sessionData[document.documentID] = document.data()
+                    print("Loaded data for document \(document.documentID): \(document.data())")
                 }
                 self.mainCalendar.reloadData()
             }
         }
     }
+
     
     deinit {
         listener?.remove()
@@ -186,9 +189,9 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         let isToday = Calendar.current.isDateInToday(date)
         let dateString = formatDate(date: date)
         if let session = sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
-            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current)
+            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: session["profile-image-name"] as? String)
         } else {
-            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current) // 데이터가 없으면 이미지 없음
+            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: nil) // 데이터가 없으면 이미지 없음
         }
         return cell
     }
@@ -231,7 +234,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         private let customLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.font = UIFont.systemFont(ofSize: 14)
+            label.font = UIFont(name: "Pretendard-Medium", size: 14)
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
@@ -239,7 +242,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         private let marimoImageView: UIImageView = {
             let imageView = UIImageView()
             imageView.contentMode = .scaleAspectFit
-            imageView.backgroundColor = .blue // 이미지가 없을 때 파란색 배경으로 설정
+            imageView.backgroundColor = .clear // 이미지가 없을 때 투명 배경으로 설정
             imageView.translatesAutoresizingMaskIntoConstraints = false
             return imageView
         }()
@@ -267,23 +270,58 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             fatalError("init(coder:) has not been implemented")
         }
         
-        func configure(with date: Date, marimoState: Int?, isToday: Bool, isCurrentMonth: Bool) {
+        func configure(with date: Date, marimoState: Int?, isToday: Bool, isCurrentMonth: Bool, profileImageName: String?) {
             customLabel.text = Calendar.current.component(.day, from: date).description
+            
             if let marimoState = marimoState {
-                marimoImageView.image = UIImage(named: "Group\(marimoState)")
+                var imageName: String?
+                
+                switch marimoState {
+                case -1:
+                    imageName = "Group 1"
+                case 0:
+                    imageName = "Group 2"
+                case 1:
+                    imageName = "Group 3"
+                case 2:
+                    imageName = "Group 4"
+                case 3:
+                    imageName = profileImageName ?? "Group7"
+                default:
+                    imageName = nil
+                }
+                
+                if let imageName = imageName {
+                    if let image = UIImage(named: imageName) {
+                        marimoImageView.image = image
+                        print("Image \(imageName) loaded successfully.")
+                    } else {
+                        marimoImageView.image = nil
+                        print("Failed to load image \(imageName).")
+                    }
+                } else {
+                    marimoImageView.image = nil
+                    print("Image name is nil.")
+                }
                 marimoImageView.backgroundColor = .clear
             } else {
                 marimoImageView.image = nil
-                marimoImageView.backgroundColor = .blue // marimoState가 없을 때 파란색 배경으로 설정
+                marimoImageView.backgroundColor = .clear
+                print("marimoState is nil.")
             }
+            
             if isToday {
                 customLabel.textColor = MySpecialColors.MainColor
+                customLabel.font = UIFont(name: "Pretendard-Bold", size: 14)
             } else if !isCurrentMonth {
                 customLabel.textColor = MySpecialColors.Gray2
+                customLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
             } else {
                 customLabel.textColor = .black
+                customLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
             }
         }
+
         
         override func layoutSubviews() {
             super.layoutSubviews()

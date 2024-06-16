@@ -14,9 +14,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     private var nicknameCheck: Bool = true
     private var emailCheck: Bool = false
-    private var emailVerified = false
     private var passwordCheck: Bool = false
     private var passwordDoubleCheck: Bool = false
+    
+    private var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - HeaderView
     private let HeaderView: UIView = {
@@ -99,18 +100,18 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = MySpecialColors.Gray1
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-             view.addGestureRecognizer(tapGesture)
+        view.addGestureRecognizer(tapGesture)
         
         nameAlertTextLabel.isHidden = true
         emailAlertTextLabel.isHidden = true
         passwordAlertTextLabel.isHidden = true
         passwordDoubleCheckAlertTextLabel.isHidden = true
         
+        setupActivityIndicator()
         setupNavigationBar()
         setupHeaderViews()
         setupBottomView()
         setupButtons()
-        
         
         nameTextField.delegate = self
         emailTextField.delegate = self
@@ -146,12 +147,25 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         
         updatePasswordHiddenIconImage()
         updatePasswordDoubleCheckHiddenIconImage()
-
+        
         setupPasswordDeleteIcon()
         setupPasswordDoubleCheckDeleteIcon()
-
+        
         // 처음 한 번 호출
         setupSignUpButton()
+    }
+    
+    //MARK: - setupActivityIndicator
+    private func setupActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .gray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     //MARK: - setupNavigationBar
@@ -177,7 +191,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         }
         return true
     }
-
  
     //MARK: - setupHeaderViews
     private func setupHeaderViews() {
@@ -207,8 +220,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let passwordDoubleCheckTextFieldStackView = TextFieldUIFactory.textFieldStackView(spacing: 10)
         
         let passwordDoubleCheckFieldIcon = TextFieldUIFactory.fieldIcon(name: "lock")
-        
-
         
         let passwordDoubleCheckIconsStackView = UIStackView()
         passwordDoubleCheckIconsStackView.axis = .horizontal
@@ -396,7 +407,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         ])
     }
     
-    
     //MARK: - setupBottomView
     private func setupBottomView() {
         view.addSubview(BottomView)
@@ -471,6 +481,14 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             checkLabel.topAnchor.constraint(equalTo: checkView.topAnchor, constant: 14),
             checkLabel.centerXAnchor.constraint(equalTo: checkView.centerXAnchor),
         ])
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
                 
         checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(checkLabelTapped)))
     }
@@ -486,8 +504,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
               let password = passwordTextField.text,
               let confirmPassword = passwordDoubleCheckTextField.text,
               let nickname = nameTextField.text,
-              !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty, !nickname.isEmpty else {
-
+              !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty, !nickname.isEmpty,
+              nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck
+        else {
+            
             UIView.animate(withDuration: 0.3) {
                 self.SignUpButton.isEnabled = false
                 self.SignUpButton.backgroundColor = MySpecialColors.Gray3
@@ -510,19 +530,24 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Actions
     @objc private func registerButtonTapped() {
-        //이메일 , 페스워드 , 패스워드 확인 , 닉네임 공백 예외처리
+        activityIndicator.startAnimating()
+        
+        // 이메일, 패스워드, 패스워드 확인, 닉네임 공백, 중복확인 예외처리
         guard let email = emailTextField.text,
               let password = passwordTextField.text,
               let confirmPassword = passwordDoubleCheckTextField.text,
               let nickname = nameTextField.text,
               !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty, !nickname.isEmpty,
-              passwordCheck else {
+              nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck else {
+            self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
+            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
             return
         }
         
-        // 패스워드 , 패스워드 확인 일치,불일치 예외처리
+        // 패스워드, 패스워드 확인 일치, 불일치 예외처리
         guard password == confirmPassword else {
-            showAlert(message: "Passwords do not match")
+            self.setAlertView(title: "비밀번호가 일치하지 않습니다.", subTitle: "다시 입력해 주세요.")
+            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
             return
         }
         
@@ -530,22 +555,29 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 print("회원가입 실패 \(error.localizedDescription)")
+                self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
+                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
                 return
             }
             
-            guard let uid = authResult?.user.uid else { return }
+            guard let uid = authResult?.user.uid else {
+                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
+                return
+            }
             
             if let profileImage = UIImage(named: "Group 1"), let imageData = profileImage.jpegData(compressionQuality: 0.5) {
                 let storageRef = Storage.storage().reference().child("profile_images/\(uid).jpg")
                 storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                     if let error = error {
                         print("이미지 업로드 실패 \(error.localizedDescription)")
+                        self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
                         return
                     }
                     
                     storageRef.downloadURL { (url, error) in
                         guard let downloadURL = url else {
                             print("Error fetching download URL: \(error?.localizedDescription ?? "Unknown error")")
+                            self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
                             return
                         }
                         
@@ -556,26 +588,25 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                             "block-user-list": [],
                             "d-day-title": "",
                             "d-day": "",
-                            "target-time": ""
+                            "target-time": "7"
                         ]
                         Firestore.firestore().collection("user-info").document(uid).setData(userData) { error in
+                            self.activityIndicator.stopAnimating() // 처리 완료 시 로딩 인디케이터를 멈춤
                             if let error = error {
                                 print("회원가입 정보 저장 실패 \(error.localizedDescription)")
+                                self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
                             } else {
-                                print("회원가입 정보 저장 성공")
+                                print("회원가입 정보 저장 성공 \(email)")
+                                self.dismiss(animated: true, completion: nil)
+                                self.setAlertView(title: "회원가입 성공", subTitle: "회원가입이 완료되었습니다.")
                             }
                         }
                     }
                 }
+            } else {
+                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             }
         }
-    }
-    
-    // MARK: - Helper Methods
-    private func showAlert(message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Nickname 유효성 검사
@@ -623,6 +654,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // MARK: - Helper Methods
     private func validateNickname(_ nickname: String) -> Bool {
         let nicknameRegex = "^[가-힣a-zA-Z0-9]{4,8}$"
         return NSPredicate(format: "SELF MATCHES %@", nicknameRegex).evaluate(with: nickname)
@@ -662,7 +694,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Email 유효성 검사
     @objc private func emailTextFieldDidChange(_ textField: UITextField) {
-        emailVerified = false
+        emailCheck = false
         guard let email = emailTextField.text else {
             emailCheck = false
             return
@@ -702,12 +734,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 self?.emailAlertTextLabel.isHidden = false
                 self?.emailAlertTextLabel.text = "이미 사용중인 이메일입니다."
                 self?.emailAlertTextLabel.textColor = MySpecialColors.Red
-                self?.emailVerified = false
+                self?.emailCheck = false
             } else {
                 self?.emailAlertTextLabel.isHidden = false
                 self?.emailAlertTextLabel.text = "사용할 수 있는 이메일입니다."
                 self?.emailAlertTextLabel.textColor = MySpecialColors.MainColor
-                self?.emailVerified = true
+                self?.emailCheck = true
             }
             self?.setupSignUpButton()
         }
@@ -742,10 +774,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             passwordAlertTextLabel.isHidden = false
             passwordAlertTextLabel.text = "✓대문자/소문자  ✓숫자  ✓특수문자"
             passwordAlertTextLabel.textColor = MySpecialColors.MainColor
+            passwordCheck = true
         } else {
             passwordAlertTextLabel.isHidden = false
             passwordAlertTextLabel.text = "대문자/소문자, 숫자, 특수문자를 포함해 주세요."
             passwordAlertTextLabel.textColor = MySpecialColors.Red
+            passwordCheck = false
         }
     }
 
@@ -788,24 +822,25 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.text = ""
     }
     
-    
     // MARK: - Password Double Check 유효성 검사
     @objc func checkPasswordMatch() {
         let password = passwordTextField.text ?? ""
-        let passwordDoubleCheck = passwordDoubleCheckTextField.text ?? ""
+        let passwordDoubleCheckText = passwordDoubleCheckTextField.text ?? ""
         
-        let passwordsMatch = password == passwordDoubleCheck && !password.isEmpty
+        let passwordsMatch = password == passwordDoubleCheckText && !password.isEmpty
                 
         if passwordsMatch {
             // 정규식에 일치하는 경우
             passwordDoubleCheckAlertTextLabel.isHidden = false
             passwordDoubleCheckAlertTextLabel.text = "비밀번호가 일치합니다."
             passwordDoubleCheckAlertTextLabel.textColor = MySpecialColors.MainColor
+            passwordDoubleCheck = true
         } else {
             // 정규식에 일치하지 않는 경우
             passwordDoubleCheckAlertTextLabel.isHidden = false
             passwordDoubleCheckAlertTextLabel.text = "비밀번호가 일치하지 않습니다."
             passwordDoubleCheckAlertTextLabel.textColor = MySpecialColors.Red
+            passwordDoubleCheck = false
         }
         
         setupSignUpButton()

@@ -1,8 +1,8 @@
 //
-//  PopupCalendarViewController.swift
-//  Marimo
+//  ToDoPopupCalendarViewController.swift
+//  RimoRimo
 //
-//  Created by 이유진 on 6/12/24.
+//  Created by 이유진 on 6/15/24.
 //
 
 import UIKit
@@ -10,8 +10,8 @@ import SnapKit
 import FSCalendar
 import Firebase
 
-class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDelegateAppearance, FSCalendarDataSource {
-
+class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCalendarDelegateAppearance, FSCalendarDataSource {
+    
     
     let backgroundView: UIView = {
        let view = UIView()
@@ -191,20 +191,48 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
         customHeaderLabel.text = formatter.string(from: mainCalendar.currentPage)
     }
     
-    var selectedDate: String?
-    var didSelectDate: ((String) -> Void)?
+    var selectedDate: Date?
+    var didSelectDate: ((Date, String) -> Void)?
     
     @objc private func confirmButtonTapped() {
         if let selectedDate = mainCalendar.selectedDate {
+            self.selectedDate = selectedDate
+           
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy년 MM월 dd일"
+            formatter.locale = Locale(identifier: "ko_KR")
+            formatter.dateFormat = "yyyy.MM.dd.EEE"
             let formattedDate = formatter.string(from: selectedDate)
-            self.didSelectDate?(formattedDate)
+            
+            self.didSelectDate?(selectedDate, formattedDate)
+            saveSelectedDateToFirebase(selectedDate: selectedDate)
+
             dismiss(animated: true, completion: nil)
-            print("Selected Date: \(formattedDate)")
+            print("선택한 날짜: \(formattedDate)")
         } else {
-            print("No date selected")
+            print("날짜가 선택되지 않았습니다.")
         }
+    }
+    
+    private func saveSelectedDateToFirebase(selectedDate: Date) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd"
+        let day = formatter.string(from: selectedDate)
+        
+        Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .setData(["day": Timestamp(date: selectedDate)], merge: true) { error in
+                if let error = error {
+                    print("Error saving selected date: \(error.localizedDescription)")
+                } else {
+                    print("Selected date saved successfully.")
+                }
+            }
     }
     
     var lastSelectedDate: Date?
@@ -219,7 +247,7 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
             let userDocRef = db.collection("user-info").document(uid)
             userDocRef.getDocument { (document, error) in
                 if let document = document, document.exists {
-                    if let selectedTimestamp = document.data()?["d-day-date"] as? Timestamp {
+                    if let selectedTimestamp = document.data()?["day"] as? Timestamp {
                         let selectedDate = selectedTimestamp.dateValue()
                         self.lastSelectedDate = selectedDate
                         self.mainCalendar.select(selectedDate)
