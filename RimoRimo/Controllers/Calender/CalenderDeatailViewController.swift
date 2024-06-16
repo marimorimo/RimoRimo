@@ -99,6 +99,11 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     private func setupUI() {
         view.backgroundColor = UIColor(patternImage: UIImage(named: "GradientBackground")!)
         self.title = "오늘의 집중 시간"
+
+        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "chevron-left")
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "chevron-left")
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.tintColor = MySpecialColors.Green4
     }
     
     private func setupContent() {

@@ -1,9 +1,4 @@
-//
-//  Color.swift
-//  RimoWidgetExtension
-//
-//  Created by A Hyeon on 6/14/24.
-//
+
 import SwiftUI
 
 extension Color {
@@ -41,3 +36,4 @@ enum MySpecialColors {
     //color        asset
     static let customColor  = Color("")
 }
+

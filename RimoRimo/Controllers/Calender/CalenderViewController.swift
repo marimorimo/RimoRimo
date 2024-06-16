@@ -78,7 +78,13 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         setupCalendar()
         setupSessionDataListener()
     }
-    
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+
     // MARK: - Setup
     private func setupMonthLabel() {
         view.addSubview(monthLabel)
@@ -116,7 +122,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             make.top.equalTo(monthLabel.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
-            make.bottom.equalToSuperview().offset(-100) // 캘린더 높이 조절
+            make.bottom.equalToSuperview().inset(150) // 캘린더 높이 조절
         }
         mainCalendar.appearance.weekdayTextColor = MySpecialColors.MainColor
         mainCalendar.appearance.weekdayFont = UIFont(name: "Pretendard-SemiBold", size: 14)
@@ -202,7 +208,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         if let data = sessionData[dateString] as? [String: Any] {
             let detailVC = CalendarDetailViewController()
             detailVC.data = data
-            navigationController?.pushViewController(detailVC, animated: true)
+            self.navigationController?.pushViewController(detailVC, animated: true)
         }
     }
     
@@ -262,7 +268,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 make.centerX.equalToSuperview()
                 make.bottom.equalToSuperview()
                 make.width.equalToSuperview()
-                make.height.equalTo(20)
+                make.height.equalTo(12)
             }
         }
         

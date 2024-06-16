@@ -111,15 +111,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Constraints Setup
     
     func setupConstraints() {
-//        datePicker.snp.makeConstraints { make in
-//            make.top.equalTo(view).offset(100)
-//            make.leading.equalTo(view).offset(20)
-//            make.trailing.equalTo(view).offset(-20)
-//        }
-//        calendarButton.snp.makeConstraints { make in
-//            make.top.equalTo(view).offset(100)
-//            make.trailing.equalTo(editDate).inset(5)
-//        }
         dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
             make.leading.equalTo(view).offset(246)
