@@ -270,9 +270,9 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         case 1:
             imageName = "Group 2"
         case 2:
-            imageName = profileImageName ?? "Group7"
+            imageName = "Group 3"
         case 3:
-            imageName = profileImageName ?? "Group7"
+            imageName = "Group 4"
         case 4:
             imageName = profileImageName ?? "Group7"
         default:

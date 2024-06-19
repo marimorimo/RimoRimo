@@ -12,8 +12,13 @@ import Firebase
 
 class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDelegateAppearance, FSCalendarDataSource {
 
-    
     let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let boxView: UIView = {
        let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 20
@@ -78,6 +83,8 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
         updateHeaderTitle(for: mainCalendar.currentPage)
         
         fetchLastSelectedDateFromFirebase()
+        
+        tapBackground()
 
     }
     
@@ -85,14 +92,19 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
     
     private func setupContent() {
         
-        [backgroundView, mainCalendar, customHeaderLabel, buttonStack, confirmButton].forEach {
-            view.addSubview($0)
+        view.addSubview(backgroundView)
+        [boxView, mainCalendar, customHeaderLabel, buttonStack, confirmButton].forEach {
+            backgroundView.addSubview($0)
         }
         [prevButton, nextButton].forEach {
             buttonStack.addArrangedSubview($0)
         }
         
         backgroundView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        boxView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(180)
             make.centerX.equalToSuperview()
             make.width.equalTo(345)
@@ -100,26 +112,26 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
         }
         
         customHeaderLabel.snp.makeConstraints { make in
-            make.top.equalTo(backgroundView.snp.top).offset(30)
-            make.leading.equalTo(backgroundView.snp.leading).offset(30)
+            make.top.equalTo(boxView.snp.top).offset(30)
+            make.leading.equalTo(boxView.snp.leading).offset(30)
         }
         
         buttonStack.snp.makeConstraints { make in
             make.centerY.equalTo(customHeaderLabel)
-            make.trailing.equalTo(backgroundView.snp.trailing).inset(24)
+            make.trailing.equalTo(boxView.snp.trailing).inset(24)
         }
         
         mainCalendar.snp.makeConstraints { make in
-            make.top.equalTo(backgroundView.snp.top).offset(70)
-            make.leading.equalTo(backgroundView.snp.leading).offset(24)
-            make.trailing.equalTo(backgroundView.snp.trailing).inset(24)
+            make.top.equalTo(boxView.snp.top).offset(70)
+            make.leading.equalTo(boxView.snp.leading).offset(24)
+            make.trailing.equalTo(boxView.snp.trailing).inset(24)
             make.width.equalTo(297)
             make.height.equalTo(263)
         }
         
         confirmButton.snp.makeConstraints { make in
             make.top.equalTo(mainCalendar.snp.bottom).offset(16)
-            make.centerX.equalTo(backgroundView)
+            make.centerX.equalTo(boxView)
             make.width.equalTo(297)
             make.height.equalTo(46)
         }
@@ -165,6 +177,14 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
     
     
     // MARK: - Func
+    private func tapBackground() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundViewTapped))
+               backgroundView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func backgroundViewTapped() {
+            dismiss(animated: true, completion: nil)
+        }
     
     @objc private func didTapPrevButton() {
         moveCurrentPage(by: -1)
