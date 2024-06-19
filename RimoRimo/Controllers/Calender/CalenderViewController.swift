@@ -6,6 +6,7 @@ import SnapKit
 
 class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     
+    var profileImageName: String = ""
     private var currentYear: Int = 0
     private var currentMonth: Int = 0
     private var uid: String? {
@@ -21,6 +22,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         calendar.appearance.selectionColor = UIColor.clear
         calendar.appearance.eventDefaultColor = UIColor.clear
         calendar.appearance.eventSelectionColor = UIColor.clear // 이벤트 점의 색상 설정
+        calendar.scrollEnabled = false
         return calendar
     }()
     
@@ -77,14 +79,63 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         setupMonthLabel()
         setupCalendar()
         setupSessionDataListener()
+        fetchUserDataAndBindUI()
     }
-
+    
+    private func fetchUserDataAndBindUI() {
+        guard let uid = uid else {
+            print("유저 정보를 찾을 수 없음")
+            return
+        }
+        
+        let documentRef = Firestore.firestore().collection("user-info").document(uid)
+        
+        documentRef.addSnapshotListener { [weak self] (documentSnapshot, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("문서를 가져오는 중 오류 발생: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let document = documentSnapshot else {
+                print("문서가 존재하지 않음")
+                return
+            }
+            
+            if document.exists {
+                if let data = document.data() {
+                    print("Data: \(data)")
+                    
+                    if let imageName = data["profile-image"] as? String {
+                        DispatchQueue.main.async {
+                            self.profileImageName = imageName
+                            self.mainCalendar.reloadData() // 캘린더 리로드
+                        }
+                    } else {
+                        print("No profile-image")
+                        DispatchQueue.main.async {
+                            self.profileImageName = "Group 9"
+                            self.mainCalendar.reloadData() // 캘린더 리로드
+                        }
+                    }
+                    
+                } else {
+                    print("문서 데이터가 비어 있습니다.")
+                }
+            } else {
+                print("문서가 존재하지 않습니다")
+            }
+        }
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
-
+    
     // MARK: - Setup
     private func setupMonthLabel() {
         view.addSubview(monthLabel)
@@ -151,11 +202,11 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                     self.sessionData[document.documentID] = document.data()
                     print("Loaded data for document \(document.documentID): \(document.data())")
                 }
-                self.mainCalendar.reloadData()
+                self.mainCalendar.reloadData() // 캘린더 리로드
             }
         }
     }
-
+    
     
     deinit {
         listener?.remove()
@@ -192,12 +243,13 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     func calendar(_ calendar: FSCalendar, cellFor date: Date, at monthPosition: FSCalendarMonthPosition) -> FSCalendarCell {
         let cell = calendar.dequeueReusableCell(withIdentifier: "CustomCalendarCell", for: date, at: monthPosition) as! CustomCalendarCell
+        cell.profileImageName = self.profileImageName // profileImageName을 CustomCalendarCell에 전달
         let isToday = Calendar.current.isDateInToday(date)
         let dateString = formatDate(date: date)
         if let session = sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
-            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: session["profile-image-name"] as? String)
+            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current)
         } else {
-            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: nil) // 데이터가 없으면 이미지 없음
+            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current) // 데이터가 없으면 이미지 없음
         }
         return cell
     }
@@ -237,6 +289,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     // CustomCalendarCell 클래스 정의
     class CustomCalendarCell: FSCalendarCell {
+        var profileImageName: String?
         private let customLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
@@ -276,9 +329,8 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             fatalError("init(coder:) has not been implemented")
         }
         
-        func configure(with date: Date, marimoState: Int?, isToday: Bool, isCurrentMonth: Bool, profileImageName: String?) {
+        func configure(with date: Date, marimoState: Int?, isToday: Bool, isCurrentMonth: Bool) {
             customLabel.text = Calendar.current.component(.day, from: date).description
-            
             if let marimoState = marimoState {
                 var imageName: String?
                 
@@ -291,8 +343,8 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                     imageName = "Group 3"
                 case 2:
                     imageName = "Group 4"
-                case 3:
-                    imageName = profileImageName ?? "Group7"
+                case 3, 4...:
+                    imageName = profileImageName ?? "Group 7"
                 default:
                     imageName = nil
                 }
@@ -327,7 +379,6 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 customLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
             }
         }
-
         
         override func layoutSubviews() {
             super.layoutSubviews()
