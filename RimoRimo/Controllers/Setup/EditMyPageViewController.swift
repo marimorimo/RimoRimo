@@ -625,16 +625,8 @@ class EditMyPageViewController: UIViewController {
             
             if let imageName = self?.selectedProfileImageName {
                 updateData["profile-image"] = imageName
-                Firestore.firestore().collection("user-info").document(uid).collection("study-sessions").getDocuments { (querySnapshot, error) in
-                    if let error = error {
-                        print("Error getting documents: \(error)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            document.reference.updateData(["profile-image": imageName])
-                        }
-                    }
-                }
             }
+            
             if let nickname = self?.editNickName.text, !nickname.isEmpty {
                 updateData["nickname"] = nickname
                 
@@ -660,12 +652,15 @@ class EditMyPageViewController: UIViewController {
                     self?.saveDataToFirestore(userDocRef: userDocRef, updateData: updateData)
                 }
             }
+            
             if let selectedFocusTime = self?.selectedFocusTime {
                 updateData["target-time"] = "\(selectedFocusTime)"
             }
+            
             if let scheduleName = self?.editScheduleName.text, !scheduleName.isEmpty {
                 updateData["d-day-title"] = scheduleName
             }
+            
             if let dateString = self?.editDate.text, let selectedDate = self?.dateFormatter.date(from: dateString) {
                 var targetDate = selectedDate
                 if self?.isTodayIncluded == true {

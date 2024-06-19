@@ -92,9 +92,8 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
     
     private func setupContent() {
         
-        view.addSubview(backgroundView)
-        [boxView, mainCalendar, customHeaderLabel, buttonStack, confirmButton].forEach {
-            backgroundView.addSubview($0)
+        [backgroundView, boxView, mainCalendar, customHeaderLabel, buttonStack, confirmButton].forEach {
+            view.addSubview($0)
         }
         [prevButton, nextButton].forEach {
             buttonStack.addArrangedSubview($0)
@@ -201,6 +200,22 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
         updateHeaderTitle(for: nextPage)
     }
     
+    // MARK: - FSCalendarDelegate
+    
+    func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {
+        let canSelect = !isDateInPast(date)
+        
+        if !canSelect {
+            setAlertView(title: "선택 불가", subTitle: "지난 날짜는 선택할 수 없습니다.")
+        }
+        return canSelect
+    }
+    private func isDateInPast(_ date: Date) -> Bool {
+        let today = Calendar.current.startOfDay(for: Date())
+        let selectedDay = Calendar.current.startOfDay(for: date)
+        return selectedDay < today
+    }
+    
     // Header
     func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
         updateHeaderTitle(for: mainCalendar.currentPage)
@@ -230,26 +245,112 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
     var lastSelectedDate: Date?
     private let db = Firestore.firestore()
     // Firebase Fetch
-        private func fetchLastSelectedDateFromFirebase() {
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("User not authenticated")
-                return
-            }
-
-            let userDocRef = db.collection("user-info").document(uid)
-            userDocRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    if let selectedTimestamp = document.data()?["d-day-date"] as? Timestamp {
-                        let selectedDate = selectedTimestamp.dateValue()
-                        self.lastSelectedDate = selectedDate
-                        self.mainCalendar.select(selectedDate)
-                        self.mainCalendar.setCurrentPage(selectedDate, animated: true)
-                        self.updateHeaderTitle(for: selectedDate)
-                    }
-                } else {
-                    print("Document does not exist")
+    private func fetchLastSelectedDateFromFirebase() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
+        
+        let userDocRef = db.collection("user-info").document(uid)
+        userDocRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let selectedTimestamp = document.data()?["d-day-date"] as? Timestamp {
+                    let selectedDate = selectedTimestamp.dateValue()
+                    self.lastSelectedDate = selectedDate
+                    self.mainCalendar.select(selectedDate)
+                    self.mainCalendar.setCurrentPage(selectedDate, animated: true)
+                    self.updateHeaderTitle(for: selectedDate)
                 }
+            } else {
+                print("Document does not exist")
             }
         }
+    }
+    
+    // MARK: - setAlertView
+    let alertBack = AlertUIFactory.alertBackView()
+    let alertView = AlertUIFactory.alertView()
+    
+    let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
+    let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+    
+    let widthLine = AlertUIFactory.widthLine()
+    let heightLine = AlertUIFactory.heightLine()
+
+    let checkView = AlertUIFactory.checkView()
+    let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+    
+    @objc private func setAlertView(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+        
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        [alertTitle, alertSubTitle, widthLine, checkView].forEach {
+            alertView.addSubview($0)
+        }
+        checkView.addSubview(checkLabel)
+        
+        alertBack.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        alertView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(46)
+            make.trailing.equalToSuperview().inset(46)
+            make.height.equalTo(140)
+        }
+        
+        alertTitle.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(24)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertSubTitle.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        widthLine.snp.makeConstraints { make in
+            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
+        }
+        
+        checkView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        checkLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+    }
+    @objc private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+            self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+            self.alertView.removeFromSuperview()
+        }
+    }
     
 }
