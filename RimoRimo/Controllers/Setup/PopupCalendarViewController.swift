@@ -104,7 +104,7 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
         }
         
         boxView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(180)
+            make.centerY.equalToSuperview()
             make.centerX.equalToSuperview()
             make.width.equalTo(345)
             make.height.equalTo(414)
@@ -178,12 +178,12 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
     // MARK: - Func
     private func tapBackground() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundViewTapped))
-               backgroundView.addGestureRecognizer(tapGesture)
+        backgroundView.addGestureRecognizer(tapGesture)
     }
     
     @objc private func backgroundViewTapped() {
-            dismiss(animated: true, completion: nil)
-        }
+        dismiss(animated: true, completion: nil)
+    }
     
     @objc private func didTapPrevButton() {
         moveCurrentPage(by: -1)
