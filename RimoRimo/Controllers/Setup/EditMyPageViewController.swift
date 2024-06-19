@@ -23,6 +23,7 @@ class EditMyPageViewController: UIViewController {
         setupSchedule()
         setupFocusTime()
         setupEditDateTapGesture()
+        includeButtonTapped()
         
         tapView()
         
@@ -218,6 +219,11 @@ class EditMyPageViewController: UIViewController {
         label.textColor = MySpecialColors.Black
         return label
     }()
+    private let includeTodayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
     private let includeTodayLabel: UILabel = {
         let label = UILabel()
         label.text = "오늘 포함"
@@ -230,8 +236,13 @@ class EditMyPageViewController: UIViewController {
         let image = UIImage(named: "square")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.Gray3
-        button.addTarget(nil, action: #selector(includeTodayButtonTapped), for: .touchUpInside)
         return button
+    }()
+    private let dateStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        return stack
     }()
     private let calendarButton: UIButton = {
         let button = UIButton()
@@ -275,7 +286,7 @@ class EditMyPageViewController: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [rimoMessage, changeProfile, plusButton, outerNickNameStackView, nickNameErrorMessage, focusTimeMessage, focusTimeBox, focusTimeStack, scheduleLabel, editScheduleName, scheduleLine, dateLabel, includeTodayLabel, includeTodayButton, calendarButton, editDate, dateLine, confirmButton].forEach {
+        [rimoMessage, changeProfile, plusButton, outerNickNameStackView, nickNameErrorMessage, focusTimeMessage, focusTimeBox, focusTimeStack, scheduleLabel, editScheduleName, scheduleLine, dateLabel, includeTodayView, includeTodayLabel, includeTodayButton, dateStack, dateLine, confirmButton].forEach {
             contentView.addSubview($0)
         }
         // NickName
@@ -284,6 +295,9 @@ class EditMyPageViewController: UIViewController {
         }
         [editNickName, nickNameLine].forEach {
             innerNickNameStackView.addArrangedSubview($0)
+        }
+        [calendarButton, editDate].forEach {
+            dateStack.addArrangedSubview($0)
         }
         
         [editFocusTime, timeLabel].forEach {
@@ -370,6 +384,7 @@ class EditMyPageViewController: UIViewController {
         editScheduleName.snp.makeConstraints { make in
             make.top.equalTo(scheduleLabel.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(35)
+            make.trailing.equalToSuperview().inset(35)
         }
         scheduleLine.snp.makeConstraints { make in
             make.top.equalTo(editScheduleName.snp.bottom).offset(12)
@@ -384,6 +399,12 @@ class EditMyPageViewController: UIViewController {
             make.top.equalTo(scheduleLine.snp.bottom).offset(46)
             make.leading.equalTo(scheduleLine)
         }
+        includeTodayView.snp.makeConstraints { make in
+            make.centerY.equalTo(dateLabel)
+            make.trailing.equalToSuperview().inset(24)
+            make.width.equalTo(82)
+            make.height.equalTo(24)
+        }
         includeTodayLabel.snp.makeConstraints { make in
             make.centerY.equalTo(dateLabel)
             make.trailing.equalTo(includeTodayButton.snp.trailing).inset(30)
@@ -392,13 +413,20 @@ class EditMyPageViewController: UIViewController {
             make.centerY.equalTo(dateLabel)
             make.trailing.equalToSuperview().inset(30)
         }
-        calendarButton.snp.makeConstraints { make in
+        dateStack.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(35)
+            make.trailing.equalToSuperview().inset(35)
+            make.height.equalTo(22)
+        }
+        calendarButton.snp.makeConstraints { make in
+            make.top.leading.bottom.equalToSuperview()
+            make.width.equalTo(24)
+            make.height.equalTo(24)
         }
         editDate.snp.makeConstraints { make in
             make.centerY.equalTo(calendarButton)
-            make.leading.equalTo(calendarButton.snp.trailing).offset(8)
+            make.top.bottom.trailing.equalToSuperview()
         }
         dateLine.snp.makeConstraints { make in
             make.top.equalTo(editDate.snp.bottom).offset(12)
@@ -586,6 +614,16 @@ class EditMyPageViewController: UIViewController {
     }
     // Toggle IncludeToday
     var isTodayIncluded = false
+    private func includeButtonTapped() {
+        let includeViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(includeTodayButtonTapped))
+        includeTodayView.addGestureRecognizer(includeViewTapGesture)
+        
+        let includeLabelTapGesture = UITapGestureRecognizer(target: self, action: #selector(includeTodayButtonTapped))
+        includeTodayLabel.addGestureRecognizer(includeLabelTapGesture)
+        
+        let includeButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(includeTodayButtonTapped))
+        includeTodayButton.addGestureRecognizer(includeButtonTapGesture)
+    }
     @objc private func includeTodayButtonTapped() {
         if isTodayIncluded {
             if let image = UIImage(named: "square")?.withRenderingMode(.alwaysTemplate) {

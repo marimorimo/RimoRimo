@@ -106,7 +106,7 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
         }
         
         marimoView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(146)
+            make.centerY.equalToSuperview()
             make.centerX.equalToSuperview()
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().inset(24)
