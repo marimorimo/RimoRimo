@@ -42,12 +42,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     }()
     
     let dateLabel: UILabel = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
-        let currentDate = dateFormatter.string(from: Date())
-        
         let label = UILabel()
-        label.text = currentDate
         label.font = UIFont.pretendard(style: .semiBold, size: 14)
         label.textColor = MySpecialColors.Gray4
         return label
@@ -207,10 +202,22 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     
     private func loadMemoData() {
         guard let uid = uid, let day = data?["day"] as? String else {
-                   print("UID or day is nil")
-                   return
-               }
+            print("UID or day is nil")
+            return
+        }
         print("UID: \(uid), Day: \(day)")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let date = dateFormatter.date(from: day) {
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            let formattedDay = dateFormatter.string(from: date)
+            dateLabel.text = formattedDay
+        } else {
+            print("Failed to convert day string to date.")
+            return
+        }
+        
         
         guard let memoText = memoTextView.text else {
             print("Memo text is nil")
@@ -259,6 +266,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     print("No document found for day: \(day)")
                     self.memoPlaceholderLabel.isHidden = false
                 }
+                
             }
     }
     
