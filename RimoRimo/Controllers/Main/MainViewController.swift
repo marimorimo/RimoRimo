@@ -16,15 +16,15 @@ class MainViewController: UIViewController {
     private var marimoTimer: Timer?
     private var timerInterval: TimeInterval?
     
-    var timerIsCounting: Bool = false
-    var startTime: Date?
-    var stopTime: Date?
-    let userDefaults = UserDefaults.standard
-    let START_TIME_KEY = "startTime"
-    let STOP_TIME_KEY = "stopTime"
-    let COUNTING_KEY = "countingKey"
+    private var timerIsCounting: Bool = false
+    private var startTime: Date?
+    private var stopTime: Date?
+    private let userDefaults = UserDefaults.standard
+    private let START_TIME_KEY = "startTime"
+    private let STOP_TIME_KEY = "stopTime"
+    private let COUNTING_KEY = "countingKey"
     
-    var scheduledTimer: Timer!
+    private var scheduledTimer: Timer!
     private var timerStartDate: Date?
     private var totalTimeElapsed: TimeInterval = 0
     private var isStudy = false
@@ -33,6 +33,9 @@ class MainViewController: UIViewController {
     private var uid: String? {
         return Auth.auth().currentUser?.uid
     }
+    
+    private var checkAction: (() -> Void)?
+    private var cancelAction: (() -> Void)?
     
     // MARK: - HeaderView
     private let HeaderView: UIView = {
@@ -161,25 +164,25 @@ class MainViewController: UIViewController {
     }()
     
     // MARK: - AlertUIFactory
-    let alertBack = AlertUIFactory.alertBackView()
-    let alertView = AlertUIFactory.alertView()
+    private let alertBack = AlertUIFactory.alertBackView()
+    private let alertView = AlertUIFactory.alertView()
     
-    let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
-    let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+    private let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
+    private let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
     
-    let widthLine = AlertUIFactory.widthLine()
-    let heightLine = AlertUIFactory.heightLine()
+    private let widthLine = AlertUIFactory.widthLine()
+    private let heightLine = AlertUIFactory.heightLine()
     
-    let cancleView = AlertUIFactory.checkView()
-    let cancleLabel = AlertUIFactory.checkLabel(cancleText: "취소", textColor: MySpecialColors.Red, fontSize: 14)
+    private let cancleView = AlertUIFactory.checkView()
+    private let cancleLabel = AlertUIFactory.checkLabel(cancleText: "취소", textColor: MySpecialColors.Red, fontSize: 14)
 
-    let checkView = AlertUIFactory.checkView()
-    let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+    private let checkView = AlertUIFactory.checkView()
+    private let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
     
     // MARK: - Onboarding Alert
-    let onboardingBackView = AlertUIFactory.alertBackView()
-    let onboardingView = AlertUIFactory.alertView()
-    let onboardingText = AlertUIFactory.alertSubTitle(subTitleText: "자정(12시) 전에 꼭 집중 모드를 중단해 주세요!", textColor: MySpecialColors.Black, fontSize: 14)
+    private let onboardingBackView = AlertUIFactory.alertBackView()
+    private let onboardingView = AlertUIFactory.alertView()
+    private let onboardingText = AlertUIFactory.alertSubTitle(subTitleText: "자정(12시) 전에 꼭 집중 모드를 중단해 주세요!", textColor: MySpecialColors.Black, fontSize: 14)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -188,7 +191,7 @@ class MainViewController: UIViewController {
         startTime = userDefaults.object(forKey: START_TIME_KEY) as? Date
         stopTime = userDefaults.object(forKey: STOP_TIME_KEY) as? Date
         timerIsCounting = userDefaults.bool(forKey: COUNTING_KEY)
-        
+                
         hideSuccessView()
         cheeringLabel.isHidden = false
         
@@ -363,7 +366,6 @@ class MainViewController: UIViewController {
             successTextLabel.bottomAnchor.constraint(equalTo: successView.bottomAnchor, constant: -20)
         ])
     }
-
     
     // MARK: - hideSuccessView
     private func hideSuccessView() {
@@ -386,7 +388,7 @@ class MainViewController: UIViewController {
     }
     
     // MARK: - setAlertView
-    @objc private func setAlertView(title: String, subTitle: String) {
+    @objc private func setAlertView(title: String, subTitle: String, checkTitle: String = "확인", cancelTitle: String = "취소", checkAction: (() -> Void)? = nil, cancelAction: (() -> Void)? = nil) {
         let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
         let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
         
@@ -433,8 +435,8 @@ class MainViewController: UIViewController {
             
             widthLine.topAnchor.constraint(equalTo: alertSubTitle.bottomAnchor, constant: 20),
             widthLine.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
-            widthLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 46),
-            widthLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -46),
+            widthLine.leadingAnchor.constraint(equalTo: alertView.leadingAnchor),
+            widthLine.trailingAnchor.constraint(equalTo: alertView.trailingAnchor),
             widthLine.heightAnchor.constraint(equalToConstant: 0.5),
             
             heightLine.topAnchor.constraint(equalTo: widthLine.bottomAnchor),
@@ -459,6 +461,9 @@ class MainViewController: UIViewController {
             checkLabel.centerXAnchor.constraint(equalTo: checkView.centerXAnchor),
         ])
         
+        cancleLabel.text = cancelTitle
+        checkLabel.text = checkTitle
+        
         alertBack.alpha = 0
         alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         
@@ -467,10 +472,13 @@ class MainViewController: UIViewController {
             self.alertView.transform = CGAffineTransform.identity
         }
         
-        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(deleteTodayStudySessionData)))
-        cancleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(checkButtonTapped)))
+        cancleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(cancelButtonTapped)))
+        
+        self.checkAction = checkAction
+        self.cancelAction = cancelAction
     }
-    
+
     // MARK: - setOnboardingUI
     private func setOnboardingUI() {
         view.addSubview(onboardingBackView)
@@ -613,10 +621,10 @@ class MainViewController: UIViewController {
                     self.bindUIData(with: data)
                     print("Data: \(data)")
                     
-                    if let imageName = data["profile-image-name"] as? String {
+                    if let imageName = data["profile-image"] as? String {
                         self.profileImageName = imageName
                     } else {
-                        print("No profile-image-name")
+                        print("No profile-image")
                         self.profileImageName = "Group 9"
                     }
                     
@@ -625,8 +633,8 @@ class MainViewController: UIViewController {
                         let processedTimeInSeconds = (Double(hours) * 3600) / 5
                         print("Processed time seconds: \(processedTimeInSeconds)")
                         
-                        self.timerInterval = processedTimeInSeconds
-//                        self.timerInterval = 3
+//                        self.timerInterval = processedTimeInSeconds
+                        self.timerInterval = 3
                     } else {
                         print("No target-time")
                     }
@@ -648,6 +656,7 @@ class MainViewController: UIViewController {
             
             if let title = data["d-day-title"] as? String, !title.isEmpty {
                 self.dayTitleLabel.text = title
+                dayView.backgroundColor = MySpecialColors.DayBlue
             } else {
                 print("No d-day-title")
                 self.dayTitleLabel.text = "D-day는"
@@ -660,9 +669,10 @@ class MainViewController: UIViewController {
                 print("No d-day")
                 self.dayLabel.text = "프로필에서 설정할 수 있어요."
                 dayView.backgroundColor = .clear
+                dayView.backgroundColor = MySpecialColors.DayBlue
             }
             
-            if let profileImageName = data["profile-image-name"] as? String {
+            if let profileImageName = data["profile-image"] as? String {
                 self.profileImageName = profileImageName
             } else {
                 print("No profile-image")
@@ -742,7 +752,7 @@ class MainViewController: UIViewController {
         marimoTimer?.invalidate()
         
         guard let timerInterval = timerInterval else {
-            print("Error: timerInterval is nil")
+            print("Error: timerInterval nil")
             return
         }
         
@@ -762,24 +772,24 @@ class MainViewController: UIViewController {
     // MARK: - MARIMO
     @objc private func updateMarimoImage() {
         guard let startTime = startTime else { return }
-        
+
         let elapsedTime = Date().timeIntervalSince(startTime)
-        
+
         guard let timerInterval = timerInterval else {
-            print("Error: timerInterval is nil")
+            print("Error: timerInterval nil")
             return
         }
-        
+
         let currentIndex = min(Int(elapsedTime / timerInterval), marimoImages.count - 1)
-        
+
         currentMarimoIndex = currentIndex
-        
+
         showMarimoImage(at: currentIndex)
     }
         
     private func showMarimoImage(at index: Int) {
         let group = DispatchGroup()
-        
+
         for (i, imageView) in marimoImages.enumerated() {
             group.enter()
             UIView.animate(withDuration: 0.5, animations: {
@@ -788,7 +798,7 @@ class MainViewController: UIViewController {
                 group.leave()
             }
         }
-        
+
         group.notify(queue: .main) {
             if index == self.marimoImages.count - 1 {
                 self.showSuccessView()
@@ -796,6 +806,7 @@ class MainViewController: UIViewController {
             }
         }
     }
+
 
     private func updateMarimoImagesPosition() {
         for (index, imageView) in marimoImages.enumerated() {
@@ -985,6 +996,25 @@ class MainViewController: UIViewController {
         return 0.1
     }
     
+    //MARK: - Alert Action
+    @objc private func checkButtonTapped() {
+        removeAlertView()
+        checkAction?()
+    }
+
+    @objc private func cancelButtonTapped() {
+        removeAlertView()
+        cancelAction?()
+    }
+
+    @objc private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+        }
+    }
+    
     //MARK: - startStopAction
     @objc private func startStopAction(_ sender: Any) {
         if timerIsCounting {
@@ -1010,15 +1040,19 @@ class MainViewController: UIViewController {
 
     // MARK: - resetAction
     @objc private func resetAction(_ sender: Any) {
-        self.setAlertView(title: "Reset Timer", subTitle: "공부 시간을 초기화하시겠습니까?")
-    }
-    
-    @objc private func removeAlertView() {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.alertBack.alpha = 0
-        }) { _ in
-            self.alertBack.removeFromSuperview()
-        }
+        setAlertView(
+            title: "Reset Timer",
+            subTitle: "공부 시간을 초기화하시겠습니까?",
+            checkTitle: "확인",
+            cancelTitle: "취소",
+            checkAction: { [weak self] in
+                self?.deleteTodayStudySessionData()
+            },
+            cancelAction: {
+                print("Cancel button tapped")
+                self.removeAlertView()
+            }
+        )
     }
     
     // MARK: - startFocusModeButtonTapped
@@ -1259,25 +1293,6 @@ class MainViewController: UIViewController {
                     self.onboardingBackView.alpha = 0.0
                 }) { _ in
                     self.onboardingBackView.removeFromSuperview()
-                }
-            }
-        }
-    }
-}
-
-extension UIImageView {
-    func loadImage(fromURL urlString: String) {
-        guard let url = URL(string: urlString) else {
-            print("잘못된 URL")
-            return
-        }
-        
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.image = image
-                    }
                 }
             }
         }

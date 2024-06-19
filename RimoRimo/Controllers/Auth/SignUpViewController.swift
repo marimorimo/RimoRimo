@@ -540,14 +540,14 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
               !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty, !nickname.isEmpty,
               nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck else {
             self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
-            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
+            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             return
         }
         
         // 패스워드, 패스워드 확인 일치, 불일치 예외처리
         guard password == confirmPassword else {
             self.setAlertView(title: "비밀번호가 일치하지 않습니다.", subTitle: "다시 입력해 주세요.")
-            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
+            activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             return
         }
         
@@ -556,55 +556,45 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             if let error = error {
                 print("회원가입 실패 \(error.localizedDescription)")
                 self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
-                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
+                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
                 return
             }
             
             guard let uid = authResult?.user.uid else {
-                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
+                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
                 return
             }
             
-            if let profileImage = UIImage(named: "Group 1"), let imageData = profileImage.jpegData(compressionQuality: 0.5) {
-                let storageRef = Storage.storage().reference().child("profile_images/\(uid).jpg")
-                storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-                    if let error = error {
-                        print("이미지 업로드 실패 \(error.localizedDescription)")
-                        self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춥니다.
-                        return
-                    }
-                    
-                    storageRef.downloadURL { (url, error) in
-                        guard let downloadURL = url else {
-                            print("Error fetching download URL: \(error?.localizedDescription ?? "Unknown error")")
-                            self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
-                            return
-                        }
-                        
-                        let userData: [String: Any] = [
-                            "email": email,
-                            "nickname": nickname,
-                            "profile-image": downloadURL.absoluteString,
-                            "block-user-list": [],
-                            "d-day-title": "",
-                            "d-day": "",
-                            "target-time": "7"
-                        ]
-                        Firestore.firestore().collection("user-info").document(uid).setData(userData) { error in
-                            self.activityIndicator.stopAnimating() // 처리 완료 시 로딩 인디케이터를 멈춤
-                            if let error = error {
-                                print("회원가입 정보 저장 실패 \(error.localizedDescription)")
-                                self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
-                            } else {
-                                print("회원가입 정보 저장 성공 \(email)")
-                                self.dismiss(animated: true, completion: nil)
-                                self.setAlertView(title: "회원가입 성공", subTitle: "회원가입이 완료되었습니다.")
-                            }
-                        }
+            let userData: [String: Any] = [
+                "email": email,
+                "nickname": nickname,
+                "profile-image": "Group 5",
+                "block-user-list": [],
+                "d-day-title": "",
+                "d-day": "",
+                "target-time": "7",
+                "challenge": [
+                    "01" : false, // 프로필 수정 - 처음 프로필 수정 하면 챌린지 성공
+                    "02" : false, // 메인 - 처음 목표시간 채웠을 경우 챌린지 성공
+                    "03" : false, // 캘린더 디테일 - 처음 메모 작성 시 챌린지 성공
+                    "04" : false, // 메인 - 총 30개 채웠을 경우 챌린지 성공
+                    "05" : false, // 투두 - 처음 투두 프로그레스바가 100%완료 시 챌린지 성공 / 12시 기준 투두 5개 이상
+                    "06" : false, // 마이페이지 - 30일 채우면 챌린지 성공
+                ],
+            ]
+            
+            Firestore.firestore().collection("user-info").document(uid).setData(userData) { error in
+                self.activityIndicator.stopAnimating() // 처리 완료 시 로딩 인디케이터를 멈춤
+                if let error = error {
+                    print("회원가입 정보 저장 실패 \(error.localizedDescription)")
+                    self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
+                } else {
+                    print("회원가입 정보 저장 성공 \(email)")
+                    self.setAlertView(title: "회원가입 성공", subTitle: "회원가입이 완료되었습니다.")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.dismiss(animated: true, completion: nil)
                     }
                 }
-            } else {
-                self.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             }
         }
     }
