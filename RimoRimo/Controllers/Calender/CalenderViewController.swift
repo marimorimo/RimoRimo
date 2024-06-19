@@ -142,7 +142,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         view.addSubview(buttonStack)
         
         monthLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(90)
+            make.top.equalToSuperview().offset(70)//90
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(30)
@@ -153,7 +153,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         }
         
         buttonStack.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(90)
+            make.top.equalToSuperview().offset(80) //90
             make.leading.equalTo(monthLabel.snp.trailing).offset(10)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(30)
@@ -170,10 +170,10 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         mainCalendar.register(CustomCalendarCell.self, forCellReuseIdentifier: "CustomCalendarCell")
         
         mainCalendar.snp.makeConstraints { make in
-            make.top.equalTo(monthLabel.snp.bottom).offset(10)
+            make.top.equalTo(monthLabel.snp.bottom).offset(10)//10
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
-            make.bottom.equalToSuperview().inset(150) // 캘린더 높이 조절
+            make.bottom.equalToSuperview().inset(150) // 캘린더 높이 조절 150
         }
         mainCalendar.appearance.weekdayTextColor = MySpecialColors.MainColor
         mainCalendar.appearance.weekdayFont = UIFont(name: "Pretendard-SemiBold", size: 14)
@@ -315,6 +315,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 make.centerX.equalToSuperview()
                 make.centerY.equalToSuperview()
                 make.width.height.equalTo(45)
+                make.bottom.equalTo(customLabel).offset(-12)
             }
             
             customLabel.snp.makeConstraints { make in
