@@ -54,7 +54,9 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     
     let editButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
+        let image = UIImage(named: "edit-pencil-01")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.tintColor = MySpecialColors.MainColor
         button.addTarget(nil, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -223,24 +225,53 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     
                     // Update memoTextView with day-memo
                     if let dayMemo = memoData["day-memo"] as? String {
-                        self.memoTextView.text = dayMemo
                         if dayMemo == "" {
                             self.memoPlaceholderLabel.isHidden = false
                         } else {
+                            self.memoTextView.text = dayMemo
                             self.memoPlaceholderLabel.isHidden = true
                         }
                     }
                     
                     // Update timeLabel with total-time
-                    if let totalTime = memoData["total-time"] as? String {
-                        self.timeLabel.text = totalTime
-                    }
+                        if let totalTime = memoData["total-time"] as? String {
+                            if totalTime == "" {
+                                self.timeLabel.text = "00:00:00"
+                            } else {
+                                self.timeLabel.text = totalTime
+                            }
+                        }
+                    
+                    // Update Marimo Image
+                    let marimoState = memoData["marimo-state"] as? Int
+                    let profileImageName = memoData["profile-image-name"] as? String
+                    self.updateMarimoImage(with: marimoState, profileImageName: profileImageName)
                 } else {
                     print("No document found for day: \(day)")
                     self.memoPlaceholderLabel.isHidden = false
                 }
             }
     }
+    
+    private func updateMarimoImage(with state: Int?, profileImageName: String?) {
+        var imageName: String
+        switch state {
+        case -1:
+            imageName = "Group 1"
+        case 0:
+            imageName = "Group 2"
+        case 1:
+            imageName = "Group 3"
+        case 2:
+            imageName = "Group 4"
+        case 3:
+            imageName = profileImageName ?? "Group7"
+        default:
+            imageName = "Group 7"
+        }
+        self.marimoImage.image = UIImage(named: imageName)
+    }
+    
     
     private func saveMemoToFirebase() {
         guard let uid = uid, let day = data?["day"] as? String else {
@@ -274,11 +305,16 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
         memoPlaceholderLabel.isHidden = true
+        editButton.tintColor = MySpecialColors.Gray3
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             memoPlaceholderLabel.isHidden = false
+            editButton.tintColor = MySpecialColors.Gray3
+        } else {
+            memoTextView.textColor = MySpecialColors.Gray4
+            editButton.tintColor = MySpecialColors.MainColor
         }
     }
     
@@ -287,7 +323,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             checkMaxLength(textView)
             setupTextViewLineSpacing()
             
-            memoTextView.textColor = MySpecialColors.Gray4
+            memoTextView.textColor = MySpecialColors.Gray3
             memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
             
             if textView.text.isEmpty {
@@ -318,139 +354,3 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         memoTextView.attributedText = attributedString
     }
 }
-
-//import UIKit
-//import FirebaseFirestore
-//import FirebaseAuth
-//
-//class CalenderDeatailViewController: UIViewController {
-//    var data: [String: Any]?
-//    private var uid: String? {
-//        return Auth.auth().currentUser?.uid
-//    }
-//    private let calenderDeatailTitle: UILabel = {
-//        let text = UILabel()
-//        text.text = "CalenderDeatail"
-//        return text
-//    }()
-//    
-//    private lazy var memoLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "메모를 추가하려면 탭하세요."
-//        label.isUserInteractionEnabled = true
-//        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleMemoLabelTap)))
-//        return label
-//    }()
-//    
-//    private lazy var memoTextField: UITextField = {
-//        let textField = UITextField()
-//        textField.isHidden = true
-//        textField.borderStyle = .roundedRect
-//        return textField
-//    }()
-//    
-//    private lazy var saveButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Save Memo", for: .normal)
-//        button.addTarget(self, action: #selector(saveMemo), for: .touchUpInside)
-//        return button
-//    }()
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        view.backgroundColor = .white
-//        
-//        view.addSubview(calenderDeatailTitle)
-//        view.addSubview(memoLabel)
-//        view.addSubview(memoTextField)
-//        view.addSubview(saveButton)
-//        
-//        calenderDeatailTitle.translatesAutoresizingMaskIntoConstraints = false
-//        memoLabel.translatesAutoresizingMaskIntoConstraints = false
-//        memoTextField.translatesAutoresizingMaskIntoConstraints = false
-//        saveButton.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            calenderDeatailTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            calenderDeatailTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-//            
-//            memoLabel.topAnchor.constraint(equalTo: calenderDeatailTitle.bottomAnchor, constant: 20),
-//            memoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            
-//            memoTextField.topAnchor.constraint(equalTo: calenderDeatailTitle.bottomAnchor, constant: 20),
-//            memoTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            memoTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//            memoTextField.heightAnchor.constraint(equalToConstant: 40),
-//            
-//            saveButton.topAnchor.constraint(equalTo: memoTextField.bottomAnchor, constant: 20),
-//            saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-//        ])
-//        
-//        displayData()
-//    }
-//    
-//    private func displayData() {
-//        guard let data = data else { return }
-//        
-//        var topAnchor = memoLabel.bottomAnchor
-//        
-//        for (key, value) in data {
-//            let keyLabel = UILabel()
-//            keyLabel.text = key
-//            keyLabel.font = UIFont.boldSystemFont(ofSize: 16)
-//            keyLabel.translatesAutoresizingMaskIntoConstraints = false
-//            view.addSubview(keyLabel)
-//            
-//            let valueLabel = UILabel()
-//            valueLabel.text = "\(value)"
-//            valueLabel.translatesAutoresizingMaskIntoConstraints = false
-//            view.addSubview(valueLabel)
-//            
-//            NSLayoutConstraint.activate([
-//                keyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//                keyLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-//                
-//                valueLabel.leadingAnchor.constraint(equalTo: keyLabel.trailingAnchor, constant: 10),
-//                valueLabel.firstBaselineAnchor.constraint(equalTo: keyLabel.firstBaselineAnchor),
-//                valueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-//            ])
-//            
-//            topAnchor = keyLabel.bottomAnchor
-//        }
-//    }
-//    
-//    @objc private func handleMemoLabelTap() {
-//        memoLabel.isHidden = true
-//        memoTextField.isHidden = false
-//        memoTextField.becomeFirstResponder()
-//    }
-//    
-//    @objc private func saveMemo() {
-//        guard let uid = uid, let day = data?["day"] as? String else {
-//            print("UID or day is nil")
-//            return
-//        }
-//        
-//        guard let memoText = memoTextField.text else {
-//            print("Memo text is nil")
-//            return
-//        }
-//        
-//        let memoData: [String: Any] = [
-//            "day-memo": memoText
-//        ]
-//        
-//        Firestore.firestore()
-//            .collection("user-info")
-//            .document(uid)
-//            .collection("study-sessions")
-//            .document(day)
-//            .updateData(memoData) { error in
-//                if let error = error {
-//                    print("메모 업데이트 중 오류 발생: \(error.localizedDescription)")
-//                } else {
-//                    print("메모가 성공적으로 업데이트되었습니다.")
-//                }
-//            }
-//    }
-//}
