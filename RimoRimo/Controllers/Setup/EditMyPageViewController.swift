@@ -715,6 +715,7 @@ class EditMyPageViewController: UIViewController {
         }
     }
     
+    // 키보드
     @objc func keyboardWillShow(_ noti: NSNotification){
         if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue

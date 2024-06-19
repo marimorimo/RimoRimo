@@ -87,6 +87,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         setupGestureRecognizer()
         
         memoTextView.delegate = self
+        tapView()
         
         loadMemoData()
            
@@ -116,12 +117,12 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         }
         
         timeLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(140)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
             make.centerX.equalToSuperview()
         }
         
         marimoImage.snp.makeConstraints { make in
-            make.top.equalTo(timeLabel.snp.bottom).offset(52)
+            make.top.equalTo(timeLabel.snp.bottom).offset(42)
             make.centerX.equalToSuperview()
             make.height.equalTo(159)
             make.width.equalTo(165)
@@ -172,12 +173,20 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     private func setupGestureRecognizer() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         view.addGestureRecognizer(tapGesture)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc private func editButtonTapped() {
         memoPlaceholderLabel.isHidden = true
         memoTextView.isEditable = true
         memoTextView.becomeFirstResponder()
+        memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
+        memoTextView.textColor = MySpecialColors.Gray4
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc private func viewTapped() {
@@ -187,12 +196,59 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         memoTextView.isEditable = false
         memoTextView.isScrollEnabled = true
         
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        saveMemoToFirebase()
+        if !memoTextView.text.isEmpty {
+            setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+        }
+        
+    }
+    
+    // MARK: - Keyboard
+    
+    @objc func keyboardWillShow(_ noti: NSNotification){
+        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            
+            // memoView
+            let memoViewFrame = memoView.frame
+            
+            let keyboardHeight = keyboardRectangle.height
+            let screenHeight = UIScreen.main.bounds.height
+            let memoViewBottomY = memoViewFrame.origin.y + memoViewFrame.height
+            
+            // 메모뷰가 키보드보다 위에 있을 때만 뷰를 올림
+            if memoViewBottomY > (screenHeight - keyboardHeight - 100) {
+                let offsetY = memoViewBottomY - (screenHeight - keyboardHeight - 20)
+                self.view.frame.origin.y = -offsetY
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        UIView.animate(withDuration: 0.3) {
+               self.view.frame.origin.y = 0
+           }
+    }
+    
+    private func tapView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+           // view에 gesture 추가
+           view.addGestureRecognizer(tapGesture)
+    }
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        // 터치된 지점이 키보드를 닫을 필요가 있는 경우
+        view.endEditing(true)
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame.origin.y = 0
+        }
         saveMemoToFirebase()
         if !memoTextView.text.isEmpty {
             setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
         }
     }
-    
     
     // MARK: - Firebase Data Handling
     var data: [String: Any]?
@@ -200,6 +256,9 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         return Auth.auth().currentUser?.uid
     }
     
+    private var profileImageName: String?
+    private var marimoState: Int?
+
     private func loadMemoData() {
         guard let uid = uid, let day = data?["day"] as? String else {
             print("UID or day is nil")
@@ -218,61 +277,82 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             return
         }
         
+        // Fetch profile-image from user-info
+        Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .getDocument { (userInfoDocument, userInfoError) in
+                if let userInfoError = userInfoError {
+                    print("Error fetching user info document: \(userInfoError.localizedDescription)")
+                    return
+                }
+                
+                if let userInfoDocument = userInfoDocument, userInfoDocument.exists {
+                    let userInfo = userInfoDocument.data() ?? [:]
+                    print("User info document data: \(userInfo)")
+                    
+                    // Fetch profile-image from userInfo
+                    self.profileImageName = userInfo["profile-image"] as? String
+                    
+                    // Call updateMarimoImage with profileImageName and marimoState
+                    self.updateMarimoImage()
+                    
+                } else {
+                    print("No user info document found for uid: \(uid)")
+                }
+            }
         
-        guard let memoText = memoTextView.text else {
-            print("Memo text is nil")
-            return
-        }
-        
+        // Fetch study session data
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
             .collection("study-sessions")
             .document(day)
-            .getDocument { (document, error) in
-                if let error = error {
-                    print("Error fetching document: \(error.localizedDescription)")
+            .getDocument { (studySessionDocument, studySessionError) in
+                if let studySessionError = studySessionError {
+                    print("Error fetching study session document: \(studySessionError.localizedDescription)")
                     return
                 }
                 
-                if let document = document, document.exists {
-                    let memoData = document.data() ?? [:]
-                    print("Document data: \(memoData)")
+                if let studySessionDocument = studySessionDocument, studySessionDocument.exists {
+                    let studySessionData = studySessionDocument.data() ?? [:]
+                    print("Study session document data: \(studySessionData)")
                     
                     // Update memoTextView with day-memo
-                    if let dayMemo = memoData["day-memo"] as? String {
+                    if let dayMemo = studySessionData["day-memo"] as? String {
                         if dayMemo == "" {
                             self.memoPlaceholderLabel.isHidden = false
                         } else {
                             self.memoTextView.text = dayMemo
                             self.memoPlaceholderLabel.isHidden = true
+                            self.setupTextViewLineSpacing()
+                            self.memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
                         }
                     }
                     
                     // Update timeLabel with total-time
-                        if let totalTime = memoData["total-time"] as? String {
-                            if totalTime == "" {
-                                self.timeLabel.text = "00:00:00"
-                            } else {
-                                self.timeLabel.text = totalTime
-                            }
+                    if let totalTime = studySessionData["total-time"] as? String {
+                        if totalTime == "" {
+                            self.timeLabel.text = "00:00:00"
+                        } else {
+                            self.timeLabel.text = totalTime
                         }
+                    }
                     
-                    // Update Marimo Image
-                    let marimoState = memoData["marimo-state"] as? Int
-                    let profileImageName = memoData["profile-image"] as? String
-                    self.updateMarimoImage(with: marimoState, profileImageName: profileImageName)
+                    self.marimoState = studySessionData["marimo-state"] as? Int ?? 0
+                    self.updateMarimoImage()
+                    
                 } else {
-                    print("No document found for day: \(day)")
+                    print("No study session document found for day: \(day)")
                     self.memoPlaceholderLabel.isHidden = false
                 }
-                
             }
     }
-    
-    private func updateMarimoImage(with state: Int?, profileImageName: String?) {
+
+    private func updateMarimoImage() {
         var imageName: String
-        switch state {
+        
+        switch marimoState {
         case 0:
             imageName = "Group 1"
         case 1:
@@ -286,6 +366,8 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         default:
             imageName = "Group 7"
         }
+        
+        print("\(imageName)")
         self.marimoImage.image = UIImage(named: imageName)
     }
     
@@ -408,15 +490,18 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
+        setupTextViewLineSpacing()
         memoPlaceholderLabel.isHidden = true
         editButton.tintColor = MySpecialColors.Gray3
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
+            setupTextViewLineSpacing()
             memoPlaceholderLabel.isHidden = false
             editButton.tintColor = MySpecialColors.Gray3
         } else {
+            setupTextViewLineSpacing()
             memoTextView.textColor = MySpecialColors.Gray4
             editButton.tintColor = MySpecialColors.MainColor
         }
@@ -427,7 +512,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             checkMaxLength(textView)
             setupTextViewLineSpacing()
             
-            memoTextView.textColor = MySpecialColors.Gray3
+            memoTextView.textColor = MySpecialColors.Gray4
             memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
             
             if textView.text.isEmpty {
