@@ -187,6 +187,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         memoTextView.isScrollEnabled = true
         
         saveMemoToFirebase()
+        setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
     }
     
     
@@ -300,6 +301,93 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     print("메모가 성공적으로 저장되었습니다.")
                 }
             }
+    }
+    
+    // MARK: - setAlertView
+    let alertBack = AlertUIFactory.alertBackView()
+    let alertView = AlertUIFactory.alertView()
+    
+    let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
+    let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+    
+    let widthLine = AlertUIFactory.widthLine()
+    let heightLine = AlertUIFactory.heightLine()
+
+    let checkView = AlertUIFactory.checkView()
+    let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+    
+    @objc private func setAlertView(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+        
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        [alertTitle, alertSubTitle, widthLine, checkView].forEach {
+            alertView.addSubview($0)
+        }
+        checkView.addSubview(checkLabel)
+        
+        alertBack.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        alertView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(46)
+            make.trailing.equalToSuperview().inset(46)
+            make.height.equalTo(140)
+        }
+        
+        alertTitle.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(24)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertSubTitle.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        widthLine.snp.makeConstraints { make in
+            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
+        }
+        
+        checkView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        checkLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+    }
+    
+    @objc private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+            self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+            self.alertView.removeFromSuperview()
+        }
     }
     
     // MARK: - UITextViewDelegate
