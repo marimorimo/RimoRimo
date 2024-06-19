@@ -399,6 +399,7 @@ class EditMyPageViewController: UIViewController {
                     // Update ProfileImage
                     if let profileImageName = data?["profile-image"] as? String, !profileImageName.isEmpty {
                         DispatchQueue.main.async {
+                            print("프로필 설정: \(profileImageName)")
                             self.changeProfile.setImage(UIImage(named: profileImageName) ?? UIImage(named: "Group 5"), for: .normal)
                             self.changeProfile.imageView?.contentMode = .scaleAspectFit
                         }
@@ -555,7 +556,26 @@ class EditMyPageViewController: UIViewController {
         
         if let imageName = selectedProfileImageName {
             updateData["profile-image"] = imageName
+            
+            userDocRef.collection("study-sessions").getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error getting study-sessions documents: \(error)")
+                    return
+                }
+                if let documents = querySnapshot?.documents {
+                    for document in documents {
+                        document.reference.updateData(["profile-image": imageName]) { error in
+                            if let error = error {
+                                print("Error updating study-session document: \(error)")
+                            } else {
+                                print("Study-session document successfully updated with profile-image")
+                            }
+                        }
+                    }
+                }
+            }
         }
+        
         if let nickname = editNickName.text, !nickname.isEmpty {
             updateData["nickname"] = nickname
             

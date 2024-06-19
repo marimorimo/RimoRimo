@@ -22,6 +22,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     
     let marimoImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "Group 3"))
+        image.contentMode = .scaleAspectFill
         return image
     }()
     
@@ -94,6 +95,11 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         
         loadMemoData()
            
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadMemoData()
     }
     
     
@@ -187,7 +193,9 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         memoTextView.isScrollEnabled = true
         
         saveMemoToFirebase()
-        setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+        if !memoTextView.text.isEmpty {
+            setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+        }
     }
     
     
@@ -245,7 +253,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                     
                     // Update Marimo Image
                     let marimoState = memoData["marimo-state"] as? Int
-                    let profileImageName = memoData["profile-image-name"] as? String
+                    let profileImageName = memoData["profile-image"] as? String
                     self.updateMarimoImage(with: marimoState, profileImageName: profileImageName)
                 } else {
                     print("No document found for day: \(day)")
@@ -257,15 +265,15 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     private func updateMarimoImage(with state: Int?, profileImageName: String?) {
         var imageName: String
         switch state {
-        case -1:
-            imageName = "Group 1"
         case 0:
-            imageName = "Group 2"
+            imageName = "Group 1"
         case 1:
-            imageName = "Group 3"
+            imageName = "Group 2"
         case 2:
-            imageName = "Group 4"
+            imageName = profileImageName ?? "Group7"
         case 3:
+            imageName = profileImageName ?? "Group7"
+        case 4:
             imageName = profileImageName ?? "Group7"
         default:
             imageName = "Group 7"

@@ -195,7 +195,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         let isToday = Calendar.current.isDateInToday(date)
         let dateString = formatDate(date: date)
         if let session = sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
-            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: session["profile-image-name"] as? String)
+            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: session["profile-image"] as? String)
         } else {
             cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current, profileImageName: nil) // 데이터가 없으면 이미지 없음
         }
@@ -283,15 +283,15 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 var imageName: String?
                 
                 switch marimoState {
-                case -1:
-                    imageName = "Group 1"
                 case 0:
-                    imageName = "Group 2"
+                    imageName = "Group 1"
                 case 1:
-                    imageName = "Group 3"
+                    imageName = "Group 2"
                 case 2:
-                    imageName = "Group 4"
+                    imageName = "Group 3"
                 case 3:
+                    imageName = "Group 4"
+                case 4:
                     imageName = profileImageName ?? "Group7"
                 default:
                     imageName = nil

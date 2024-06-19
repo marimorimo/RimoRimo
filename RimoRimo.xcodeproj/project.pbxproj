@@ -68,6 +68,7 @@
 		4500E9C62C1C6BFA005BB8DF /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4500E9C72C1C6BFA005BB8DF /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */; };
+		4574B3A42C22AF6800B3E161 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */; };
 		7863C0D62C1C6D6B00D91E8C /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
 		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
@@ -152,6 +153,7 @@
 		1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedUITableViewCell.swift; path = RimoRimo/Views/BlockedUITableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoPopupCalendarViewController.swift; sourceTree = "<group>"; };
 		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				0B18087C2C19966D00081B2A /* AccountInfoViewController.swift */,
+				4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */,
 				0B18087D2C19966D00081B2A /* EditMyPageViewController.swift */,
 				11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */,
 				11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */,
@@ -525,6 +528,7 @@
 				7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
+				4574B3A42C22AF6800B3E161 /* ResetPasswordViewController.swift in Sources */,
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
 				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,

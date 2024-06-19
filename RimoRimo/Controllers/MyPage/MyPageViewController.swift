@@ -353,6 +353,7 @@ class MyPageViewController: UIViewController {
     // MARK: - move to Setting page
     @objc private func moveToSetting() {
         let settingsVC = SetupViewController()
+        settingsVC.hidesBottomBarWhenPushed = true
 
         //Test for widget Data setting
         UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: -20, to: Date()), forKey: "startDate")
