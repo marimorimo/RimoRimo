@@ -30,7 +30,7 @@ class AccountInfoViewController: UIViewController {
     private lazy var withdrawButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
-        button.setTitle("회원탈퇴", for: .normal)
+        button.setTitle("회원 탈퇴", for: .normal)
         button.titleLabel?.font = .pretendard(style: .regular, size: 12)
         button.addTarget(self, action: #selector(withdrawButtonTapped), for: .touchUpInside)
         button.setTitleColor(MySpecialColors.Gray3, for: .normal)
@@ -62,7 +62,7 @@ class AccountInfoViewController: UIViewController {
         }
         
         withdrawButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(15)
             make.centerX.equalToSuperview()
             make.height.equalTo(16)
             make.width.equalTo(56)
