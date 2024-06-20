@@ -121,7 +121,6 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     //MARK: - setupNavigationBar
     private func setupNavigationBar() {
         title = "비밀번호 변경"
-        navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = MySpecialColors.MainColor
     }
     

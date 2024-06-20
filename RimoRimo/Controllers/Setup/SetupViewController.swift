@@ -157,6 +157,9 @@ extension SetupViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            navigationItem.backBarButtonItem = backBarButtonItem
+        
         switch indexPath.row {
         case 0:
             let nextVC = EditMyPageViewController()
