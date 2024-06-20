@@ -758,7 +758,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         }
     }
     
-    private func resetTimer() {
+    func resetTimer() {
         print("집중 모드 데이터 삭제")
         self.setStopTime(date: nil)
         self.setStartTime(date: nil)

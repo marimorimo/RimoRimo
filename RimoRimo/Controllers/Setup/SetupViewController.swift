@@ -169,6 +169,9 @@ class SetupViewController: UIViewController {
    
     private let saveAutoLoginInfo = "userEmail"
     @objc private func performLogout() {
+        // 로그아웃 후 메인뷰컨트롤러의 resetTimer 작동
+        let mainViewController = MainViewController()
+        mainViewController.resetTimer()
         do {
             try Auth.auth().signOut()
             // 로그아웃 후 저장된 로그인 정보 삭제
