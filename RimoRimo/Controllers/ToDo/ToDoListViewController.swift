@@ -299,7 +299,9 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
 
             // 스크롤 위치 조정
             if let editingIndexPath = editingIndexPath {
-                tableView.scrollToRow(at: editingIndexPath, at: .middle, animated: true)
+                if tableView.numberOfRows(inSection: editingIndexPath.section) > editingIndexPath.row {
+                    tableView.scrollToRow(at: editingIndexPath, at: .middle, animated: true)
+                }
             } else {
                 textFieldStack.snp.updateConstraints { make in
                     make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
@@ -476,18 +478,16 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             tableView.reloadRows(at: [previousIndexPath], with: .automatic)
         }
         
-        // 키보드를 숨기고 textFieldStack을 원래 위치로 이동
-        dismissKeyboard()
-        textFieldStack.snp.updateConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-        }
-
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
         let todo = todos[indexPath.row]
         guard let todoText = todo["todo"] as? String else { return }
         cell.setEditMode(todoText: todoText, target: self)
         
         editingIndexPath = indexPath
+        // textFieldStack 위치를 원래대로 되돌립니다.
+        textFieldStack.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
     }
     
     // MARK: - Swipe to Delete
