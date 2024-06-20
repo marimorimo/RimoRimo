@@ -45,19 +45,19 @@ class AlertOnboarding {
     }
 
     func setupConstraints(in view: UIView) {
-        onboardingBackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        onboardingBackView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
-        onboardingView.snp.makeConstraints { make in
-            make.centerY.equalTo(onboardingBackView.snp.centerY)
-            make.leading.trailing.equalTo(onboardingBackView).inset(46)
+        onboardingView.snp.makeConstraints {
+            $0.centerY.equalTo(onboardingBackView.snp.centerY)
+            $0.leading.trailing.equalTo(onboardingBackView).inset(46)
         }
         
-        onboardingText.snp.makeConstraints { make in
-            make.top.equalTo(onboardingView.snp.top).offset(16)
-            make.bottom.equalTo(onboardingView.snp.bottom).offset(-16)
-            make.centerX.equalTo(onboardingView.snp.centerX)
+        onboardingText.snp.makeConstraints {
+            $0.top.equalTo(onboardingView.snp.top).offset(16)
+            $0.bottom.equalTo(onboardingView.snp.bottom).offset(-16)
+            $0.centerX.equalTo(onboardingView.snp.centerX)
         }
     }
 }
