@@ -20,6 +20,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var listener: ListenerRegistration?
     
     // PickDate Setup
+    let dateView: UIView = {
+        let view = UIView()
+        return view
+    }()
     let dateStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -71,6 +75,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     func setupUI() {
         view.backgroundColor = MySpecialColors.Gray1
         view.addSubview(dateStack)
+        view.addSubview(dateView)
         [calendarButton, editDate].forEach {
             dateStack.addArrangedSubview($0)
         }
@@ -113,6 +118,13 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Constraints Setup
     func setupConstraints() {
+        
+        dateView.snp.makeConstraints { make in
+            make.top.equalTo(view).offset(95)
+            make.width.equalTo(104)
+            make.height.equalTo(30)
+            make.trailing.equalToSuperview().inset(24)
+        }
         dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
             make.leading.equalTo(view).offset(246)
@@ -161,8 +173,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     private func setupEditDateTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
         let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
+        let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(editDateTapped))
         editDate.addGestureRecognizer(tapGesture)
         calendarButton.addGestureRecognizer(tapGesture2)
+        dateView.addGestureRecognizer(tapGesture3)
     }
     
     // MARK: - Actions
