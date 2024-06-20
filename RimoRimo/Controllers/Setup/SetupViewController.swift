@@ -272,10 +272,10 @@ extension SetupViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.row {
         case 0:
             let nextVC = EditMyPageViewController()
-            self.navigationController?.pushViewController(nextVC, animated: false)
+            self.navigationController?.pushViewController(nextVC, animated: true)
         case 1:
             let nextVC = AccountInfoViewController()
-            self.navigationController?.pushViewController(nextVC, animated: false)
+            self.navigationController?.pushViewController(nextVC, animated: true)
         default:
             debugPrint("invalid indexPath")
         }
