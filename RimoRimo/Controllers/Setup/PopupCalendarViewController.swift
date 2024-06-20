@@ -203,13 +203,12 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
     // MARK: - FSCalendarDelegate
     
     func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {
-//        let canSelect = !isDateInPast(date)
-//        
-//        if !canSelect {
-//            setAlertView(title: "선택 불가", subTitle: "지난 날짜는 선택할 수 없습니다.")
-//        }
-//        return canSelect
-        return true
+        let canSelect = !isDateInPast(date)
+        
+        if !canSelect {
+            setAlertView(title: "선택 불가", subTitle: "지난 날짜는 선택할 수 없습니다.")
+        }
+        return canSelect
     }
     private func isDateInPast(_ date: Date) -> Bool {
         let today = Calendar.current.startOfDay(for: Date())
