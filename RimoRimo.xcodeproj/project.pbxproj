@@ -52,7 +52,6 @@
 		0B4A5B1A2C243EDC000F8DDE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B192C243EDC000F8DDE /* Then */; };
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
-		0B4A5B322C24C87D000F8DDE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B4A5B312C24C87D000F8DDE /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -79,6 +78,7 @@
 		4500E9C72C1C6BFA005BB8DF /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */; };
 		4574B3A42C22AF6800B3E161 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */; };
+		784A93772C24CBA8006A02C7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 784A93762C24CBA8006A02C7 /* GoogleService-Info.plist */; };
 		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
 /* End PBXBuildFile section */
@@ -147,7 +147,6 @@
 		0B4A5B0C2C243B6E000F8DDE /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
 		0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
-		0B4A5B312C24C87D000F8DDE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Swift-Study/study-marimo/study-marimo/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -169,6 +168,7 @@
 		4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoPopupCalendarViewController.swift; sourceTree = "<group>"; };
 		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		784A93762C24CBA8006A02C7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,8 +232,8 @@
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
-				0B4A5B312C24C87D000F8DDE /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
+				784A93762C24CBA8006A02C7 /* GoogleService-Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
 			path = RimoRimo;
@@ -515,7 +515,7 @@
 				0B18086D2C19965700081B2A /* Pretendard-ExtraLight.ttf in Resources */,
 				0B1808692C19965700081B2A /* Pretendard-Medium.ttf in Resources */,
 				0B18086A2C19965700081B2A /* Pretendard-Black.ttf in Resources */,
-				0B4A5B322C24C87D000F8DDE /* GoogleService-Info.plist in Resources */,
+				784A93772C24CBA8006A02C7 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -235,6 +235,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func saveEditedText(_ sender: UIButton) {
         guard let indexPath = editingIndexPath else { return }
+        saveEditedText(at: indexPath)
+    }
+    
+    func saveEditedText(at indexPath: IndexPath) {
         let todo = todos[indexPath.row]
         guard let documentId = todo["id"] as? String else { return }
         let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
@@ -288,24 +292,31 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             let keyboardHeight = keyboardFrame.height
-            textFieldStack.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
-            }
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+            tableView.contentInset = contentInsets
+            tableView.scrollIndicatorInsets = contentInsets
+
+            // 스크롤 위치 조정
+            if let editingIndexPath = editingIndexPath {
+                tableView.scrollToRow(at: editingIndexPath, at: .middle, animated: true)
+            } else {
+                textFieldStack.snp.updateConstraints { make in
+                    make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
+                }
             }
         }
     }
-    
+
     @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+
         textFieldStack.snp.updateConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
-    
+
     // MARK: - Firebase Functions
     func addSnapshotListener(for date: Date) {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -413,7 +424,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        saveToDo()
+        if let indexPath = editingIndexPath {
+            saveEditedText(at: indexPath)
+        } else {
+            saveToDo()
+        }
         textField.resignFirstResponder()
         return true
     }
@@ -581,36 +596,41 @@ class ToDoTableViewCell: UITableViewCell {
     
     func setEditMode(todoText: String, target: Any) {
         todoTextLabel.isHidden = true
+
+        textField?.removeFromSuperview()
+        saveButton?.removeFromSuperview()
         
         textField = UITextField()
         textField.text = todoText
         textField.borderStyle = .none
         textField.tag = toggleButton.tag
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.delegate = target as? UITextFieldDelegate
         contentView.addSubview(textField)
-        
+
         saveButton = UIButton(type: .system)
         saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
         saveButton.tintColor = MySpecialColors.MainColor
         saveButton.addTarget(target, action: #selector(ToDoListViewController.saveEditedText(_:)), for: .touchUpInside)
         saveButton.tag = toggleButton.tag
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(saveButton)
-        
-        textField.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.centerY.equalTo(contentView)
-            make.trailing.equalTo(saveButton.snp.leading).offset(-10)
-            make.height.equalTo(30)
-        }
-        
-        saveButton.snp.makeConstraints { make in
-            make.trailing.equalTo(contentView).offset(-10)
-            make.centerY.equalTo(contentView)
-            make.width.height.equalTo(30)
-        }
-        
+
+        NSLayoutConstraint.activate([
+            textField.leadingAnchor.constraint(equalTo: toggleButton.trailingAnchor, constant: 10),
+            textField.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            textField.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: -10),
+            textField.heightAnchor.constraint(equalToConstant: 30),
+            
+            saveButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            saveButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            saveButton.widthAnchor.constraint(equalToConstant: 30),
+            saveButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+
         textField.becomeFirstResponder()
         if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
-            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) //텍스트 필드 활성화 되면 텍스트 맨 끝으로 커서 보내기
+            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) // 텍스트 필드 활성화 시 텍스트 끝으로 커서 이동
         }
     }
     
