@@ -166,16 +166,18 @@ class SetupViewController: UIViewController {
         }
     }
 
-   
+    private let START_TIME_KEY = "startTime"
+    private let STOP_TIME_KEY = "stopTime"
+    private let COUNTING_KEY = "countingKey"
     private let saveAutoLoginInfo = "userEmail"
     @objc private func performLogout() {
-        // 로그아웃 후 메인뷰컨트롤러의 resetTimer 작동
-        let mainViewController = MainViewController()
-        mainViewController.resetTimer()
         do {
             try Auth.auth().signOut()
             // 로그아웃 후 저장된 로그인 정보 삭제
             UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
+            UserDefaults.standard.removeObject(forKey: START_TIME_KEY)
+            UserDefaults.standard.removeObject(forKey: STOP_TIME_KEY)
+            UserDefaults.standard.removeObject(forKey: COUNTING_KEY)
             // 로그인 화면으로 이동
             let loginViewController = LoginViewController()
             let navController = UINavigationController(rootViewController: loginViewController)

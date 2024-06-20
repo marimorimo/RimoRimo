@@ -260,26 +260,26 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
     var lastSelectedDate: Date?
     private let db = Firestore.firestore()
     // Firebase Fetch
-        private func fetchLastSelectedDateFromFirebase() {
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("User not authenticated")
-                return
-            }
-
-            let userDocRef = db.collection("user-info").document(uid)
-            userDocRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    if let selectedTimestamp = document.data()?["day"] as? Timestamp {
-                        let selectedDate = selectedTimestamp.dateValue()
-                        self.lastSelectedDate = selectedDate
-                        self.mainCalendar.select(selectedDate)
-                        self.mainCalendar.setCurrentPage(selectedDate, animated: true)
-                        self.updateHeaderTitle(for: selectedDate)
-                    }
-                } else {
-                    print("Document does not exist")
+    private func fetchLastSelectedDateFromFirebase() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
+        
+        let userDocRef = db.collection("user-info").document(uid)
+        userDocRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let selectedTimestamp = document.data()?["day"] as? Timestamp {
+                    let selectedDate = selectedTimestamp.dateValue()
+                    self.lastSelectedDate = selectedDate
+                    self.mainCalendar.select(selectedDate)
+                    self.mainCalendar.setCurrentPage(selectedDate, animated: true)
+                    self.updateHeaderTitle(for: selectedDate)
                 }
+            } else {
+                print("Document does not exist")
             }
         }
+    }
     
 }
