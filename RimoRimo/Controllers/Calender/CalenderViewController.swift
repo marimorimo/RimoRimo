@@ -282,6 +282,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             if let marimoState = marimoState {
                 var imageName: String?
                 
+                print(marimoState)
                 switch marimoState {
                 case -1:
                     imageName = "Group 1"

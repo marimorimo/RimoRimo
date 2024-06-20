@@ -52,10 +52,10 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         return label
     }()
     
-    let editButton: UIButton = {
+    lazy var editButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
-        button.addTarget(nil, action: #selector(editButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
     }()
     

@@ -49,14 +49,14 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
     let cellImages = ["Group 2", "Group 3", "Group 4", "Group 5", "Group 13", "Group 12", "Group 11", "Group 10", "Group 9", "Group 8", "Group 7", "Group 6"]
     var selectedIndexPath: IndexPath?
     
-    let confirmButton: UIButton = {
+    lazy var confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("확인", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = MySpecialColors.MainColor
         button.layer.cornerRadius = 22
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         return button
     }()
     

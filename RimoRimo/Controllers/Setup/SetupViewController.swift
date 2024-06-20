@@ -36,7 +36,7 @@ class SetupViewController: UIViewController {
                                                   textColor: .white,
                                                   cornerRadius: 24,
                                                   backgroundColor: MySpecialColors.Gray3)
-        button.addTarget(nil, action: #selector(logoutButtonTapped(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(logoutButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
     @objc private func logoutButtonTapped(_ sender: UIButton) {
@@ -49,11 +49,11 @@ class SetupViewController: UIViewController {
     }
     
     private lazy var loginButton: UIButton = {
-        let button = TabButtonUIFactory.tapButton(buttonTitle: "로그인",
+        let button = TabButtonUIFactory.tapButton(buttonTitle: "로그아웃",
                                                   textColor: .white,
                                                   cornerRadius: 24,
-                                                  backgroundColor: MySpecialColors.MainColor)
-        button.addTarget(nil, action: #selector(loginButtonTapped(_:)), for: .touchUpInside)
+                                                  backgroundColor: MySpecialColors.Gray3)
+        button.addTarget(self, action: #selector(loginButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
     @objc private func loginButtonTapped(_ sender: UIButton) {
