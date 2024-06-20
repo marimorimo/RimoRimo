@@ -127,7 +127,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
-            make.leading.equalTo(view).offset(246)
+            make.trailing.equalTo(view).offset(30)
         }
         
         textFieldStack.snp.makeConstraints { make in

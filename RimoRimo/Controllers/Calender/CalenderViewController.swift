@@ -60,7 +60,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     private var collectionRef: CollectionReference!
     private var listener: ListenerRegistration?
-    private var sessionData: [String: Any] = [:]
+    private var sessionData: [String: [String: Any]] = [:]
     
     // MARK: - Override
     override func viewDidLoad() {
@@ -83,52 +83,49 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     }
     
     private func fetchUserDataAndBindUI() {
-        guard let uid = uid else {
-            print("유저 정보를 찾을 수 없음")
-            return
-        }
-        
-        let documentRef = Firestore.firestore().collection("user-info").document(uid)
-        
-        documentRef.addSnapshotListener { [weak self] (documentSnapshot, error) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("문서를 가져오는 중 오류 발생: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let document = documentSnapshot else {
-                print("문서가 존재하지 않음")
-                return
-            }
-            
-            if document.exists {
-                if let data = document.data() {
-                    print("Data: \(data)")
-                    
-                    if let imageName = data["profile-image"] as? String {
-                        DispatchQueue.main.async {
-                            self.profileImageName = imageName
-                            self.mainCalendar.reloadData() // 캘린더 리로드
-                        }
-                    } else {
-                        print("No profile-image")
-                        DispatchQueue.main.async {
-                            self.profileImageName = "Group 9"
-                            self.mainCalendar.reloadData() // 캘린더 리로드
-                        }
-                    }
-                    
-                } else {
-                    print("문서 데이터가 비어 있습니다.")
-                }
-            } else {
-                print("문서가 존재하지 않습니다")
-            }
-        }
-        
-    }
+           guard let uid = uid else {
+               print("유저 정보를 찾을 수 없음")
+               return
+           }
+           
+           // Fetch marimo-name data from study-sessions collection
+           let studySessionRef = Firestore.firestore()
+               .collection("user-info")
+               .document(uid)
+               .collection("study-sessions")
+           
+           studySessionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
+               guard let self = self else { return }
+               
+               if let error = error {
+                   print("문서를 가져오는 중 오류 발생: \(error.localizedDescription)")
+                   return
+               }
+               
+               guard let documents = querySnapshot?.documents else {
+                   print("문서가 존재하지 않음")
+                   return
+               }
+               
+               if documents.isEmpty {
+                   print("문서 데이터가 비어 있습니다.")
+                   return
+               }
+               
+               // Process each document in the query snapshot
+               for document in documents {
+                   let data = document.data()
+                   print("Study Session Data: \(data)")
+                   
+                   let documentID = document.documentID // 문서 ID를 사용하여 sessionData에 저장
+                   self.sessionData[documentID] = data
+                   
+                   DispatchQueue.main.async {
+                       self.mainCalendar.reloadData() // 캘린더 리로드
+                   }
+               }
+           }
+       }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -243,13 +240,16 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     func calendar(_ calendar: FSCalendar, cellFor date: Date, at monthPosition: FSCalendarMonthPosition) -> FSCalendarCell {
         let cell = calendar.dequeueReusableCell(withIdentifier: "CustomCalendarCell", for: date, at: monthPosition) as! CustomCalendarCell
-        cell.profileImageName = self.profileImageName // profileImageName을 CustomCalendarCell에 전달
         let isToday = Calendar.current.isDateInToday(date)
         let dateString = formatDate(date: date)
-        if let session = sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
-            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current)
+        
+        if let session = sessionData[dateString] {
+            let marimoState = session["marimo-state"] as? Int
+            let marimoName = session["marimo-name"] as? String
+            cell.profileImageName = marimoName // marimoName을 CustomCalendarCell에 전달
+            cell.configure(with: date, marimoState: marimoState, isToday: isToday, isCurrentMonth: monthPosition == .current)
         } else {
-            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current) // 데이터가 없으면 이미지 없음
+            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current)
         }
         return cell
     }
@@ -338,13 +338,15 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 
                 print(marimoState)
                 switch marimoState {
-                case 0:
-                    imageName = "Group 1"
                 case 1:
-                    imageName = "Group 2"
+                    imageName = "Group 1"
                 case 2:
+                    imageName = "Group 2"
+                case 3:
+                    imageName = "Group 3"
+                case 4:
                     imageName = "Group 4"
-                case 3, 4...:
+                case 5:
                     imageName = profileImageName ?? "Group 7"
                 default:
                     imageName = nil
