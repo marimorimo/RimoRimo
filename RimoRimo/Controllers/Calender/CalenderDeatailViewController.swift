@@ -189,21 +189,25 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    private var isMemoChanged = false
+    
     @objc private func viewTapped() {
         if memoTextView.isFirstResponder {
             memoTextView.resignFirstResponder()
+            if isMemoChanged {
+                saveMemoToFirebase()
+                if !memoTextView.text.isEmpty {
+                    setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+                }
+                // 메모가 저장되었으므로 플래그를 초기화
+                isMemoChanged = false
+            }
         }
         memoTextView.isEditable = false
         memoTextView.isScrollEnabled = true
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        saveMemoToFirebase()
-        if !memoTextView.text.isEmpty {
-            setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
-        }
-        
     }
     
     // MARK: - Keyboard
@@ -244,9 +248,14 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         UIView.animate(withDuration: 0.3) {
             self.view.frame.origin.y = 0
         }
-        saveMemoToFirebase()
-        if !memoTextView.text.isEmpty {
-            setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+        
+        if isMemoChanged {
+            saveMemoToFirebase()
+            if !memoTextView.text.isEmpty {
+                setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+            }
+            // 메모가 저장되었으므로 플래그를 초기화
+            isMemoChanged = false
         }
     }
     
@@ -276,31 +285,6 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             print("Failed to convert day string to date.")
             return
         }
-        
-        // Fetch profile-image from user-info
-        Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .getDocument { (userInfoDocument, userInfoError) in
-                if let userInfoError = userInfoError {
-                    print("Error fetching user info document: \(userInfoError.localizedDescription)")
-                    return
-                }
-                
-                if let userInfoDocument = userInfoDocument, userInfoDocument.exists {
-                    let userInfo = userInfoDocument.data() ?? [:]
-                    print("User info document data: \(userInfo)")
-                    
-                    // Fetch profile-image from userInfo
-                    self.profileImageName = userInfo["profile-image"] as? String
-                    
-                    // Call updateMarimoImage with profileImageName and marimoState
-                    self.updateMarimoImage()
-                    
-                } else {
-                    print("No user info document found for uid: \(uid)")
-                }
-            }
         
         // Fetch study session data
         Firestore.firestore()
@@ -339,6 +323,8 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
                         }
                     }
                     
+                    self.profileImageName = studySessionData["marimo-name"] as? String ?? ""
+                    print("캘린더 디테일 마리모 이미지 확인1: \(String(describing: studySessionData["marimo-name"] as? String))")
                     self.marimoState = studySessionData["marimo-state"] as? Int ?? 0
                     self.updateMarimoImage()
                     
@@ -353,21 +339,22 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         var imageName: String
         
         switch marimoState {
-        case 0:
-            imageName = "Group 1"
         case 1:
-            imageName = "Group 2"
+            imageName = "Group 1"
         case 2:
-            imageName = "Group 3"
+            imageName = "Group 2"
         case 3:
-            imageName = "Group 4"
+            imageName = "Group 3"
         case 4:
+            imageName = "Group 4"
+        case 5:
             imageName = profileImageName ?? "Group7"
         default:
             imageName = "Group 7"
         }
         
         print("\(imageName)")
+        print("캘린더 디테일 마리모 이미지 확인2: \(String(describing: profileImageName))")
         self.marimoImage.image = UIImage(named: imageName)
     }
     
@@ -500,10 +487,12 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             setupTextViewLineSpacing()
             memoPlaceholderLabel.isHidden = false
             editButton.tintColor = MySpecialColors.Gray3
+            memoPlaceholderLabel.font = UIFont.pretendard(style: .regular, size: 14)
         } else {
             setupTextViewLineSpacing()
             memoTextView.textColor = MySpecialColors.Gray4
             editButton.tintColor = MySpecialColors.MainColor
+            memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
         }
     }
     
@@ -524,6 +513,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             let count  = textView.text.count
             characterCountLabel.text = "\(count)/50"
         }
+        isMemoChanged = true
     }
     
     func checkMaxLength(_ textView: UITextView) {
