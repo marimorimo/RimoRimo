@@ -346,7 +346,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 case 4:
                     imageName = "Group 4"
                 case 5:
-                    imageName =  marimoName ?? "Group 7"
+                    imageName = marimoName ?? "Group 7"
                 default:
                     imageName = nil
                 }
@@ -365,7 +365,13 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 }
                 marimoImageView.backgroundColor = .clear
             } else {
-                marimoImageView.image = nil
+                // 데이터가 없는 경우 기본 이미지를 설정
+                if let defaultImage = UIImage(named: "Gray") {
+                    marimoImageView.image = defaultImage
+                    marimoImageView.alpha = 0.8
+                } else {
+                    marimoImageView.image = nil
+                }
                 marimoImageView.backgroundColor = .clear
                 print("marimoState is nil.")
             }
@@ -381,6 +387,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 customLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
             }
         }
+
         
         override func layoutSubviews() {
             super.layoutSubviews()
