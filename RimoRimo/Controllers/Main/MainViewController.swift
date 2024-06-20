@@ -803,6 +803,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             "start-time": startTimeString,
             "isStudy": isStudy,
             "marimo-state": "",
+            "marimo-name": "",
             "last-time": "",
             "total-time": "",
             "day-memo": "",
@@ -857,6 +858,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         db.collection(path).document(day).updateData([
             "isStudy": false,
             "marimo-state": currentGroup,
+            "marimo-name": profileImageName,
             "last-time": lastTime,
             "total-time": formattedTotalTime
         ]) { error in
