@@ -287,11 +287,6 @@ class MyPageViewController: UIViewController {
         let settingsVC = SetupViewController()
         settingsVC.hidesBottomBarWhenPushed = true
 
-        //todo
-        UserDefaults.shared.set(["아침", "점심"], forKey: "todo")
-        UserDefaults.shared.set("토익 시험", forKey: "goal")
-        WidgetCenter.shared.reloadAllTimelines()
-
         navigationController?.pushViewController(settingsVC, animated: true)
     }
 
@@ -328,7 +323,7 @@ extension MyPageViewController {
                 if let timestamp = data?["d-day-date"] as? Timestamp {
                     let targetDate = timestamp.dateValue() // Convert Timestamp to Date
 
-                    let components = Calendar.current.dateComponents([.day], from: targetDate, to: Date())
+                    let components = Calendar.current.dateComponents([.day], from: targetDate.onlyDate, to: Date().onlyDate)
 
                     switch components.day! {
                     case let dday where dday < 0:
@@ -490,5 +485,12 @@ extension String {
         } else {
             return nil
         }
+    }
+}
+
+extension Date {
+    var onlyDate: Date {
+        let component = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        return Calendar.current.date(from: component) ?? Date()
     }
 }
