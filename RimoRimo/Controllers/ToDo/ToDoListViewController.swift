@@ -215,8 +215,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
-        
-        let todoText = textField.text ?? ""
       
         Firestore.firestore()
             .collection("user-info")
