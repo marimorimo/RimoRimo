@@ -462,7 +462,8 @@ extension MyPageViewController {
                     self.sessionData[document.documentID] = document.data()
 
                     print("Loaded data for document \(document.documentID): \(document.data())")
-
+                    self.marimoNameList = []
+                    
                     for index in stride(from: 30, to: 0, by: -1) {
                         guard let date = Calendar.current.date(byAdding: .day, value: -index, to: Date()) else {break}
                         let dateString = self.formatDate(date: date)
