@@ -23,6 +23,9 @@ class EditMyPageViewController: UIViewController {
         setupSchedule()
         setupFocusTime()
         setupEditDateTapGesture()
+        includeButtonTapped()
+        
+        tapView()
         
         fetchUserData()
         
@@ -30,6 +33,7 @@ class EditMyPageViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: editNickName)
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -37,6 +41,15 @@ class EditMyPageViewController: UIViewController {
     }
     
     // MARK: - Contents
+    
+    private let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        return view
+    }()
+    private let contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
     
     // Profile Image
     private let rimoMessage: UILabel = {
@@ -65,10 +78,22 @@ class EditMyPageViewController: UIViewController {
     }()
     
     // NickName
+    private let outerNickNameStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 12
+        return stackView
+    }()
+    private let innerNickNameStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 12
+        return stackView
+    }()
     private let editNickName: UITextField = {
         let textField = UITextField()
         textField.font = UIFont.pretendard(style: .regular, size: 14)
-        textField.textColor = MySpecialColors.Gray4
+        textField.textColor = MySpecialColors.Gray3
         textField.tintColor = MySpecialColors.MainColor
         textField.borderStyle = .none
         textField.backgroundColor = .clear
@@ -159,7 +184,7 @@ class EditMyPageViewController: UIViewController {
     // Schedule
     private let scheduleLabel: UILabel = {
         let label = UILabel()
-        label.text = "일정"
+        label.text = "D-Day 제목"
         label.font = UIFont.pretendard(style: .semiBold, size: 12)
         label.textColor = MySpecialColors.Black
         return label
@@ -189,10 +214,15 @@ class EditMyPageViewController: UIViewController {
     // Date
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "날짜"
+        label.text = "D-Day 날짜"
         label.font = UIFont.pretendard(style: .semiBold, size: 12)
         label.textColor = MySpecialColors.Black
         return label
+    }()
+    private let includeTodayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     private let includeTodayLabel: UILabel = {
         let label = UILabel()
@@ -208,6 +238,12 @@ class EditMyPageViewController: UIViewController {
         button.tintColor = MySpecialColors.Gray3
         button.addTarget(self, action: #selector(includeTodayButtonTapped), for: .touchUpInside)
         return button
+    }()
+    private let dateStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        return stack
     }()
     private let calendarButton: UIButton = {
         let button = UIButton()
@@ -249,24 +285,45 @@ class EditMyPageViewController: UIViewController {
     
     private func setupContent() {
         
-        [rimoMessage, changeProfile, plusButton, editNickName, nameDoubleCheckButton, nickNameLine, nickNameErrorMessage, focusTimeMessage, focusTimeBox, focusTimeStack, scheduleLabel, editScheduleName, scheduleLine, dateLabel, includeTodayLabel, includeTodayButton, calendarButton, editDate, dateLine, confirmButton].forEach {
-            view.addSubview($0)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        [rimoMessage, changeProfile, plusButton, outerNickNameStackView, nickNameErrorMessage, focusTimeMessage, focusTimeBox, focusTimeStack, scheduleLabel, editScheduleName, scheduleLine, dateLabel, includeTodayView, includeTodayLabel, includeTodayButton, dateStack, dateLine, confirmButton].forEach {
+            contentView.addSubview($0)
+        }
+        // NickName
+        [innerNickNameStackView, nameDoubleCheckButton].forEach {
+            outerNickNameStackView.addArrangedSubview($0)
+        }
+        [editNickName, nickNameLine].forEach {
+            innerNickNameStackView.addArrangedSubview($0)
+        }
+        [calendarButton, editDate].forEach {
+            dateStack.addArrangedSubview($0)
         }
         
         [editFocusTime, timeLabel].forEach {
             focusTimeStack.addArrangedSubview($0)
         }
         
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+            make.width.height.equalToSuperview()
+        }
+        contentView.snp.makeConstraints { make in
+            make.width.equalTo(scrollView.snp.width)
+            make.edges.equalToSuperview()
+            make.height.equalTo(800)
+        }
+        
         rimoMessage.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(118)
-            make.leading.equalToSuperview().offset(110.5)
-            make.trailing.equalToSuperview().inset(110.5)
+            make.top.equalToSuperview().offset(18)
+            make.centerX.equalToSuperview()
         }
         
         changeProfile.snp.makeConstraints { make in
             make.top.equalTo(rimoMessage.snp.bottom).offset(15)
-            make.leading.equalToSuperview().offset(146.5)
-            make.trailing.equalToSuperview().inset(146.5)
+            make.centerX.equalToSuperview()
         }
         
         plusButton.snp.makeConstraints { make in
@@ -275,25 +332,30 @@ class EditMyPageViewController: UIViewController {
         }
         
         // NickName
-        editNickName.snp.makeConstraints { make in
+        outerNickNameStackView.snp.makeConstraints { make in
             make.top.equalTo(changeProfile.snp.bottom).offset(46)
-            make.leading.equalToSuperview().offset(35)
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalToSuperview().inset(24)
+            make.centerX.equalToSuperview()
+        }
+        innerNickNameStackView.snp.makeConstraints { make in
+            make.height.equalTo(44)
+        }
+        editNickName.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(10)
         }
         nickNameLine.snp.makeConstraints { make in
-            make.top.equalTo(editNickName.snp.bottom).offset(12)
-            make.leading.equalToSuperview().offset(30)
-            make.width.equalTo(258)
+            make.leading.equalToSuperview()
             make.height.equalTo(0.8)
+            make.width.equalToSuperview()
         }
         nameDoubleCheckButton.snp.makeConstraints { make in
-            make.centerY.equalTo(editNickName)
-            make.leading.equalTo(nickNameLine.snp.trailing).offset(12)
-            make.trailing.equalToSuperview().inset(30)
+            make.width.equalTo(74)
             make.height.equalTo(44)
         }
         nickNameErrorMessage.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLine.snp.bottom).offset(9)
-            make.leading.equalTo(nickNameLine.snp.leading)
+            make.top.equalTo(outerNickNameStackView.snp.bottom).offset(9)
+            make.leading.equalTo(outerNickNameStackView.snp.leading)
         }
         
         // FocusTime
@@ -318,16 +380,18 @@ class EditMyPageViewController: UIViewController {
         // Schedule
         scheduleLabel.snp.makeConstraints { make in
             make.top.equalTo(editFocusTime.snp.bottom).offset(56)
-            make.leading.equalToSuperview().offset(35)
+            make.leading.equalToSuperview().offset(24)
         }
         editScheduleName.snp.makeConstraints { make in
             make.top.equalTo(scheduleLabel.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(35)
+            make.trailing.equalToSuperview().inset(35)
         }
         scheduleLine.snp.makeConstraints { make in
             make.top.equalTo(editScheduleName.snp.bottom).offset(12)
-            make.leading.equalToSuperview().offset(30)
-            make.width.equalTo(323)
+            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalToSuperview().inset(24)
             make.height.equalTo(0.8)
         }
         
@@ -335,6 +399,12 @@ class EditMyPageViewController: UIViewController {
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(scheduleLine.snp.bottom).offset(46)
             make.leading.equalTo(scheduleLine)
+        }
+        includeTodayView.snp.makeConstraints { make in
+            make.centerY.equalTo(dateLabel)
+            make.trailing.equalToSuperview().inset(24)
+            make.width.equalTo(82)
+            make.height.equalTo(24)
         }
         includeTodayLabel.snp.makeConstraints { make in
             make.centerY.equalTo(dateLabel)
@@ -344,24 +414,32 @@ class EditMyPageViewController: UIViewController {
             make.centerY.equalTo(dateLabel)
             make.trailing.equalToSuperview().inset(30)
         }
-        calendarButton.snp.makeConstraints { make in
+        dateStack.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(35)
+            make.trailing.equalToSuperview().inset(35)
+            make.height.equalTo(22)
+        }
+        calendarButton.snp.makeConstraints { make in
+            make.top.leading.bottom.equalToSuperview()
+            make.width.equalTo(24)
+            make.height.equalTo(24)
         }
         editDate.snp.makeConstraints { make in
             make.centerY.equalTo(calendarButton)
-            make.leading.equalTo(calendarButton.snp.trailing).offset(8)
+            make.top.bottom.trailing.equalToSuperview()
         }
         dateLine.snp.makeConstraints { make in
             make.top.equalTo(editDate.snp.bottom).offset(12)
-            make.leading.equalToSuperview().offset(30)
-            make.width.equalTo(323)
+            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalToSuperview().inset(24)
             make.height.equalTo(0.8)
         }
         
         // Confirm
         confirmButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(112)
+            make.top.equalTo(dateLine.snp.bottom).offset(46)
             make.centerX.equalToSuperview()
             make.width.equalTo(345)
             make.height.equalTo(46)
@@ -399,6 +477,7 @@ class EditMyPageViewController: UIViewController {
                     // Update ProfileImage
                     if let profileImageName = data?["profile-image"] as? String, !profileImageName.isEmpty {
                         DispatchQueue.main.async {
+                            print("프로필 설정: \(profileImageName)")
                             self.changeProfile.setImage(UIImage(named: profileImageName) ?? UIImage(named: "Group 5"), for: .normal)
                             self.changeProfile.imageView?.contentMode = .scaleAspectFit
                         }
@@ -491,6 +570,8 @@ class EditMyPageViewController: UIViewController {
     // Edit Schedule
     private func setupSchedule() {
         editScheduleName.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // Edit focusTime
@@ -499,7 +580,17 @@ class EditMyPageViewController: UIViewController {
         editFocusTime.inputView = focusTimePicker
         focusTimePicker.delegate = self
         focusTimePicker.dataSource = self
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(focusTimeBoxTapped))
+            focusTimeBox.addGestureRecognizer(tapGesture)
+            focusTimeBox.isUserInteractionEnabled = true
+        let tapGestureLabel = UITapGestureRecognizer(target: self, action: #selector(focusTimeBoxTapped))
+           timeLabel.addGestureRecognizer(tapGestureLabel)
+           timeLabel.isUserInteractionEnabled = true
     }
+    @objc private func focusTimeBoxTapped() {
+        editFocusTime.becomeFirstResponder()
+    }
+    
     
     // Edit Date
     private func setupEditDateTapGesture() {
@@ -524,6 +615,16 @@ class EditMyPageViewController: UIViewController {
     }
     // Toggle IncludeToday
     var isTodayIncluded = false
+    private func includeButtonTapped() {
+        let includeViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(includeTodayButtonTapped))
+        includeTodayView.addGestureRecognizer(includeViewTapGesture)
+        
+        let includeLabelTapGesture = UITapGestureRecognizer(target: self, action: #selector(includeTodayButtonTapped))
+        includeTodayLabel.addGestureRecognizer(includeLabelTapGesture)
+        
+        let includeButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(includeTodayButtonTapped))
+        includeTodayButton.addGestureRecognizer(includeButtonTapGesture)
+    }
     @objc private func includeTodayButtonTapped() {
         if isTodayIncluded {
             if let image = UIImage(named: "square")?.withRenderingMode(.alwaysTemplate) {
@@ -550,71 +651,83 @@ class EditMyPageViewController: UIViewController {
             return
         }
         
-        let userDocRef = Firestore.firestore().collection("user-info").document(uid)
-        var updateData: [String: Any] = [:]
+        // 버튼 색상 변경
+        let originalColor = confirmButton.backgroundColor
+        confirmButton.backgroundColor = MySpecialColors.Gray2
         
-        if let imageName = selectedProfileImageName {
-            updateData["profile-image"] = imageName
-        }
-        if let nickname = editNickName.text, !nickname.isEmpty {
-            updateData["nickname"] = nickname
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.confirmButton.backgroundColor = originalColor
             
-            // 닉네임이 수정된 경우에만 중복 체크
-            if isNickNameEdited {
-                Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
-                    if let error = error {
-                        print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
-                        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                        return
+            // Firestore 업데이트
+            let userDocRef = Firestore.firestore().collection("user-info").document(uid)
+            var updateData: [String: Any] = [:]
+            
+            if let imageName = self?.selectedProfileImageName {
+                updateData["profile-image"] = imageName
+            }
+            
+            if let nickname = self?.editNickName.text, !nickname.isEmpty {
+                updateData["nickname"] = nickname
+                
+                if self?.isNickNameEdited == true {
+                    Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
+                        if let error = error {
+                            print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
+                            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self?.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                        
+                        if let documents = querySnapshot?.documents, documents.isEmpty {
+                            self?.saveDataToFirestore(userDocRef: userDocRef, updateData: updateData)
+                        } else {
+                            let alert = UIAlertController(title: "Unavailable", message: "이 닉네임은 이미 사용 중입니다.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self?.present(alert, animated: true, completion: nil)
+                        }
                     }
-                    
-                    if let documents = querySnapshot?.documents, documents.isEmpty {
-                        // 중복된 닉네임이 없으면 Firestore에 저장
-                        self.saveDataToFirestore(userDocRef: userDocRef, updateData: updateData)
+                } else {
+                    self?.saveDataToFirestore(userDocRef: userDocRef, updateData: updateData)
+                }
+            }
+            
+            if let selectedFocusTime = self?.selectedFocusTime {
+                updateData["target-time"] = "\(selectedFocusTime)"
+            }
+            
+            if let scheduleName = self?.editScheduleName.text, !scheduleName.isEmpty {
+                updateData["d-day-title"] = scheduleName
+            }
+            
+            if let dateString = self?.editDate.text, let selectedDate = self?.dateFormatter.date(from: dateString) {
+                var targetDate = selectedDate
+                if self?.isTodayIncluded == true {
+                    targetDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+                }
+                let daysRemaining = self?.calculateDaysRemaining(to: targetDate) ?? 0
+                let dDayMessage = "D-\(daysRemaining)"
+                updateData["d-day-date"] = selectedDate
+                updateData["d-day"] = dDayMessage
+                updateData["isTodayIncluded"] = self?.isTodayIncluded ?? false
+                
+                userDocRef.updateData(updateData) { error in
+                    if let error = error {
+                        print("Error updating document: \(error)")
                     } else {
-                        // 중복된 닉네임이 있으면 알림 표시
-                        let alert = UIAlertController(title: "Unavailable", message: "이 닉네임은 이미 사용 중입니다.", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        print("Document successfully updated")
+                        self?.navigateToMyPage()
                     }
                 }
             } else {
-                // 닉네임이 수정되지 않은 경우에도 Firestore에 저장
-                self.saveDataToFirestore(userDocRef: userDocRef, updateData: updateData)
+                self?.navigateToMyPage()
             }
         }
-
-        if let selectedFocusTime = selectedFocusTime {
-            updateData["target-time"] = "\(selectedFocusTime)"
-        }
-        if let scheduleName = editScheduleName.text, !scheduleName.isEmpty {
-               updateData["d-day-title"] = scheduleName
-        }
-        if let dateString = editDate.text, let selectedDate = dateFormatter.date(from: dateString) {
-            var targetDate = selectedDate
-            if isTodayIncluded {
-                targetDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
-            }
-            // Calculate D-day
-            let daysRemaining = calculateDaysRemaining(to: targetDate)
-            let dDayMessage = "D-\(daysRemaining)"
-            // Update D-Day
-            updateData["d-day-date"] = selectedDate
-            updateData["d-day"] = dDayMessage
-            
-            // TodayIncluded
-            let isTodayIncluded = self.isTodayIncluded
-            updateData["isTodayIncluded"] = isTodayIncluded
-            
-            userDocRef.updateData(updateData) { error in
-                if let error = error {
-                    print("Error updating document: \(error)")
-                } else {
-                    print("Document successfully updated")
-                }
-            }
+    }
+    
+    private func navigateToMyPage() {
+        if let myPageVC = self.navigationController?.viewControllers.first(where: { $0 is MyPageViewController }) {
+            self.navigationController?.popToViewController(myPageVC, animated: true)
         }
     }
     private let dateFormatter: DateFormatter = {
@@ -640,6 +753,46 @@ class EditMyPageViewController: UIViewController {
             }
         }
     }
+    
+    // 키보드
+    @objc func keyboardWillShow(_ noti: NSNotification){
+        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            
+            // editScheduleName 텍스트 필드의 현재 위치
+            let textFieldFrame = editScheduleName.frame
+            
+            let keyboardHeight = keyboardRectangle.height
+            let screenHeight = UIScreen.main.bounds.height
+            let textFieldBottomY = textFieldFrame.origin.y + textFieldFrame.height
+            
+            // 텍스트 필드가 키보드보다 위에 있을 때만 뷰를 올림
+            if textFieldBottomY > (screenHeight - keyboardHeight - 100) {
+                let offsetY = textFieldBottomY - (screenHeight - keyboardHeight - 120)
+                self.view.frame.origin.y = -offsetY
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        UIView.animate(withDuration: 0.3) {
+               self.view.frame.origin.y = 0
+           }
+    }
+    
+    private func tapView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+           // view에 gesture 추가
+           view.addGestureRecognizer(tapGesture)
+    }
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        // 터치된 지점이 키보드를 닫을 필요가 있는 경우
+        view.endEditing(true)
+        UIView.animate(withDuration: 0.3) {
+               self.view.frame.origin.y = 0
+           }
+    }
+
 }
 
 // MARK: - TextField
@@ -651,6 +804,16 @@ extension EditMyPageViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.placeholder = ""
         textField.textColor = MySpecialColors.Gray4
+        
+        if textField == editScheduleName {
+            // editScheduleName이 편집되기 시작할 때 키보드 노티피케이션을 추가
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        } else {
+            // 다른 텍스트 필드 선택 시 키보드 노티피케이션 제거
+            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        }
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == editNickName {
@@ -661,6 +824,8 @@ extension EditMyPageViewController: UITextFieldDelegate {
             if textField.text?.isEmpty ?? true {
                 textField.placeholder = "일정 이름을 입력해 주세요"
             }
+            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         }
     }
     @objc private func textFieldDidChange(_ notification: Notification) {

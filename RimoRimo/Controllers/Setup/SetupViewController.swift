@@ -10,8 +10,7 @@ import FirebaseAuth
 
 class SetupViewController: UIViewController {
     let settingDescriptionString = [("프로필 수정", "내 프로필을 수정합니다."),
-                                    ("계정 관리", "내 계정 정보를 관리합니다."),
-                                    ("비밀번호 변경하기", "비밀번호를 변경합니다.")]
+                                    ("계정 관리", "내 계정 정보를 관리합니다.")]
     
     private lazy var settingTableView: UITableView = {
         let tableView = UITableView()
@@ -40,12 +39,7 @@ class SetupViewController: UIViewController {
         return button
     }()
     @objc private func logoutButtonTapped(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Log Out", message: "로그아웃", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Confirm", style: .destructive, handler: { _ in
-            self.performLogout()
-        }))
-        present(alert, animated: true, completion: nil)
+        showLogOutAlert(title: "로그아웃", subTitle: "로그아웃 하시겠습니까?")
     }
     
     private lazy var loginButton: UIButton = {
@@ -60,10 +54,121 @@ class SetupViewController: UIViewController {
         let loginViewController = LoginViewController()
         self.navigationController?.pushViewController(loginViewController, animated: true)
     }
+    
+    // Log Out Alert
+    let alertBack = AlertUIFactory.alertBackView()
+       let alertView = AlertUIFactory.alertView()
+       
+       let alertTitle = AlertUIFactory.alertTitle(titleText: "비밀번호 변경", textColor: MySpecialColors.Black, fontSize: 16)
+       let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "비밀번호를 변경하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+       
+       let widthLine = AlertUIFactory.widthLine()
+       let heightLine = AlertUIFactory.heightLine()
+       
+       let cancelView = AlertUIFactory.cancleView()
+       let cancelLabel = AlertUIFactory.checkLabel(cancleText: "취소", textColor: MySpecialColors.Red, fontSize: 14)
+
+       let checkView = AlertUIFactory.checkView()
+       let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+                         
+    private func showLogOutAlert(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        [alertTitle, alertSubTitle, widthLine, heightLine, cancelView, checkView].forEach {
+            alertView.addSubview($0)
+        }
+        cancelView.addSubview(cancelLabel)
+        checkView.addSubview(checkLabel)
+        
+        alertBack.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        alertView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(46)
+            make.trailing.equalToSuperview().inset(46)
+            make.height.equalTo(140)
+        }
+        
+        alertTitle.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(24)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertSubTitle.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        widthLine.snp.makeConstraints { make in
+            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
+        }
+        
+        heightLine.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(0.5)
+            make.height.equalTo(80)
+        }
+        
+        cancelView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(heightLine.snp.leading).offset(-4)
+            make.bottom.equalToSuperview()
+        }
+        
+        cancelLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        checkView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalTo(heightLine.snp.trailing).offset(4)
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        checkLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(performLogout)))
+        cancelView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+    }
+    
+    @objc private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+            self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+            self.alertView.removeFromSuperview()
+        }
+    }
 
    
     private let saveAutoLoginInfo = "userEmail"
-    private func performLogout() {
+    @objc private func performLogout() {
         do {
             try Auth.auth().signOut()
             // 로그아웃 후 저장된 로그인 정보 삭제
@@ -158,15 +263,15 @@ extension SetupViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            navigationItem.backBarButtonItem = backBarButtonItem
+        
         switch indexPath.row {
         case 0:
             let nextVC = EditMyPageViewController()
             self.navigationController?.pushViewController(nextVC, animated: false)
         case 1:
             let nextVC = AccountInfoViewController()
-            self.navigationController?.pushViewController(nextVC, animated: false)
-        case 2:
-            let nextVC = FindPasswordViewController()
             self.navigationController?.pushViewController(nextVC, animated: false)
         default:
             debugPrint("invalid indexPath")

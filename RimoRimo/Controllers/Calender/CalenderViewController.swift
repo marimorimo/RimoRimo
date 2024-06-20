@@ -260,6 +260,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         if let data = sessionData[dateString] as? [String: Any] {
             let detailVC = CalendarDetailViewController()
             detailVC.data = data
+            detailVC.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(detailVC, animated: true)
         }
     }
@@ -337,12 +338,10 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 
                 print(marimoState)
                 switch marimoState {
-                case -1:
-                    imageName = "Group 1"
                 case 0:
-                    imageName = "Group 2"
+                    imageName = "Group 1"
                 case 1:
-                    imageName = "Group 3"
+                    imageName = "Group 2"
                 case 2:
                     imageName = "Group 4"
                 case 3, 4...:

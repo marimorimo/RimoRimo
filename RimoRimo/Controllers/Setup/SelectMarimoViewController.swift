@@ -10,11 +10,10 @@ import Firebase
 
 class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    let backgroundView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.alpha = 0.1
-        return blurEffectView
+    let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
     let marimoView: UIView = {
@@ -76,6 +75,8 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
         if let lastIndex = UserDefaults.standard.value(forKey: "lastSelectedIndex") as? Int {
             selectedIndexPath = IndexPath(row: lastIndex, section: 0)
         }
+        
+        tapBackground()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,7 +106,7 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
         }
         
         marimoView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(146)
+            make.centerY.equalToSuperview()
             make.centerX.equalToSuperview()
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().inset(24)
@@ -131,6 +132,15 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
             make.height.equalTo(46)
         }
     }
+    
+    private func tapBackground() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundViewTapped))
+               backgroundView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func backgroundViewTapped() {
+            dismiss(animated: true, completion: nil)
+        }
     
     @objc private func confirmButtonTapped() {
         guard let selectedIndexPath = selectedIndexPath else {
