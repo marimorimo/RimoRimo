@@ -704,6 +704,10 @@ class EditMyPageViewController: UIViewController {
                 var targetDate = selectedDate
                 if self?.isTodayIncluded == true {
                     targetDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+
+                    //Data for widget
+                    UserDefaults.shared.set(Date(), forKey: "startDate")
+                    UserDefaults.shared.set(targetDate, forKey: "endDate")
                 }
                 let daysRemaining = self?.calculateDaysRemaining(to: targetDate) ?? 0
                 let dDayMessage = "D-\(daysRemaining)"

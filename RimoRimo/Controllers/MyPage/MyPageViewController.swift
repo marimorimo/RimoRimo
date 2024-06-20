@@ -287,9 +287,7 @@ class MyPageViewController: UIViewController {
         let settingsVC = SetupViewController()
         settingsVC.hidesBottomBarWhenPushed = true
 
-        //Test for widget Data setting
-        UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: -20, to: Date()), forKey: "startDate")
-        UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: 10, to: Date()), forKey: "endDate")
+        //todo
         UserDefaults.shared.set(["아침", "점심"], forKey: "todo")
         UserDefaults.shared.set("토익 시험", forKey: "goal")
         WidgetCenter.shared.reloadAllTimelines()
