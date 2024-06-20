@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseStorage
 import FirebaseAuth
 import SnapKit
+import WidgetKit
 
 class EditMyPageViewController: UIViewController {
     
@@ -711,6 +712,7 @@ class EditMyPageViewController: UIViewController {
             
             if let scheduleName = self?.editScheduleName.text, !scheduleName.isEmpty {
                 updateData["d-day-title"] = scheduleName
+                UserDefaults.shared.set(scheduleName, forKey: "goal")
             }
             
             if let dateString = self?.editDate.text, let selectedDate = self?.dateFormatter.date(from: dateString) {
@@ -718,7 +720,16 @@ class EditMyPageViewController: UIViewController {
                 if self?.isTodayIncluded == true {
                     targetDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
                 }
-                updateData["d-day-date"] = selectedDate
+
+                //Data for widget
+                UserDefaults.shared.set(Date(), forKey: "startDate")
+                UserDefaults.shared.set(targetDate, forKey: "endDate")
+                WidgetCenter.shared.reloadAllTimelines()
+
+                let daysRemaining = self?.calculateDaysRemaining(to: targetDate) ?? 0
+                let dDayMessage = "D-\(daysRemaining)"
+                updateData["d-day-date"] = targetDate
+                updateData["d-day"] = dDayMessage
                 updateData["isTodayIncluded"] = self?.isTodayIncluded ?? false
                 
                 userDocRef.updateData(updateData) { error in
@@ -733,6 +744,7 @@ class EditMyPageViewController: UIViewController {
                 self?.navigateToMyPage()
             }
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     private func navigateToMyPage() {

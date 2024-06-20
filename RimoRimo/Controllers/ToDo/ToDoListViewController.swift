@@ -1,10 +1,13 @@
 import UIKit
+import WidgetKit
 import FirebaseFirestore
 import FirebaseAuth
 import SnapKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-    
+
+    var todolistArr: [String] = []
+
     //MARK: - UI Components
     var textField: UITextField!
     var saveButton: UIButton!
@@ -61,10 +64,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         addSnapshotListener(for: selectedDate)
         fetchDateData()
-        
-        // Hide keyboard when tapping outside
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
         
         // Keyboard event observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -127,7 +126,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
-            make.trailing.equalTo(view).offset(30)
+            make.trailing.equalTo(saveButton)
         }
         
         textFieldStack.snp.makeConstraints { make in
@@ -194,6 +193,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 self?.addSnapshotListener(for: selectedDate)
             }
         }
+        
         addSnapshotListener(for: selectedDate)
         popupCalendarVC.modalPresentationStyle = .overCurrentContext
         present(popupCalendarVC, animated: true, completion: nil)
@@ -205,12 +205,19 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             return
         }
         
+        let todoText = textField.text ?? ""
+        
+        guard !todoText.isEmpty else {
+            print("할 일 텍스트가 비어있습니다.") // 텍스트 필드 비어있으면 셀에 추가 안 됨 그냥 취소 됨
+            return
+        }
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
         
         let todoText = textField.text ?? ""
-        
+      
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
@@ -233,6 +240,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let todo = todos[indexPath.row]
         guard let documentId = todo["id"] as? String else { return }
         let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
+        
+        guard !updatedText.isEmpty else {
+            print("할 일 텍스트가 비어있습니다.")
+            return
+        }
         
         guard let uid = Auth.auth().currentUser?.uid else {
             print("사용자가 인증되지 않았습니다.")
@@ -334,6 +346,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func loadTodos(for date: Date) {
+        todolistArr = []
         addSnapshotListener(for: selectedDate)
     }
     
@@ -422,6 +435,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         let todo = todos[indexPath.row]
         let todoText = todo["todo"] as? String ?? ""
+
+
+        todolistArr.append(todoText)
+        UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
+        WidgetCenter.shared.reloadAllTimelines()
+
         let isCompleted = todo["completed"] as? Bool ?? false
         cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
         
@@ -518,6 +537,11 @@ class ToDoTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        toggleButton.setImage(nil, for: .normal)
+    }
+    
     func setupCellUI() {
         toggleButton = UIButton()
         todoTextLabel = UILabel()
@@ -584,6 +608,11 @@ class ToDoTableViewCell: UITableViewCell {
             make.trailing.equalTo(contentView).offset(-10)
             make.centerY.equalTo(contentView)
             make.width.height.equalTo(30)
+        }
+        
+        textField.becomeFirstResponder()
+        if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
+            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) //텍스트 필드 활성화 되면 텍스트 맨 끝으로 커서 보내기
         }
     }
     

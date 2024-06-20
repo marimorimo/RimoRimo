@@ -83,50 +83,50 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     }
     
     private func fetchUserDataAndBindUI() {
-           guard let uid = uid else {
-               print("유저 정보를 찾을 수 없음")
-               return
-           }
-           
-           // Fetch marimo-name data from study-sessions collection
-           let studySessionRef = Firestore.firestore()
-               .collection("user-info")
-               .document(uid)
-               .collection("study-sessions")
-           
-           studySessionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
-               guard let self = self else { return }
-               
-               if let error = error {
-                   print("문서를 가져오는 중 오류 발생: \(error.localizedDescription)")
-                   return
-               }
-               
-               guard let documents = querySnapshot?.documents else {
-                   print("문서가 존재하지 않음")
-                   return
-               }
-               
-               if documents.isEmpty {
-                   print("문서 데이터가 비어 있습니다.")
-                   return
-               }
-               
-               // Process each document in the query snapshot
-               for document in documents {
-                   let data = document.data()
-                   print("Study Session Data: \(data)")
-                   
-                   let documentID = document.documentID // 문서 ID를 사용하여 sessionData에 저장
-                   self.sessionData[documentID] = data
-                   
-                   DispatchQueue.main.async {
-                       self.mainCalendar.reloadData() // 캘린더 리로드
-                   }
-               }
-           }
-       }
-    
+        guard let uid = uid else {
+            print("유저 정보를 찾을 수 없음")
+            return
+        }
+        
+        // Fetch marimo-name data from study-sessions collection
+        let studySessionRef = Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .collection("study-sessions")
+        
+        studySessionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("문서를 가져오는 중 오류 발생: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                print("문서가 존재하지 않음")
+                return
+            }
+            
+            if documents.isEmpty {
+                print("문서 데이터가 비어 있습니다.")
+                return
+            }
+            
+            // Process each document in the query snapshot
+            for document in documents {
+                let data = document.data()
+                print("Study Session Data: \(data)")
+                
+                let documentID = document.documentID // 문서 ID를 사용하여 sessionData에 저장
+                self.sessionData[documentID] = data
+                
+                DispatchQueue.main.async {
+                    self.mainCalendar.reloadData() // 캘린더 리로드
+                }
+            }
+        }
+    }
+  
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -203,7 +203,6 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             }
         }
     }
-    
     
     deinit {
         listener?.remove()
@@ -365,10 +364,18 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                     print("Image name is nil.")
                 }
                 marimoImageView.backgroundColor = .clear
+                
             } else {
-                marimoImageView.image = nil
-                marimoImageView.backgroundColor = .clear
-                print("marimoState is nil.")
+                //데이터 없는 경우 marimo-state
+                if let grayImage = UIImage(named: "Gray") {
+                    marimoImageView.image = grayImage
+                    marimoImageView.backgroundColor = .clear
+                    print("빈 데이터에 회색 미생물 추가.")
+                } else {
+                    marimoImageView.image = nil
+                    marimoImageView.backgroundColor = .clear
+                    print("회색 이미지 없음.")
+                }
             }
             
             if isToday {
