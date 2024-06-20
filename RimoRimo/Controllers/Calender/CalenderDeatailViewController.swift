@@ -22,6 +22,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     
     let marimoImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "Group 3"))
+        image.contentMode = .scaleAspectFill
         return image
     }()
     
@@ -41,20 +42,17 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     }()
     
     let dateLabel: UILabel = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
-        let currentDate = dateFormatter.string(from: Date())
-        
         let label = UILabel()
-        label.text = currentDate
         label.font = UIFont.pretendard(style: .semiBold, size: 14)
         label.textColor = MySpecialColors.Gray4
         return label
     }()
     
-    let editButton: UIButton = {
+    lazy var editButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
+        let image = UIImage(named: "edit-pencil-01")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.tintColor = MySpecialColors.MainColor
         button.addTarget(nil, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -89,9 +87,15 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         setupGestureRecognizer()
         
         memoTextView.delegate = self
+        tapView()
         
         loadMemoData()
            
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadMemoData()
     }
     
     
@@ -113,12 +117,12 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         }
         
         timeLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(140)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
             make.centerX.equalToSuperview()
         }
         
         marimoImage.snp.makeConstraints { make in
-            make.top.equalTo(timeLabel.snp.bottom).offset(52)
+            make.top.equalTo(timeLabel.snp.bottom).offset(42)
             make.centerX.equalToSuperview()
             make.height.equalTo(159)
             make.width.equalTo(165)
@@ -169,12 +173,20 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     private func setupGestureRecognizer() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         view.addGestureRecognizer(tapGesture)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc private func editButtonTapped() {
         memoPlaceholderLabel.isHidden = true
         memoTextView.isEditable = true
         memoTextView.becomeFirstResponder()
+        memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
+        memoTextView.textColor = MySpecialColors.Gray4
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc private func viewTapped() {
@@ -184,9 +196,59 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         memoTextView.isEditable = false
         memoTextView.isScrollEnabled = true
         
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         saveMemoToFirebase()
+        if !memoTextView.text.isEmpty {
+            setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+        }
+        
     }
     
+    // MARK: - Keyboard
+    
+    @objc func keyboardWillShow(_ noti: NSNotification){
+        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            
+            // memoView
+            let memoViewFrame = memoView.frame
+            
+            let keyboardHeight = keyboardRectangle.height
+            let screenHeight = UIScreen.main.bounds.height
+            let memoViewBottomY = memoViewFrame.origin.y + memoViewFrame.height
+            
+            // 메모뷰가 키보드보다 위에 있을 때만 뷰를 올림
+            if memoViewBottomY > (screenHeight - keyboardHeight - 100) {
+                let offsetY = memoViewBottomY - (screenHeight - keyboardHeight - 20)
+                self.view.frame.origin.y = -offsetY
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        UIView.animate(withDuration: 0.3) {
+               self.view.frame.origin.y = 0
+           }
+    }
+    
+    private func tapView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+           // view에 gesture 추가
+           view.addGestureRecognizer(tapGesture)
+    }
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        // 터치된 지점이 키보드를 닫을 필요가 있는 경우
+        view.endEditing(true)
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame.origin.y = 0
+        }
+        saveMemoToFirebase()
+        if !memoTextView.text.isEmpty {
+            setAlertView(title: "메모 저장", subTitle: "메모가 성공적으로 저장되었습니다.")
+        }
+    }
     
     // MARK: - Firebase Data Handling
     var data: [String: Any]?
@@ -194,53 +256,121 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         return Auth.auth().currentUser?.uid
     }
     
+    private var profileImageName: String?
+    private var marimoState: Int?
+
     private func loadMemoData() {
         guard let uid = uid, let day = data?["day"] as? String else {
-                   print("UID or day is nil")
-                   return
-               }
+            print("UID or day is nil")
+            return
+        }
         print("UID: \(uid), Day: \(day)")
         
-        guard let memoText = memoTextView.text else {
-            print("Memo text is nil")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let date = dateFormatter.date(from: day) {
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            let formattedDay = dateFormatter.string(from: date)
+            dateLabel.text = formattedDay
+        } else {
+            print("Failed to convert day string to date.")
             return
         }
         
+        // Fetch profile-image from user-info
+        Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .getDocument { (userInfoDocument, userInfoError) in
+                if let userInfoError = userInfoError {
+                    print("Error fetching user info document: \(userInfoError.localizedDescription)")
+                    return
+                }
+                
+                if let userInfoDocument = userInfoDocument, userInfoDocument.exists {
+                    let userInfo = userInfoDocument.data() ?? [:]
+                    print("User info document data: \(userInfo)")
+                    
+                    // Fetch profile-image from userInfo
+                    self.profileImageName = userInfo["profile-image"] as? String
+                    
+                    // Call updateMarimoImage with profileImageName and marimoState
+                    self.updateMarimoImage()
+                    
+                } else {
+                    print("No user info document found for uid: \(uid)")
+                }
+            }
+        
+        // Fetch study session data
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
             .collection("study-sessions")
             .document(day)
-            .getDocument { (document, error) in
-                if let error = error {
-                    print("Error fetching document: \(error.localizedDescription)")
+            .getDocument { (studySessionDocument, studySessionError) in
+                if let studySessionError = studySessionError {
+                    print("Error fetching study session document: \(studySessionError.localizedDescription)")
                     return
                 }
                 
-                if let document = document, document.exists {
-                    let memoData = document.data() ?? [:]
-                    print("Document data: \(memoData)")
+                if let studySessionDocument = studySessionDocument, studySessionDocument.exists {
+                    let studySessionData = studySessionDocument.data() ?? [:]
+                    print("Study session document data: \(studySessionData)")
                     
                     // Update memoTextView with day-memo
-                    if let dayMemo = memoData["day-memo"] as? String {
-                        self.memoTextView.text = dayMemo
+                    if let dayMemo = studySessionData["day-memo"] as? String {
                         if dayMemo == "" {
                             self.memoPlaceholderLabel.isHidden = false
                         } else {
+                            self.memoTextView.text = dayMemo
                             self.memoPlaceholderLabel.isHidden = true
+                            self.setupTextViewLineSpacing()
+                            self.memoTextView.font = UIFont.pretendard(style: .regular, size: 14)
                         }
                     }
                     
                     // Update timeLabel with total-time
-                    if let totalTime = memoData["total-time"] as? String {
-                        self.timeLabel.text = totalTime
+                    if let totalTime = studySessionData["total-time"] as? String {
+                        if totalTime == "" {
+                            self.timeLabel.text = "00:00:00"
+                        } else {
+                            self.timeLabel.text = totalTime
+                        }
                     }
+                    
+                    self.marimoState = studySessionData["marimo-state"] as? Int ?? 0
+                    self.updateMarimoImage()
+                    
                 } else {
-                    print("No document found for day: \(day)")
+                    print("No study session document found for day: \(day)")
                     self.memoPlaceholderLabel.isHidden = false
                 }
             }
     }
+
+    private func updateMarimoImage() {
+        var imageName: String
+        
+        switch marimoState {
+        case 0:
+            imageName = "Group 1"
+        case 1:
+            imageName = "Group 2"
+        case 2:
+            imageName = "Group 3"
+        case 3:
+            imageName = "Group 4"
+        case 4:
+            imageName = profileImageName ?? "Group7"
+        default:
+            imageName = "Group 7"
+        }
+        
+        print("\(imageName)")
+        self.marimoImage.image = UIImage(named: imageName)
+    }
+    
     
     private func saveMemoToFirebase() {
         guard let uid = uid, let day = data?["day"] as? String else {
@@ -271,14 +401,109 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
             }
     }
     
+    // MARK: - setAlertView
+    let alertBack = AlertUIFactory.alertBackView()
+    let alertView = AlertUIFactory.alertView()
+    
+    let alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
+    let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "차단을 해제하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+    
+    let widthLine = AlertUIFactory.widthLine()
+    let heightLine = AlertUIFactory.heightLine()
+
+    let checkView = AlertUIFactory.checkView()
+    let checkLabel = AlertUIFactory.checkLabel(cancleText: "확인", textColor: MySpecialColors.MainColor, fontSize: 14)
+    
+    @objc private func setAlertView(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+        
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        [alertTitle, alertSubTitle, widthLine, checkView].forEach {
+            alertView.addSubview($0)
+        }
+        checkView.addSubview(checkLabel)
+        
+        alertBack.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        alertView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(46)
+            make.trailing.equalToSuperview().inset(46)
+            make.height.equalTo(140)
+        }
+        
+        alertTitle.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(24)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertSubTitle.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        widthLine.snp.makeConstraints { make in
+            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
+        }
+        
+        checkView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        checkLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+    }
+    
+    @objc private func removeAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+            self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+            self.alertView.removeFromSuperview()
+        }
+    }
+    
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
+        setupTextViewLineSpacing()
         memoPlaceholderLabel.isHidden = true
+        editButton.tintColor = MySpecialColors.Gray3
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
+            setupTextViewLineSpacing()
             memoPlaceholderLabel.isHidden = false
+            editButton.tintColor = MySpecialColors.Gray3
+        } else {
+            setupTextViewLineSpacing()
+            memoTextView.textColor = MySpecialColors.Gray4
+            editButton.tintColor = MySpecialColors.MainColor
         }
     }
     
@@ -318,139 +543,3 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         memoTextView.attributedText = attributedString
     }
 }
-
-//import UIKit
-//import FirebaseFirestore
-//import FirebaseAuth
-//
-//class CalenderDeatailViewController: UIViewController {
-//    var data: [String: Any]?
-//    private var uid: String? {
-//        return Auth.auth().currentUser?.uid
-//    }
-//    private let calenderDeatailTitle: UILabel = {
-//        let text = UILabel()
-//        text.text = "CalenderDeatail"
-//        return text
-//    }()
-//    
-//    private lazy var memoLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "메모를 추가하려면 탭하세요."
-//        label.isUserInteractionEnabled = true
-//        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleMemoLabelTap)))
-//        return label
-//    }()
-//    
-//    private lazy var memoTextField: UITextField = {
-//        let textField = UITextField()
-//        textField.isHidden = true
-//        textField.borderStyle = .roundedRect
-//        return textField
-//    }()
-//    
-//    private lazy var saveButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Save Memo", for: .normal)
-//        button.addTarget(self, action: #selector(saveMemo), for: .touchUpInside)
-//        return button
-//    }()
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        view.backgroundColor = .white
-//        
-//        view.addSubview(calenderDeatailTitle)
-//        view.addSubview(memoLabel)
-//        view.addSubview(memoTextField)
-//        view.addSubview(saveButton)
-//        
-//        calenderDeatailTitle.translatesAutoresizingMaskIntoConstraints = false
-//        memoLabel.translatesAutoresizingMaskIntoConstraints = false
-//        memoTextField.translatesAutoresizingMaskIntoConstraints = false
-//        saveButton.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            calenderDeatailTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            calenderDeatailTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-//            
-//            memoLabel.topAnchor.constraint(equalTo: calenderDeatailTitle.bottomAnchor, constant: 20),
-//            memoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            
-//            memoTextField.topAnchor.constraint(equalTo: calenderDeatailTitle.bottomAnchor, constant: 20),
-//            memoTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            memoTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//            memoTextField.heightAnchor.constraint(equalToConstant: 40),
-//            
-//            saveButton.topAnchor.constraint(equalTo: memoTextField.bottomAnchor, constant: 20),
-//            saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-//        ])
-//        
-//        displayData()
-//    }
-//    
-//    private func displayData() {
-//        guard let data = data else { return }
-//        
-//        var topAnchor = memoLabel.bottomAnchor
-//        
-//        for (key, value) in data {
-//            let keyLabel = UILabel()
-//            keyLabel.text = key
-//            keyLabel.font = UIFont.boldSystemFont(ofSize: 16)
-//            keyLabel.translatesAutoresizingMaskIntoConstraints = false
-//            view.addSubview(keyLabel)
-//            
-//            let valueLabel = UILabel()
-//            valueLabel.text = "\(value)"
-//            valueLabel.translatesAutoresizingMaskIntoConstraints = false
-//            view.addSubview(valueLabel)
-//            
-//            NSLayoutConstraint.activate([
-//                keyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//                keyLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-//                
-//                valueLabel.leadingAnchor.constraint(equalTo: keyLabel.trailingAnchor, constant: 10),
-//                valueLabel.firstBaselineAnchor.constraint(equalTo: keyLabel.firstBaselineAnchor),
-//                valueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-//            ])
-//            
-//            topAnchor = keyLabel.bottomAnchor
-//        }
-//    }
-//    
-//    @objc private func handleMemoLabelTap() {
-//        memoLabel.isHidden = true
-//        memoTextField.isHidden = false
-//        memoTextField.becomeFirstResponder()
-//    }
-//    
-//    @objc private func saveMemo() {
-//        guard let uid = uid, let day = data?["day"] as? String else {
-//            print("UID or day is nil")
-//            return
-//        }
-//        
-//        guard let memoText = memoTextField.text else {
-//            print("Memo text is nil")
-//            return
-//        }
-//        
-//        let memoData: [String: Any] = [
-//            "day-memo": memoText
-//        ]
-//        
-//        Firestore.firestore()
-//            .collection("user-info")
-//            .document(uid)
-//            .collection("study-sessions")
-//            .document(day)
-//            .updateData(memoData) { error in
-//                if let error = error {
-//                    print("메모 업데이트 중 오류 발생: \(error.localizedDescription)")
-//                } else {
-//                    print("메모가 성공적으로 업데이트되었습니다.")
-//                }
-//            }
-//    }
-//}

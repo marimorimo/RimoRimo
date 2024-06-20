@@ -10,11 +10,10 @@ import Firebase
 
 class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    let backgroundView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.alpha = 0.1
-        return blurEffectView
+    let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
     let marimoView: UIView = {
@@ -49,14 +48,14 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
     let cellImages = ["Group 2", "Group 3", "Group 4", "Group 5", "Group 13", "Group 12", "Group 11", "Group 10", "Group 9", "Group 8", "Group 7", "Group 6"]
     var selectedIndexPath: IndexPath?
     
-    let confirmButton: UIButton = {
+    lazy var confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("확인", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = MySpecialColors.MainColor
         button.layer.cornerRadius = 22
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -76,6 +75,8 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
         if let lastIndex = UserDefaults.standard.value(forKey: "lastSelectedIndex") as? Int {
             selectedIndexPath = IndexPath(row: lastIndex, section: 0)
         }
+        
+        tapBackground()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,7 +106,7 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
         }
         
         marimoView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(146)
+            make.centerY.equalToSuperview()
             make.centerX.equalToSuperview()
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().inset(24)
@@ -131,6 +132,15 @@ class SelectMarimoViewController: UIViewController, UICollectionViewDataSource, 
             make.height.equalTo(46)
         }
     }
+    
+    private func tapBackground() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundViewTapped))
+               backgroundView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func backgroundViewTapped() {
+            dismiss(animated: true, completion: nil)
+        }
     
     @objc private func confirmButtonTapped() {
         guard let selectedIndexPath = selectedIndexPath else {

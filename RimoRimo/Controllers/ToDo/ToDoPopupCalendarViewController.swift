@@ -14,6 +14,12 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
     
     
     let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let boxView: UIView = {
        let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 20
@@ -41,28 +47,28 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         return stack
     }()
     
-    let prevButton: UIButton = {
+    lazy var prevButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "chevron-left-md")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.MainColor
-        button.addTarget(nil, action: #selector(didTapPrevButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapPrevButton), for: .touchUpInside)
         return button
     }()
     
-    let nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "chevron-right-md")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.MainColor
-        button.addTarget(nil, action: #selector(didTapNextButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
         return button
     }()
     
-    let confirmButton: UIButton = {
+    lazy var confirmButton: UIButton = {
         let button = TabButtonUIFactory.tapButton(buttonTitle: "확인", textColor: .white , cornerRadius: 22, backgroundColor: MySpecialColors.MainColor)
         button.titleLabel?.font = UIFont.pretendard(style: .semiBold, size: 16)
-        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -78,6 +84,8 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         updateHeaderTitle(for: mainCalendar.currentPage)
         
         fetchLastSelectedDateFromFirebase()
+        
+        tapBackground()
 
     }
     
@@ -85,7 +93,8 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
     
     private func setupContent() {
         
-        [backgroundView, mainCalendar, customHeaderLabel, buttonStack, confirmButton].forEach {
+        
+        [backgroundView, boxView, mainCalendar, customHeaderLabel, buttonStack, confirmButton].forEach {
             view.addSubview($0)
         }
         [prevButton, nextButton].forEach {
@@ -93,33 +102,37 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         }
         
         backgroundView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(180)
+            make.edges.equalToSuperview()
+        }
+        
+        boxView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
             make.centerX.equalToSuperview()
             make.width.equalTo(345)
             make.height.equalTo(414)
         }
         
         customHeaderLabel.snp.makeConstraints { make in
-            make.top.equalTo(backgroundView.snp.top).offset(30)
-            make.leading.equalTo(backgroundView.snp.leading).offset(30)
+            make.top.equalTo(boxView.snp.top).offset(30)
+            make.leading.equalTo(boxView.snp.leading).offset(30)
         }
         
         buttonStack.snp.makeConstraints { make in
             make.centerY.equalTo(customHeaderLabel)
-            make.trailing.equalTo(backgroundView.snp.trailing).inset(24)
+            make.trailing.equalTo(boxView.snp.trailing).inset(24)
         }
         
         mainCalendar.snp.makeConstraints { make in
-            make.top.equalTo(backgroundView.snp.top).offset(70)
-            make.leading.equalTo(backgroundView.snp.leading).offset(24)
-            make.trailing.equalTo(backgroundView.snp.trailing).inset(24)
+            make.top.equalTo(boxView.snp.top).offset(70)
+            make.leading.equalTo(boxView.snp.leading).offset(24)
+            make.trailing.equalTo(boxView.snp.trailing).inset(24)
             make.width.equalTo(297)
             make.height.equalTo(263)
         }
         
         confirmButton.snp.makeConstraints { make in
             make.top.equalTo(mainCalendar.snp.bottom).offset(16)
-            make.centerX.equalTo(backgroundView)
+            make.centerX.equalTo(boxView)
             make.width.equalTo(297)
             make.height.equalTo(46)
         }
@@ -165,6 +178,15 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
     
     
     // MARK: - Func
+    
+    private func tapBackground() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundViewTapped))
+        backgroundView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func backgroundViewTapped() {
+        dismiss(animated: true, completion: nil)
+    }
     
     @objc private func didTapPrevButton() {
         moveCurrentPage(by: -1)
