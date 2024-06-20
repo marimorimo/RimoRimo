@@ -14,7 +14,11 @@ class MyPageViewController: UIViewController {
     private lazy var settingButton: UIButton = {
         let button = UIButton()
 
-        button.setImage(UIImage(systemName: "gearshape.fill"), for: .normal)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+        let image = UIImage(systemName: "gearshape.fill", withConfiguration: imageConfig)
+
+        button.setImage(image, for: .normal)
+
         button.tintColor = MySpecialColors.GearGray
         button.addTarget(self, action: #selector(moveToSetting), for: .touchUpInside)
 
