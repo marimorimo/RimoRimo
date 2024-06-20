@@ -61,6 +61,11 @@
 		119FEBC82C1C227300BCC845 /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */; };
 		119FEBC92C1C227500BCC845 /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808642C19965700081B2A /* Pretendard-Bold.ttf */; };
 		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
+		11BDE45F2C2481E800BC0E8C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE45E2C2481E800BC0E8C /* GoogleService-Info.plist */; };
+		11BDE4622C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */; };
+		11BDE4632C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */; };
+		11BDE4692C24B2D400BC0E8C /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
+		11BDE46A2C24B34700BC0E8C /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */; };
 		11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */; };
 		11F836142C1E7E6700711581 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836132C1E7E6700711581 /* Color.swift */; };
@@ -96,6 +101,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				11BDE46A2C24B34700BC0E8C /* RimoWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +158,8 @@
 		119FEBD22C1C231000BCC845 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoRimo.entitlements; sourceTree = "<group>"; };
+		11BDE45E2C2481E800BC0E8C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupCalendarViewController.swift; sourceTree = "<group>"; };
 		11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectMarimoViewController.swift; sourceTree = "<group>"; };
 		11F836132C1E7E6700711581 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
@@ -228,6 +236,8 @@
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
 				0B4A5B2D2C24BF3E000F8DDE /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
+				11BDE45E2C2481E800BC0E8C /* GoogleService-Info.plist */,
+				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
 			path = RimoRimo;
 			sourceTree = "<group>";
@@ -496,8 +506,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
+				11BDE4692C24B2D400BC0E8C /* RimoWidgetExtension.appex in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
+				11BDE4622C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */,
 				0B18086C2C19965700081B2A /* Pretendard-Thin.ttf in Resources */,
 				0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */,
 				0B4A5B2E2C24BF3E000F8DDE /* GoogleService-Info.plist in Resources */,
@@ -517,6 +529,7 @@
 				119FEBC82C1C227300BCC845 /* Pretendard-SemiBold.ttf in Resources */,
 				119FEBC72C1C227000BCC845 /* Pretendard-Regular.ttf in Resources */,
 				119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */,
+				11BDE4632C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */,
 				119FEBC92C1C227500BCC845 /* Pretendard-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -736,8 +749,8 @@
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -767,8 +780,8 @@
 				INFOPLIST_FILE = RimoRimo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -792,7 +805,7 @@
 				CODE_SIGN_ENTITLEMENTS = RimoWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KWVJ99C465;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RimoWidget;
@@ -804,7 +817,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.RimoRimo.RimoWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.teamremo.RimoRimo.RimoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -821,7 +834,7 @@
 				CODE_SIGN_ENTITLEMENTS = RimoWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KWVJ99C465;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RimoWidget;
@@ -833,7 +846,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.RimoRimo.RimoWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.teamremo.RimoRimo.RimoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

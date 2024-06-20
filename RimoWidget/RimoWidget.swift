@@ -31,7 +31,7 @@ struct Provider: TimelineProvider {
 
         let calendar = Calendar.current
 
-        let components = calendar.dateComponents([.day], from: date, to: Date())
+        let components = calendar.dateComponents([.day], from: date.onlyDate, to: Date().onlyDate)
 
         return components.day!
     }
@@ -55,7 +55,17 @@ struct Provider: TimelineProvider {
     }
 
     func getTodoList() -> [String] {
-        return UserDefaults.shared.array(forKey: "todo") as? [String] ?? ["오늘의 할일이 없습니다"]
+        if let todoList = UserDefaults.shared.array(forKey: "\(Date().onlyDate)") as? [String] {
+            if todoList.count < 3 {
+                return todoList
+            }else if todoList.isEmpty {
+                return ["오늘의 할일이 없습니다"]
+            }else {
+                return Array(todoList[0...2])
+            }
+        } else {
+            return ["오늘의 할일이 없습니다"]
+        }
     }
 
     func getPercentage() -> Double {
@@ -63,13 +73,15 @@ struct Provider: TimelineProvider {
         let endDate = UserDefaults.shared.object(forKey: "endDate") as! Date
 
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: startDate, to: endDate)
+        let components = calendar.dateComponents([.day], from: startDate.onlyDate, to: endDate.onlyDate)
 
         let fullDays = Double(components.day!)
 
         let remainDays = fullDays + Double(remainDays())
+        var percentage = remainDays / fullDays
+        if percentage > 1 { percentage = 1 }
 
-        return remainDays / fullDays
+        return percentage
     }
 }
 
@@ -238,5 +250,12 @@ struct RimoWidget: Widget {
         .description("This is an Marimo widget.")
         .supportedFamilies([.systemSmall, .systemMedium])
         .contentMarginsDisabled()
+    }
+}
+
+extension Date {
+    var onlyDate: Date {
+        let component = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        return Calendar.current.date(from: component) ?? Date()
     }
 }

@@ -1,4 +1,3 @@
-
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
@@ -15,7 +14,11 @@ class MyPageViewController: UIViewController {
     private lazy var settingButton: UIButton = {
         let button = UIButton()
 
-        button.setImage(UIImage(systemName: "gearshape.fill"), for: .normal)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+        let image = UIImage(systemName: "gearshape.fill", withConfiguration: imageConfig)
+
+        button.setImage(image, for: .normal)
+
         button.tintColor = MySpecialColors.GearGray
         button.addTarget(self, action: #selector(moveToSetting), for: .touchUpInside)
 
@@ -42,7 +45,7 @@ class MyPageViewController: UIViewController {
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
-        label.font = .pretendard(style: .regular, size: 10)
+        label.font = .pretendard(style: .regular, size: 12)
 
         label.textColor = MySpecialColors.Gray3
         label.text = "RimoRimo@naver.com"
@@ -80,7 +83,7 @@ class MyPageViewController: UIViewController {
     private let concentrationGuideLabel: UILabel = {
         let label = UILabel()
         label.text = "목표 집중 시간"
-        label.font = .pretendard(style: .regular, size: 16)
+        label.font = .pretendard(style: .semiBold, size: 16)
         label.textColor = MySpecialColors.Green4
 
         return label
@@ -116,7 +119,7 @@ class MyPageViewController: UIViewController {
     private let goalLabel: UILabel = {
         let label = UILabel()
         label.text = "토익 시험"
-        label.font = .pretendard(style: .regular, size: 16)
+        label.font = .pretendard(style: .semiBold, size: 16)
         label.textColor = MySpecialColors.Green4
 
         return label
@@ -164,25 +167,9 @@ class MyPageViewController: UIViewController {
         return stackView
     }()
 
-//    private lazy var showCollectionButton: UIButton = {
-//        let button = UIButton()
-//
-//        button.setTitle("컬렉션만 보기", for: .normal)
-//        button.setTitleColor(.black, for: .normal)
-//        button.setImage(UIImage(named: "mypageIcon2"), for: .normal)
-//        button.tintColor = MySpecialColors.Gray2
-//        button.semanticContentAttribute = .forceRightToLeft
-//        button.contentMode = .scaleToFill
-//        button.imageEdgeInsets = UIEdgeInsets(top: 2, left: 80, bottom: 2, right: 56)
-//        button.setPreferredSymbolConfiguration(.init(scale: .large), forImageIn: .normal)
-//        button.addTarget(self, action: #selector(showCollectionButtonTapped), for: .touchUpInside)
-//
-//        return button
-//    }()
-
     private lazy var showMarimoButton: UIButton = {
         let button = UIButton()
-        button.setTitle("마리모만 보기", for: .normal)
+        button.setTitle("최근 성장한 마리모 보기", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(named: "mypageIcon1"), for: .normal)
         button.tintColor = MySpecialColors.Gray2
@@ -204,47 +191,6 @@ class MyPageViewController: UIViewController {
         return stackView
     }()
 
-//    private let marimoCollectionStackView1: UIStackView = {
-//        let stackView = UIStackView()
-//
-//        stackView.distribution = .equalSpacing
-//        stackView.spacing = 32
-//
-//        stackView.alignment = .center
-//
-//        return stackView
-//    }()
-//
-//    private let marimoCollectionStackView2: UIStackView = {
-//        let stackView = UIStackView()
-//
-//        stackView.distribution = .equalSpacing
-//        stackView.alignment = .center
-//        stackView.spacing = 32
-//
-//
-//        return stackView
-//    }()
-
-    //    private let marimoCollectionStackView3: UIStackView = {
-    //        let stackView = UIStackView()
-    //
-    //        stackView.distribution = .fillEqually
-    //        stackView.alignment = .center
-    //
-    //        return stackView
-    //    }()
-
-//    private lazy var collectionContainerStackView: UIStackView = {
-//        let stackView = UIStackView(arrangedSubviews: [marimoCollectionStackView1, marimoCollectionStackView2])
-//
-//        stackView.axis = .vertical
-//        stackView.distribution = .fill
-//        stackView.alignment = .center
-//
-//        return stackView
-//    }()
-
     var animatingMarimoImageViews = [UIImageView]()
 
     var animator: UIDynamicAnimator!
@@ -258,6 +204,8 @@ class MyPageViewController: UIViewController {
         super.viewWillAppear(animated)
 
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        setupUserDataListener()
+        getMarimoList()
     }
 
     // MARK: - Setup Views
@@ -265,9 +213,7 @@ class MyPageViewController: UIViewController {
         super.viewDidLoad()
 
         setupViews()
-        configureCollection()
         setupConstraints()
-        setupUserDataListener()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -285,23 +231,6 @@ class MyPageViewController: UIViewController {
         profileBackgroundView.addSubview(statusStackView)
 
         view.addSubview(buttonStackView)
-//        view.addSubview(collectionContainerStackView)
-    }
-
-    private func configureCollection() {
-        let marimoCollectionButtonTitles = ["첫 투두 작성", "첫 투두 완료", "프로필 수정하기", "메모 작성하기"]
-
-//        for i in 0...1 {
-//            marimoCollectionStackView1.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "gray-marimo") ?? UIImage()))
-//        }
-//
-//        for i in 2...3 {
-//            marimoCollectionStackView2.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "gray-marimo") ?? UIImage()))
-//        }
-
-        //        for i in 7...10 {
-        //            marimoCollectionStackView3.addArrangedSubview(MarimoCollectionButton(title: marimoCollectionButtonTitles[i], image: UIImage(named: "gray-marimo") ?? UIImage()))
-        //        }
     }
 
     func safeAreaTopInset() -> CGFloat {
@@ -352,45 +281,17 @@ class MyPageViewController: UIViewController {
             make.height.equalTo(24)
         }
 
-//        collectionContainerStackView.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview().inset(28)
-//            make.top.equalTo(buttonStackView.snp.bottom).offset(4)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(60)
-//        }
-
-//        showCollectionButton.snp.makeConstraints { make in
-//            make.width.equalTo(100)
-//        }
     }
     // MARK: - move to Setting page
     @objc private func moveToSetting() {
         let settingsVC = SetupViewController()
         settingsVC.hidesBottomBarWhenPushed = true
 
-        //Test for widget Data setting
-        UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: -20, to: Date()), forKey: "startDate")
-        UserDefaults.shared.set(Calendar.current.date(byAdding: .day, value: 10, to: Date()), forKey: "endDate")
-        UserDefaults.shared.set(["아침", "점심"], forKey: "todo")
-        UserDefaults.shared.set("토익 시험", forKey: "goal")
-        WidgetCenter.shared.reloadAllTimelines()
-
         navigationController?.pushViewController(settingsVC, animated: true)
     }
 
     @objc
-    private func showCollectionButtonTapped() {
-//        collectionContainerStackView.isHidden = false
-
-        for _ in 0..<animatingMarimoImageViews.count {
-            let imageView = animatingMarimoImageViews.removeLast()
-            imageView.removeFromSuperview()
-        }
-    }
-
-    @objc
     private func showMarimoButtonTapped() {
-//        collectionContainerStackView.isHidden = true
-
         for _ in 0..<animatingMarimoImageViews.count {
             let imageView = animatingMarimoImageViews.removeLast()
             imageView.removeFromSuperview()
@@ -419,31 +320,39 @@ extension MyPageViewController {
                 self.emailLabel.text = "\(data?["email"] as? String ?? "N/A")"
                 self.goalLabel.text = "\(data?["d-day-title"] as? String ?? "N/A")" == "" ? "목표 미설정" : "\(data?["d-day-title"] as? String ?? "N/A")"
 
-                self.goalDdayLabel.text = "\(data?["d-day"] as? String ?? "N/A")" == "" ? "-" : "\(data?["d-day"] as? String ?? "N/A")"
+                if let timestamp = data?["d-day-date"] as? Timestamp {
+                    let targetDate = timestamp.dateValue() // Convert Timestamp to Date
+
+                    let components = Calendar.current.dateComponents([.day], from: targetDate.onlyDate, to: Date().onlyDate)
+
+                    switch components.day! {
+                    case let dday where dday < 0:
+                        self.goalDdayLabel.text = "D\(dday)"
+                    case let dday where dday == 0:
+                        self.goalDdayLabel.text = "D-Day"
+                    case let dday where dday > 0:
+                        self.goalDdayLabel.text = "D+\(dday)"
+                    default:
+                        debugPrint("invailid d-day")
+                        self.goalDdayLabel.text = "-"
+                    }
+                } else {
+                    self.goalDdayLabel.text = "-"
+                }
 
                 self.concentrationTimeLabel.text = "\(data?["target-time"] as? String ?? "N/A")hr"
-                self.profileMarimoImageView.image = UIImage(named: "\(data?["profile-image"] as? String ?? "Group 4")")
+                self.profileMarimoImageView.image = UIImage(named: "\(data?["profile-image"] as? String ?? "Group 1")")
 
-                //                if let profileImageURLString = data?["profile-image"] as? String, !profileImageURLString.isEmpty {
-                //                    if let profileImageURL = URL(string: profileImageURLString) {
-                //                        URLSession.shared.dataTask(with: profileImageURL) { (data, response, error) in
-                //                            if let data = data {
-                //                                DispatchQueue.main.async {
-                //                                    self.profileMarimoImageView.image = UIImage(data: data)
-                //                                }
-                //                            }
-                //                        }.resume()
-                //                    }
-                //                } else {
-                //                    self.profileMarimoImageView.image = UIImage(named: "Group 1")
-                //                }
+                if "\(data?["profile-image"] as? String ?? "")" == "" {
+                    self.profileMarimoImageView.image = UIImage(named: "Group 1")
+                }
 
                 let fontSize = UIFont.pretendard(style: .semiBold, size: 28, isScaled: false)
                 let attributedStr = NSMutableAttributedString(string: concentrationTimeLabel.text!)
                 attributedStr.addAttribute(.font, value: fontSize, range: (concentrationTimeLabel.text! as NSString).range(of: "hr"))
                 self.concentrationTimeLabel.attributedText = attributedStr
 
-                
+
             } else {
                 self.nicknameLabel.text = "N/A"
                 self.emailLabel.text = "N/A"
@@ -453,39 +362,53 @@ extension MyPageViewController {
                 self.profileMarimoImageView.image = UIImage(named: "Group 1")
             }
         }
+    }
 
-        listener = Firestore.firestore().collection("user-info").document(uid).collection("study-sessions").addSnapshotListener { (querySnapshot, error) in
+    func getMarimoList() {
+        self.marimoNameList = []
+        guard let uid = Auth.auth().currentUser?.uid else { return }
 
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+
+        let currentDate = Date()
+        let day = formatter.string(from: currentDate)
+
+        let calendar = Calendar.current
+        let oneMonthAgo = calendar.date(byAdding: .month, value: -1, to: currentDate)!
+        let oneMonthAgoDay = formatter.string(from: oneMonthAgo)
+
+        let collectionRef = Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .collection("study-sessions")
+
+        collectionRef.whereField("day", isGreaterThanOrEqualTo: oneMonthAgoDay).whereField("day", isLessThanOrEqualTo: day).getDocuments { (querySnapshot, error) in
             if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
-                for document in querySnapshot!.documents {
-                    self.sessionData[document.documentID] = document.data()
+                return
+            }
 
-                    print("Loaded data for document \(document.documentID): \(document.data())")
-                    self.marimoNameList = []
-                    
-                    for index in stride(from: 30, to: 0, by: -1) {
-                        guard let date = Calendar.current.date(byAdding: .day, value: -index, to: Date()) else {break}
-                        let dateString = self.formatDate(date: date)
+            guard let documents = querySnapshot?.documents else {
+                return
+            }
 
-                        if let session = self.sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
-                            if (-1...2).contains(state) {
-                                self.marimoNameList.append("Group \(state + 2)")
-                            } else if state >= 3 {
-                                self.marimoNameList.append("Group 7")
-                            }
+            for document in documents {
+                let data = document.data()
+
+                if let state = data["marimo-state"] as? Int {
+                    if (1...4).contains(state) {
+                        self.marimoNameList.append("Group \(state)")
+                    } else if state >= 5 {
+                        if let name = data["marimo-name"] as? String {
+                            self.marimoNameList.append(name)
                         }
                     }
+                }else {
+                    print("data: \(data)")
                 }
             }
         }
-    }
-
-    private func formatDate(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
     }
 }
 
@@ -500,13 +423,12 @@ extension MyPageViewController {
                                                       y: ballSize,
                                                       width: ballSize,
                                                       height: ballSize))
-            imageView.backgroundColor = .white
+            imageView.backgroundColor = .clear
             imageView.layer.cornerRadius = ballSize / 2
             imageView.clipsToBounds = true
             imageView.image = UIImage(named: marimoNameList[i])
             imageView.isUserInteractionEnabled = true
-//            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-//            imageView.addGestureRecognizer(panGesture)
+
             view.addSubview(imageView)
             animatingMarimoImageViews.append(imageView)
         }
@@ -535,32 +457,6 @@ extension MyPageViewController {
         animator.addBehavior(itemBehavior)
     }
 
-//    @objc
-//    private func handlePan(_ gesture: UIPanGestureRecognizer) {
-//        guard let view = gesture.view else { return }
-//        let location = gesture.location(in: self.view)
-//        let touchLocation = gesture.location(in: view)
-//
-//        switch gesture.state {
-//        case .began:
-//            gravityBehavior.removeItem(view)
-//            attachmentBehavior = UIAttachmentBehavior(item: view, offsetFromCenter: UIOffset(horizontal: touchLocation.x - view.bounds.midX, vertical: touchLocation.y - view.bounds.midY), attachedToAnchor: location)
-//            if let attachmentBehavior = attachmentBehavior {
-//                animator.addBehavior(attachmentBehavior)
-//            }
-//        case .changed:
-//            attachmentBehavior?.anchorPoint = location
-//        case .ended, .cancelled, .failed:
-//            if let attachmentBehavior = attachmentBehavior {
-//                animator.removeBehavior(attachmentBehavior)
-//                self.attachmentBehavior = nil
-//            }
-//            gravityBehavior.addItem(view)
-//        default:
-//            break
-//        }
-//    }
-
     @objc
     private func handleTap(_ gesture: UITapGestureRecognizer) {
         let tapLocation = gesture.location(in: self.view)
@@ -579,3 +475,22 @@ extension MyPageViewController {
     }
 }
 
+extension String {
+    func toDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        if let date = dateFormatter.date(from: self) {
+            return date
+        } else {
+            return nil
+        }
+    }
+}
+
+extension Date {
+    var onlyDate: Date {
+        let component = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        return Calendar.current.date(from: component) ?? Date()
+    }
+}

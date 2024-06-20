@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.kr.xoul.RimoRimo</string>
+		<string>group.com.teamremo.RimoRimo</string>
 	</array>
 </dict>
 </plist>
