@@ -343,6 +343,7 @@ class AccountInfoViewController: UIViewController {
             textField.font = UIFont.pretendard(style: .regular, size: 14)
             textField.textAlignment = .left
             textField.layer.cornerRadius = 5
+            textField.tintColor = MySpecialColors.MainColor
             return textField
         }()
         
