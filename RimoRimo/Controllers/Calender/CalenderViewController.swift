@@ -6,7 +6,7 @@ import SnapKit
 
 class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     
-    var profileImageName: String = ""
+    var marimoName: String = ""
     private var currentYear: Int = 0
     private var currentMonth: Int = 0
     private var uid: String? {
@@ -87,10 +87,10 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             print("유저 정보를 찾을 수 없음")
             return
         }
-        
-        let documentRef = Firestore.firestore().collection("user-info").document(uid)
-        
-        documentRef.addSnapshotListener { [weak self] (documentSnapshot, error) in
+
+        let documentRef = Firestore.firestore().collection("user-info").document(uid).collection("study-sessions")
+
+        documentRef.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
             
             if let error = error {
@@ -98,37 +98,36 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 return
             }
             
-            guard let document = documentSnapshot else {
+            guard let documents = querySnapshot?.documents else {
                 print("문서가 존재하지 않음")
                 return
             }
             
-            if document.exists {
-                if let data = document.data() {
-                    print("Data: \(data)")
-                    
-                    if let imageName = data["profile-image"] as? String {
-                        DispatchQueue.main.async {
-                            self.profileImageName = imageName
-                            self.mainCalendar.reloadData() // 캘린더 리로드
-                        }
-                    } else {
-                        print("No profile-image")
-                        DispatchQueue.main.async {
-                            self.profileImageName = "Group 9"
-                            self.mainCalendar.reloadData() // 캘린더 리로드
-                        }
+            if documents.isEmpty {
+                print("문서 데이터가 비어 있습니다.")
+                return
+            }
+            
+            for document in documents {
+                let data = document.data()
+                print("Data: \(data)")
+                
+                if let imageName = data["marimo-name"] as? String {
+                    DispatchQueue.main.async {
+                        self.marimoName = imageName
+                        self.mainCalendar.reloadData() // 캘린더 리로드
                     }
-                    
                 } else {
-                    print("문서 데이터가 비어 있습니다.")
+                    print("No marimo-name")
+                    DispatchQueue.main.async {
+                        self.marimoName = "Group 9"
+                        self.mainCalendar.reloadData() // 캘린더 리로드
+                    }
                 }
-            } else {
-                print("문서가 존재하지 않습니다")
             }
         }
-        
     }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -243,7 +242,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     func calendar(_ calendar: FSCalendar, cellFor date: Date, at monthPosition: FSCalendarMonthPosition) -> FSCalendarCell {
         let cell = calendar.dequeueReusableCell(withIdentifier: "CustomCalendarCell", for: date, at: monthPosition) as! CustomCalendarCell
-        cell.profileImageName = self.profileImageName // profileImageName을 CustomCalendarCell에 전달
+        cell.marimoName = self.marimoName // profileImageName을 CustomCalendarCell에 전달
         let isToday = Calendar.current.isDateInToday(date)
         let dateString = formatDate(date: date)
         if let session = sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
@@ -290,7 +289,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     // CustomCalendarCell 클래스 정의
     class CustomCalendarCell: FSCalendarCell {
-        var profileImageName: String?
+        var marimoName: String?
         private let customLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
@@ -338,14 +337,16 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 
                 print(marimoState)
                 switch marimoState {
-                case 0:
-                    imageName = "Group 1"
                 case 1:
-                    imageName = "Group 2"
+                    imageName = "Group 1"
                 case 2:
+                    imageName = "Group 2"
+                case 3:
+                    imageName = "Group 3"
+                case 4:
                     imageName = "Group 4"
-                case 3, 4...:
-                    imageName = profileImageName ?? "Group 7"
+                case 5:
+                    imageName =  marimoName ?? "Group 7"
                 default:
                     imageName = nil
                 }
