@@ -532,7 +532,16 @@ class AccountInfoViewController: UIViewController {
                 }
             } else {
                 print("Document successfully removed from Firestore")
-                self.navigateToLoginScreen()
+                // 로그인 화면으로 이동
+                let loginViewController = LoginViewController()
+                let navController = UINavigationController(rootViewController: loginViewController)
+                
+                // 화면 전환
+                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                    sceneDelegate.changeRootViewController(navController)
+                    navController.navigationBar.topItem?.title = ""  // 타이틀을 빈 문자열로 설정
+                    navController.navigationItem.hidesBackButton = true
+                } else { return }
             }
         }
     }

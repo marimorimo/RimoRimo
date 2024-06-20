@@ -176,11 +176,16 @@ class SetupViewController: UIViewController {
             try Auth.auth().signOut()
             // 로그아웃 후 저장된 로그인 정보 삭제
             UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
-            // 로그아웃 후 처리 (예: 로그인 화면으로 이동)
+            // 로그인 화면으로 이동
             let loginViewController = LoginViewController()
-            // MARK: - 네비게이션으로 이동하기!
             let navController = UINavigationController(rootViewController: loginViewController)
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(navController)
+            
+            // 화면 전환
+            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                sceneDelegate.changeRootViewController(navController)
+                navController.navigationBar.topItem?.title = ""  // 타이틀을 빈 문자열로 설정
+                navController.navigationItem.hidesBackButton = true
+            }
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
             
