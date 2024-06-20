@@ -6,7 +6,7 @@ import SnapKit
 
 class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     
-    var marimoName: String = ""
+    var profileImageName: String = ""
     private var currentYear: Int = 0
     private var currentMonth: Int = 0
     private var uid: String? {
@@ -60,7 +60,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     private var collectionRef: CollectionReference!
     private var listener: ListenerRegistration?
-    private var sessionData: [String: Any] = [:]
+    private var sessionData: [String: [String: Any]] = [:]
     
     // MARK: - Override
     override func viewDidLoad() {
@@ -87,10 +87,14 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             print("유저 정보를 찾을 수 없음")
             return
         }
-
-        let documentRef = Firestore.firestore().collection("user-info").document(uid).collection("study-sessions")
-
-        documentRef.addSnapshotListener { [weak self] (querySnapshot, error) in
+        
+        // Fetch marimo-name data from study-sessions collection
+        let studySessionRef = Firestore.firestore()
+            .collection("user-info")
+            .document(uid)
+            .collection("study-sessions")
+        
+        studySessionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
             
             if let error = error {
@@ -108,26 +112,20 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 return
             }
             
+            // Process each document in the query snapshot
             for document in documents {
                 let data = document.data()
-                print("Data: \(data)")
+                print("Study Session Data: \(data)")
                 
-                if let imageName = data["marimo-name"] as? String {
-                    DispatchQueue.main.async {
-                        self.marimoName = imageName
-                        self.mainCalendar.reloadData() // 캘린더 리로드
-                    }
-                } else {
-                    print("No marimo-name")
-                    DispatchQueue.main.async {
-                        self.marimoName = "Group 9"
-                        self.mainCalendar.reloadData() // 캘린더 리로드
-                    }
+                let documentID = document.documentID // 문서 ID를 사용하여 sessionData에 저장
+                self.sessionData[documentID] = data
+                
+                DispatchQueue.main.async {
+                    self.mainCalendar.reloadData() // 캘린더 리로드
                 }
             }
         }
     }
-
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -206,7 +204,6 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         }
     }
     
-    
     deinit {
         listener?.remove()
     }
@@ -242,13 +239,16 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     func calendar(_ calendar: FSCalendar, cellFor date: Date, at monthPosition: FSCalendarMonthPosition) -> FSCalendarCell {
         let cell = calendar.dequeueReusableCell(withIdentifier: "CustomCalendarCell", for: date, at: monthPosition) as! CustomCalendarCell
-        cell.marimoName = self.marimoName // profileImageName을 CustomCalendarCell에 전달
         let isToday = Calendar.current.isDateInToday(date)
         let dateString = formatDate(date: date)
-        if let session = sessionData[dateString] as? [String: Any], let state = session["marimo-state"] as? Int {
-            cell.configure(with: date, marimoState: state, isToday: isToday, isCurrentMonth: monthPosition == .current)
+        
+        if let session = sessionData[dateString] {
+            let marimoState = session["marimo-state"] as? Int
+            let marimoName = session["marimo-name"] as? String
+            cell.profileImageName = marimoName // marimoName을 CustomCalendarCell에 전달
+            cell.configure(with: date, marimoState: marimoState, isToday: isToday, isCurrentMonth: monthPosition == .current)
         } else {
-            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current) // 데이터가 없으면 이미지 없음
+            cell.configure(with: date, marimoState: nil, isToday: isToday, isCurrentMonth: monthPosition == .current)
         }
         return cell
     }
@@ -289,7 +289,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     
     // CustomCalendarCell 클래스 정의
     class CustomCalendarCell: FSCalendarCell {
-        var marimoName: String?
+        var profileImageName: String?
         private let customLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
@@ -346,7 +346,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 case 4:
                     imageName = "Group 4"
                 case 5:
-                    imageName = marimoName ?? "Group 7"
+                    imageName = profileImageName ?? "Group 7"
                 default:
                     imageName = nil
                 }
@@ -364,16 +364,18 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                     print("Image name is nil.")
                 }
                 marimoImageView.backgroundColor = .clear
+                
             } else {
-                // 데이터가 없는 경우 기본 이미지를 설정
-                if let defaultImage = UIImage(named: "Gray") {
-                    marimoImageView.image = defaultImage
-                    marimoImageView.alpha = 0.8
+                //데이터 없는 경우 marimo-state
+                if let grayImage = UIImage(named: "Gray") {
+                    marimoImageView.image = grayImage
+                    marimoImageView.backgroundColor = .clear
+                    print("빈 데이터에 회색 미생물 추가.")
                 } else {
                     marimoImageView.image = nil
+                    marimoImageView.backgroundColor = .clear
+                    print("회색 이미지 없음.")
                 }
-                marimoImageView.backgroundColor = .clear
-                print("marimoState is nil.")
             }
             
             if isToday {
@@ -387,7 +389,6 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 customLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
             }
         }
-
         
         override func layoutSubviews() {
             super.layoutSubviews()
