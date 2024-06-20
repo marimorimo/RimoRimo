@@ -243,8 +243,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         guard let documentId = todo["id"] as? String else { return }
         let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
         
-        guard !updatedText.isEmpty else {
-            print("할 일 텍스트가 비어있습니다.")
+        guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
+
+        if updatedText.isEmpty {
+            cell.textField.text = cell.previousText
+            cell.resetContent()
+            editingIndexPath = nil
             return
         }
         
@@ -273,10 +277,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         
-        if let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell {
-            cell.resetContent()
-        }
-        
+        cell.resetContent()
         editingIndexPath = nil
     }
     
@@ -539,6 +540,7 @@ class ToDoTableViewCell: UITableViewCell {
     var underline: UIView!
     var textField: UITextField!
     var saveButton: UIButton!
+    var previousText: String?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -602,6 +604,7 @@ class ToDoTableViewCell: UITableViewCell {
         
         textField = UITextField()
         textField.text = todoText
+        previousText = todoText // Store the original text
         textField.borderStyle = .none
         textField.tag = toggleButton.tag
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -616,17 +619,18 @@ class ToDoTableViewCell: UITableViewCell {
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(saveButton)
 
-        NSLayoutConstraint.activate([
-            textField.leadingAnchor.constraint(equalTo: toggleButton.trailingAnchor, constant: 10),
-            textField.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            textField.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: -10),
-            textField.heightAnchor.constraint(equalToConstant: 30),
-            
-            saveButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            saveButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            saveButton.widthAnchor.constraint(equalToConstant: 30),
-            saveButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
+        saveButton.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView).offset(-10)
+            make.centerY.equalTo(contentView)
+            make.width.height.equalTo(30)
+        }
+
+        textField.snp.makeConstraints { make in
+            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
+            make.trailing.equalTo(saveButton.snp.leading).offset(-10)
+            make.centerY.equalTo(contentView)
+            make.height.equalTo(30)
+        }
 
         textField.becomeFirstResponder()
         if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
