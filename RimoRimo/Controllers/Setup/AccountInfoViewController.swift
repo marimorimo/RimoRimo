@@ -91,8 +91,8 @@ class AccountInfoViewController: UIViewController {
     let alertBack = AlertUIFactory.alertBackView()
        let alertView = AlertUIFactory.alertView()
        
-       let alertTitle = AlertUIFactory.alertTitle(titleText: "비밀번호 변경", textColor: MySpecialColors.Black, fontSize: 16)
-       let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "비밀번호를 변경하시겠습니까?", textColor: MySpecialColors.Gray4, fontSize: 14)
+       let alertTitle = AlertUIFactory.alertTitle(titleText: "", textColor: MySpecialColors.Black, fontSize: 16)
+       let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: "", textColor: MySpecialColors.Gray4, fontSize: 14)
        
        let widthLine = AlertUIFactory.widthLine()
        let heightLine = AlertUIFactory.heightLine()
@@ -218,43 +218,46 @@ class AccountInfoViewController: UIViewController {
     }
     
     // 회원 탈퇴 Alert
+    let alertBack1 = AlertUIFactory.alertBackView()
+    let alertView1 = AlertUIFactory.alertView()
+  
     private func showWithdrawAlert(title: String, subTitle: String) {
-        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
-        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        let alertTitle1 = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle1 = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
         
         checkView.isUserInteractionEnabled = true
 
-        view.addSubview(alertBack)
-        alertBack.addSubview(alertView)
-        [alertTitle, alertSubTitle, widthLine, heightLine, cancelView, checkView].forEach {
-            alertView.addSubview($0)
+        view.addSubview(alertBack1)
+        alertBack1.addSubview(alertView1)
+        [alertTitle1, alertSubTitle1, widthLine, heightLine, cancelView, checkView].forEach {
+            alertView1.addSubview($0)
         }
         cancelView.addSubview(cancelLabel)
         checkView.addSubview(checkLabel)
         
-        alertBack.snp.makeConstraints { make in
+        alertBack1.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        alertView.snp.makeConstraints { make in
+        alertView1.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(46)
             make.trailing.equalToSuperview().inset(46)
             make.height.equalTo(140)
         }
         
-        alertTitle.snp.makeConstraints { make in
+        alertTitle1.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(24)
             make.centerX.equalToSuperview()
         }
         
-        alertSubTitle.snp.makeConstraints { make in
-            make.top.equalTo(alertTitle.snp.bottom).offset(10)
+        alertSubTitle1.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle1.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         }
         
         widthLine.snp.makeConstraints { make in
-            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            make.top.equalTo(alertSubTitle1.snp.bottom).offset(20)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.height.equalTo(0.5)
@@ -291,42 +294,173 @@ class AccountInfoViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         
-        alertBack.alpha = 0
-        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        alertBack1.alpha = 0
+        alertView1.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         
         UIView.animate(withDuration: 0.3) {
-            self.alertBack.alpha = 1
-            self.alertView.transform = CGAffineTransform.identity
+            self.alertBack1.alpha = 1
+            self.alertView1.transform = CGAffineTransform.identity
         }
         
         checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showReauthenticationAlert)))
-        cancelView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+        cancelView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView1)))
+    }
+    @objc private func removeAlertView1() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack1.alpha = 0
+            self.alertView1.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack1.removeFromSuperview()
+            self.alertView1.removeFromSuperview()
+        }
     }
     
     @objc private func showReauthenticationAlert() {
+        reauthenticationAlert(title: "비밀번호 확인", subTitle: "계정을 삭제하기 위해 비밀번호를 입력해주세요.")
         
         UIView.animate(withDuration: 0.3, animations: {
-            self.alertBack.alpha = 0
-            self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            self.alertBack1.alpha = 0
+            self.alertView1.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         }) { _ in
-            self.alertBack.removeFromSuperview()
-            self.alertView.removeFromSuperview()
+            self.alertBack1.removeFromSuperview()
+            self.alertView1.removeFromSuperview()
+        }
+    }
+    
+    // 회원 탈퇴 비밀번호 확인 Alert
+    let alertBack2 = AlertUIFactory.alertBackView()
+    let alertView2 = AlertUIFactory.alertView()
+    
+    private func reauthenticationAlert(title: String, subTitle: String) {
+        
+        let alertTitle2 = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle2 = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        let textField: UITextField = {
+           let textField = UITextField()
+            textField.placeholder = "비밀번호"
+            textField.backgroundColor = .white
+            textField.font = UIFont.pretendard(style: .regular, size: 14)
+            textField.textAlignment = .left
+            textField.layer.cornerRadius = 5
+            return textField
+        }()
+        
+        checkView.isUserInteractionEnabled = true
+
+        view.addSubview(alertBack2)
+        alertBack2.addSubview(alertView2)
+        [alertTitle2, alertSubTitle2, textField, widthLine, heightLine, cancelView, checkView].forEach {
+            alertView2.addSubview($0)
+        }
+        cancelView.addSubview(cancelLabel)
+        checkView.addSubview(checkLabel)
+        
+        alertBack2.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         
-        let alertController = UIAlertController(title: "비밀번호 확인", message: "계정을 삭제하기 위해 비밀번호를 입력해주세요.", preferredStyle: .alert)
-        alertController.addTextField { textField in
-            textField.isSecureTextEntry = true
-            textField.placeholder = "비밀번호"
+        alertView2.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(46)
+            make.trailing.equalToSuperview().inset(46)
+            make.height.equalTo(170)
         }
-        let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
-            if let password = alertController.textFields?.first?.text {
-                self.reauthenticateUserAndDeleteAccount(withPassword: password)
-            }
+        
+        alertTitle2.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(24)
+            make.centerX.equalToSuperview()
         }
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        alertController.addAction(confirmAction)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
+        
+        alertSubTitle2.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle2.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        textField.snp.makeConstraints { make in
+            make.top.equalTo(alertSubTitle2.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(30)
+        }
+        
+        widthLine.snp.makeConstraints { make in
+            make.top.equalTo(textField.snp.bottom).offset(15)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
+        }
+        
+        heightLine.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(0.5)
+            make.height.equalTo(80)
+        }
+        
+        cancelView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(heightLine.snp.leading).offset(-4)
+            make.bottom.equalToSuperview()
+        }
+        
+        cancelLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        checkView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalTo(heightLine.snp.trailing).offset(4)
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        checkLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertBack2.alpha = 0
+        alertView2.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack2.alpha = 1
+            self.alertView2.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showConfirmAlert)))
+        cancelView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView2)))
+    }
+    
+    @objc private func removeAlertView2() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack2.alpha = 0
+            self.alertView2.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack2.removeFromSuperview()
+            self.alertView2.removeFromSuperview()
+        }
+    }
+    
+    @objc private func showConfirmAlert() {
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack2.alpha = 0
+            self.alertView2.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack2.removeFromSuperview()
+            self.alertView2.removeFromSuperview()
+        }
+        
+        guard let textField = alertView2.subviews.compactMap({ $0 as? UITextField }).first else { return }
+           guard let password = textField.text, !password.isEmpty else {
+               return print("No Password Information")
+           }
+
+           reauthenticateUserAndDeleteAccount(withPassword: password)
     }
     
     private func reauthenticateUserAndDeleteAccount(withPassword password: String) {
@@ -439,76 +573,3 @@ extension AccountInfoViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
 }
-    
-    
-//    private let accountInfoTitle: UILabel = {
-//        let text = UILabel()
-//        text.text = "accountInfo"
-//        return text
-//    }()
-//    
-//    private let emailTextField: UITextField = {
-//        let textField = UITextField()
-//        textField.placeholder = "Enter your email"
-//        textField.borderStyle = .roundedRect
-//        return textField
-//    }()
-//    
-//    private let resetPasswordButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Reset Password", for: .normal)
-//        button.addTarget(self, action: #selector(resetPasswordButtonTapped), for: .touchUpInside)
-//        return button
-//    }()
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        view.backgroundColor = .white
-//        
-//        view.addSubview(accountInfoTitle)
-//        view.addSubview(emailTextField)
-//        view.addSubview(resetPasswordButton)
-//        
-//        accountInfoTitle.translatesAutoresizingMaskIntoConstraints = false
-//        emailTextField.translatesAutoresizingMaskIntoConstraints = false
-//        resetPasswordButton.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            accountInfoTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            accountInfoTitle.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            
-//            emailTextField.topAnchor.constraint(equalTo: accountInfoTitle.bottomAnchor, constant: 20),
-//            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//            emailTextField.heightAnchor.constraint(equalToConstant: 40),
-//            
-//            resetPasswordButton.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20),
-//            resetPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-//        ])
-//    }
-//    
-//    @objc private func resetPasswordButtonTapped() {
-//        guard let email = emailTextField.text, !email.isEmpty else {
-//            let alert = UIAlertController(title: "Error", message: "이메일을 입력해주세요.", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//            self.present(alert, animated: true, completion: nil)
-//            return
-//        }
-//        
-//        Auth.auth().sendPasswordReset(withEmail: email) { error in
-//            if let error = error {
-//                print("비밀번호 재설정 이메일을 보내는 중에 오류가 발생했습니다.: \(error.localizedDescription)")
-//                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//                return
-//            }
-//            
-//            let alert = UIAlertController(title: "Password Reset", message: "비밀번호 재설정 이메일이 \(email)로 전송되었습니다. 받은 편지함을 확인하세요.", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//            self.present(alert, animated: true, completion: nil)
-//            
-//            print("비밀번호 재설정 이메일이 전송되었습니다.")
-//        }
-//    }
-//}
