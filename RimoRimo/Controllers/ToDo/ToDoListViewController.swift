@@ -34,7 +34,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         button.tintColor = MySpecialColors.MainColor
         return button
     }()
-
+    
     let editDate: UITextField = {
         let date = UITextField()
         date.font = UIFont.pretendard(style: .regular, size: 14)
@@ -61,6 +61,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         // Hide keyboard when tapping outside
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+        
+        // Keyboard event observers
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - UI Setup
@@ -256,6 +260,28 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         updateCompletionStatus(todoIndex: rowIndex, isCompleted: updatedStatus)
     }
     
+    // MARK: - Keyboard Handlers
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            textFieldStack.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        textFieldStack.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     // MARK: - Firebase Functions
     func addSnapshotListener(for date: Date) {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -342,13 +368,13 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     let date = timestamp.dateValue()
                     let dateFormatter = DateFormatter()
                     dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    dateFormatter.dateFormat = "yyyy.MM.dd"
                     self.editDate.text = dateFormatter.string(from: date)
                 } else {
                     let currentDate = Date()
                     let dateFormatter = DateFormatter()
                     dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    dateFormatter.dateFormat = "yyyy.MM.dd"
                     self.editDate.text = dateFormatter.string(from: currentDate)
                 }
             }
@@ -456,6 +482,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         listener?.remove()
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

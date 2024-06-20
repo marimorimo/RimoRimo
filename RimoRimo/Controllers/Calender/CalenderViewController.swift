@@ -153,7 +153,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         }
         
         buttonStack.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(80) //90
+            make.top.equalToSuperview().offset(70) //90
             make.leading.equalTo(monthLabel.snp.trailing).offset(10)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(30)
