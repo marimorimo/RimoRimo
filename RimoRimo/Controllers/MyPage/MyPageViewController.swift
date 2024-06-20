@@ -348,7 +348,11 @@ extension MyPageViewController {
                 }
 
                 self.concentrationTimeLabel.text = "\(data?["target-time"] as? String ?? "N/A")hr"
-                self.profileMarimoImageView.image = UIImage(named: "\(data?["profile-image"] as? String ?? "Group 4")")
+                self.profileMarimoImageView.image = UIImage(named: "\(data?["profile-image"] as? String ?? "Group 1")")
+
+                if "\(data?["profile-image"] as? String ?? "")" == "" {
+                    self.profileMarimoImageView.image = UIImage(named: "Group 1")
+                }
 
                 let fontSize = UIFont.pretendard(style: .semiBold, size: 28, isScaled: false)
                 let attributedStr = NSMutableAttributedString(string: concentrationTimeLabel.text!)
