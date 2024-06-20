@@ -214,11 +214,119 @@ class AccountInfoViewController: UIViewController {
     
     // MARK: - 회원 탈퇴
     @objc private func withdrawButtonTapped() {
-        let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원 탈퇴하시겠습니까?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "확인", style: .destructive, handler: { _ in
-        }))
-        present(alert, animated: true, completion: nil)
+        showWithdrawAlert(title: "회원 탈퇴", subTitle: "정말로 회원 탈퇴하시겠습니까?")
+    }
+    
+    // 회원 탈퇴 Alert
+    private func showWithdrawAlert(title: String, subTitle: String) {
+        let alertTitle = AlertUIFactory.alertTitle(titleText: title, textColor: MySpecialColors.Black, fontSize: 16)
+        let alertSubTitle = AlertUIFactory.alertSubTitle(subTitleText: subTitle, textColor: MySpecialColors.Gray4, fontSize: 14)
+        
+        checkView.isUserInteractionEnabled = true
+
+        view.addSubview(alertBack)
+        alertBack.addSubview(alertView)
+        [alertTitle, alertSubTitle, widthLine, heightLine, cancelView, checkView].forEach {
+            alertView.addSubview($0)
+        }
+        cancelView.addSubview(cancelLabel)
+        checkView.addSubview(checkLabel)
+        
+        alertBack.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        alertView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(46)
+            make.trailing.equalToSuperview().inset(46)
+            make.height.equalTo(140)
+        }
+        
+        alertTitle.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(24)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertSubTitle.snp.makeConstraints { make in
+            make.top.equalTo(alertTitle.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        widthLine.snp.makeConstraints { make in
+            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(0.5)
+        }
+        
+        heightLine.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(0.5)
+            make.height.equalTo(80)
+        }
+        
+        cancelView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(heightLine.snp.leading).offset(-4)
+            make.bottom.equalToSuperview()
+        }
+        
+        cancelLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        checkView.snp.makeConstraints { make in
+            make.top.equalTo(widthLine.snp.bottom)
+            make.leading.equalTo(heightLine.snp.trailing).offset(4)
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        checkLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(14)
+            make.centerX.equalToSuperview()
+        }
+        
+        alertBack.alpha = 0
+        alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.alertBack.alpha = 1
+            self.alertView.transform = CGAffineTransform.identity
+        }
+        
+        checkView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showReauthenticationAlert)))
+        cancelView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeAlertView)))
+    }
+    
+    @objc private func showReauthenticationAlert() {
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertBack.alpha = 0
+            self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { _ in
+            self.alertBack.removeFromSuperview()
+            self.alertView.removeFromSuperview()
+        }
+        
+        let alertController = UIAlertController(title: "비밀번호 확인", message: "계정을 삭제하기 위해 비밀번호를 입력해주세요.", preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.isSecureTextEntry = true
+            textField.placeholder = "비밀번호"
+        }
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+            if let password = alertController.textFields?.first?.text {
+                self.reauthenticateUserAndDeleteAccount(withPassword: password)
+            }
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     private func reauthenticateUserAndDeleteAccount(withPassword password: String) {
