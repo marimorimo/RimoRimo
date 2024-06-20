@@ -59,40 +59,40 @@ class AlertOnly: NSObject {
     }
     
     private func setupConstraints(in view: UIView) {
-        alertBack.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        alertBack.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
-        alertView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(46)
-            make.height.equalTo(140)
+        alertView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(46)
+            $0.height.equalTo(140)
         }
         
-        alertTitle.snp.makeConstraints { make in
-            make.top.equalTo(alertView).offset(24)
-            make.centerX.equalTo(alertView)
+        alertTitle.snp.makeConstraints {
+            $0.top.equalTo(alertView).offset(24)
+            $0.centerX.equalTo(alertView)
         }
         
-        alertSubTitle.snp.makeConstraints { make in
-            make.top.equalTo(alertTitle.snp.bottom).offset(10)
-            make.centerX.equalTo(alertView)
+        alertSubTitle.snp.makeConstraints {
+            $0.top.equalTo(alertTitle.snp.bottom).offset(10)
+            $0.centerX.equalTo(alertView)
         }
         
-        widthLine.snp.makeConstraints { make in
-            make.top.equalTo(alertSubTitle.snp.bottom).offset(20)
-            make.leading.trailing.equalTo(alertView).inset(0)
-            make.height.equalTo(0.5)
+        widthLine.snp.makeConstraints {
+            $0.top.equalTo(alertSubTitle.snp.bottom).offset(20)
+            $0.leading.trailing.equalTo(alertView).inset(0)
+            $0.height.equalTo(0.5)
         }
         
-        checkView.snp.makeConstraints { make in
-            make.top.equalTo(widthLine.snp.bottom)
-            make.leading.trailing.bottom.equalTo(alertView)
+        checkView.snp.makeConstraints {
+            $0.top.equalTo(widthLine.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(alertView)
         }
         
-        checkLabel.snp.makeConstraints { make in
-            make.top.equalTo(checkView).offset(14)
-            make.centerX.equalTo(checkView)
+        checkLabel.snp.makeConstraints {
+            $0.top.equalTo(checkView).offset(14)
+            $0.centerX.equalTo(checkView)
         }
     }
 }

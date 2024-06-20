@@ -50,6 +50,9 @@
 		0B4A5B112C243B6F000F8DDE /* AlertPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */; };
 		0B4A5B172C243E89000F8DDE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808822C19966D00081B2A /* MainViewController.swift */; };
 		0B4A5B1A2C243EDC000F8DDE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B192C243EDC000F8DDE /* Then */; };
+		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
+		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
+		0B4A5B2E2C24BF3E000F8DDE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B4A5B2D2C24BF3E000F8DDE /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -144,6 +147,8 @@
 		0B4A5B0B2C243B6E000F8DDE /* AlertOnly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertOnly.swift; sourceTree = "<group>"; };
 		0B4A5B0C2C243B6E000F8DDE /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
+		0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
+		0B4A5B2D2C24BF3E000F8DDE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Swift-Study/study-marimo/study-marimo/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -178,6 +183,7 @@
 				0B18084B2C19956B00081B2A /* FirebaseAuth in Frameworks */,
 				0B4A5B1A2C243EDC000F8DDE /* Then in Frameworks */,
 				0B18083D2C19952100081B2A /* FSCalendar in Frameworks */,
+				0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */,
 				0B1808402C19954C00081B2A /* FirebaseAnalytics in Frameworks */,
 				0B1808512C19956B00081B2A /* FirebaseStorage in Frameworks */,
 				0B18084F2C19956B00081B2A /* FirebaseFirestore in Frameworks */,
@@ -228,6 +234,7 @@
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
+				0B4A5B2D2C24BF3E000F8DDE /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
 				11BDE45E2C2481E800BC0E8C /* GoogleService-Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
@@ -353,6 +360,7 @@
 				0B1808842C19966D00081B2A /* SignUpViewController.swift */,
 				0B1808852C19966D00081B2A /* FindPasswordViewController.swift */,
 				0B1808862C19966D00081B2A /* LoginViewController.swift */,
+				0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -425,6 +433,7 @@
 				0B18084E2C19956B00081B2A /* FirebaseFirestore */,
 				0B1808502C19956B00081B2A /* FirebaseStorage */,
 				0B4A5B192C243EDC000F8DDE /* Then */,
+				0B4A5B272C248525000F8DDE /* MarkdownView */,
 			);
 			productName = RimoRimo;
 			productReference = 45011B842C1A93AF00961E3F /* RimoRimo.app */;
@@ -479,6 +488,7 @@
 				0B18083B2C19952100081B2A /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				0B18083E2C19954C00081B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				0B4A5B122C243D74000F8DDE /* XCRemoteSwiftPackageReference "Then" */,
+				0B4A5B262C248469000F8DDE /* XCRemoteSwiftPackageReference "MarkdownView" */,
 			);
 			productRefGroup = 0B1808162C19936A00081B2A;
 			projectDirPath = "";
@@ -502,7 +512,7 @@
 				11BDE4622C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */,
 				0B18086C2C19965700081B2A /* Pretendard-Thin.ttf in Resources */,
 				0B18082F2C19936D00081B2A /* LaunchScreen.storyboard in Resources */,
-				11BDE45F2C2481E800BC0E8C /* GoogleService-Info.plist in Resources */,
+				0B4A5B2E2C24BF3E000F8DDE /* GoogleService-Info.plist in Resources */,
 				0B18082C2C19936D00081B2A /* Assets.xcassets in Resources */,
 				0B18086B2C19965700081B2A /* Pretendard-Regular.ttf in Resources */,
 				0B1808702C19965700081B2A /* Pretendard-Bold.ttf in Resources */,
@@ -531,6 +541,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */,
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
 				1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */,
@@ -909,6 +920,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		0B4A5B262C248469000F8DDE /* XCRemoteSwiftPackageReference "MarkdownView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/keitaoouchi/MarkdownView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -951,6 +970,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B4A5B122C243D74000F8DDE /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
+		};
+		0B4A5B272C248525000F8DDE /* MarkdownView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B4A5B262C248469000F8DDE /* XCRemoteSwiftPackageReference "MarkdownView" */;
+			productName = MarkdownView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
