@@ -47,7 +47,7 @@ class AccountInfoViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
-        self.title = "계정"
+        self.title = "계정 관리"
     }
     
     private func setupViews() {
