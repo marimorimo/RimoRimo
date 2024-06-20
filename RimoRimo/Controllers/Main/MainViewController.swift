@@ -33,7 +33,6 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let START_TIME_KEY = "startTime"
     private let STOP_TIME_KEY = "stopTime"
     private let COUNTING_KEY = "countingKey"
-    private let LAST_RESET_DATE_KEY = "lastDay"
     private let NOTIFICATION_KEY = "ScheduledNotification"
     
     private var currentGroup = 1
@@ -692,6 +691,31 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         }
     }
     
+    // MARK: - D-Day 변환
+    private func convertDateToDDay(targetDate: Date, isTodayIncluded: Bool) -> String {
+        let currentDate = Date()
+        let calendar = Calendar.current
+
+        let currentDateStripped = calendar.startOfDay(for: currentDate)
+        let targetDateStripped = calendar.startOfDay(for: targetDate)
+
+        var components = calendar.dateComponents([.day], from: currentDateStripped, to: targetDateStripped)
+        if isTodayIncluded {
+            components.day = (components.day ?? 0) + 1
+        }
+        guard let days = components.day else {
+            return "No days"
+        }
+
+        if days > 0 {
+            return "D-\(days)"
+        } else if days == 0 {
+            return "D-day"
+        } else {
+            return "D+\(-days)"
+        }
+    }
+
     // MARK: - bindUIData
     private func bindUIData(with data: [String: Any]) {
         DispatchQueue.main.async { [weak self] in
@@ -706,13 +730,18 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 dayView.backgroundColor = .clear
             }
             
-            if let dDayText = data["d-day"] as? String, !dDayText.isEmpty {
+            if let dDayTimestamp = data["d-day-date"] as? Timestamp {
+                let targetDate = dDayTimestamp.dateValue()
+                let isTodayIncluded = data["isTodayIncluded"] as? Bool ?? false
+                let dDayText = self.convertDateToDDay(targetDate: targetDate, isTodayIncluded: isTodayIncluded)
+                
                 self.dayLabel.text = dDayText
+                self.dayView.backgroundColor = MySpecialColors.DayBlue
+                print("D-day: \(dDayText)")
             } else {
                 print("No d-day")
                 self.dayLabel.text = "프로필에서 설정할 수 있어요."
-                dayView.backgroundColor = .clear
-                dayView.backgroundColor = MySpecialColors.DayBlue
+                self.dayView.backgroundColor = .clear
             }
             
             if let profileImageName = data["profile-image"] as? String {
@@ -911,8 +940,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     private func scheduleNotification() {
         var dateComponents = DateComponents()
-        dateComponents.hour = 20
-        dateComponents.minute = 45
+        dateComponents.hour = 22
+        dateComponents.minute = 00
         
         let content = UNMutableNotificationContent()
         content.title = "리모리모: 하루를 마무리해 볼까요?"

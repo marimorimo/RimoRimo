@@ -10,12 +10,14 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
-class SignUpViewController: UIViewController, UITextFieldDelegate {
+class SignUpViewController: UIViewController, UITextFieldDelegate, PrivacyPolicyViewControllerDelegate {
     
     private var nicknameCheck: Bool = true
     private var emailCheck: Bool = false
     private var passwordCheck: Bool = false
     private var passwordDoubleCheck: Bool = false
+    
+    private var signUpAreed: Bool = false
     
     private var activityIndicator: UIActivityIndicatorView!
     
@@ -50,6 +52,33 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         text.font = UIFont.pretendard(style: .regular, size: 10, isScaled: true)
         return text
     }
+    
+    // MARK: - PrivacyPolicyView
+    private let privacyPolicyView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private lazy var privacyPolicyButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(privacyPolicyTapped), for: .touchUpInside)
+        return button
+    }()
+
+    private let privacyPolicyArrowBox: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(systemName: "chevron.right")
+        image.tintColor = MySpecialColors.MainColor
+        return image
+    }()
+    
+    private let privacyPolicyText: UILabel = {
+        let text = UILabel()
+        text.text = "개인정보 처리 방침"
+        text.textColor = MySpecialColors.Gray4
+        text.font = UIFont.pretendard(style: .regular, size: 14, isScaled: true)
+        return text
+    }()
     
     let nameTextField = TextFieldUIFactory.textField(placeholder: "닉네임을 입력해 주세요.")
     let emailTextField = TextFieldUIFactory.textField(placeholder: "이메일을 입력해 주세요.")
@@ -93,7 +122,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     let passwordDoubleCheckDeleteIcon = TextFieldUIFactory.deleteIcon(name: "close-circle")
     let passwordDoubleCheckHiddenIcon = TextFieldUIFactory.hiddenIcon(name: "show-block")
-
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -152,6 +180,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         setupPasswordDoubleCheckDeleteIcon()
         
         // 처음 한 번 호출
+        setupPrivacyPolicyViewUI()
         setupSignUpButton()
     }
     
@@ -407,7 +436,40 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         ])
     }
     
-    //MARK: - setupBottomView
+    // MARK: - setupPrivacyPolicyViewUI
+    private func setupPrivacyPolicyViewUI() {
+        view.addSubview(privacyPolicyView)
+        privacyPolicyView.addSubview(privacyPolicyButton)
+        privacyPolicyButton.addSubviews(privacyPolicyText)
+        privacyPolicyButton.addSubviews(privacyPolicyArrowBox)
+
+        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
+        privacyPolicyButton.translatesAutoresizingMaskIntoConstraints = false
+        privacyPolicyText.translatesAutoresizingMaskIntoConstraints = false
+        privacyPolicyArrowBox.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            privacyPolicyView.bottomAnchor.constraint(equalTo: BottomView.topAnchor, constant: -18),
+            privacyPolicyView.leadingAnchor.constraint(equalTo: BottomView.leadingAnchor),
+            privacyPolicyView.trailingAnchor.constraint(equalTo: BottomView.trailingAnchor),
+            privacyPolicyView.heightAnchor.constraint(equalToConstant: 30),
+            
+            privacyPolicyButton.topAnchor.constraint(equalTo: privacyPolicyView.topAnchor),
+            privacyPolicyButton.leadingAnchor.constraint(equalTo: privacyPolicyView.leadingAnchor),
+            privacyPolicyButton.trailingAnchor.constraint(equalTo: privacyPolicyView.trailingAnchor),
+            privacyPolicyButton.bottomAnchor.constraint(equalTo: privacyPolicyView.bottomAnchor),
+
+            privacyPolicyText.centerYAnchor.constraint(equalTo: privacyPolicyButton.centerYAnchor),
+            privacyPolicyText.trailingAnchor.constraint(equalTo: privacyPolicyButton.trailingAnchor),
+            privacyPolicyText.leadingAnchor.constraint(equalTo: privacyPolicyView.leadingAnchor),
+            
+            privacyPolicyArrowBox.centerYAnchor.constraint(equalTo: privacyPolicyButton.centerYAnchor),
+            privacyPolicyArrowBox.trailingAnchor.constraint(equalTo: privacyPolicyButton.trailingAnchor),
+            privacyPolicyArrowBox.heightAnchor.constraint(equalToConstant: 20),            
+        ])
+    }
+    
+    // MARK: - setupBottomView
     private func setupBottomView() {
         view.addSubview(BottomView)
         BottomView.addSubview(SignUpButton)
@@ -505,7 +567,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
               let confirmPassword = passwordDoubleCheckTextField.text,
               let nickname = nameTextField.text,
               !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty, !nickname.isEmpty,
-              nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck
+              nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck, signUpAreed
         else {
             
             UIView.animate(withDuration: 0.3) {
@@ -538,7 +600,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
               let confirmPassword = passwordDoubleCheckTextField.text,
               let nickname = nameTextField.text,
               !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty, !nickname.isEmpty,
-              nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck else {
+              nicknameCheck, emailCheck, passwordCheck, passwordDoubleCheck, signUpAreed else {
             self.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.")
             activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
             return
@@ -569,18 +631,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 "email": email,
                 "nickname": nickname,
                 "profile-image": "Group 5",
-                "block-user-list": [],
                 "d-day-title": "",
                 "d-day": "",
                 "target-time": "7",
-                "challenge": [
-                    "01" : false, // 프로필 수정 - 처음 프로필 수정 하면 챌린지 성공
-                    "02" : false, // 메인 - 처음 목표시간 채웠을 경우 챌린지 성공
-                    "03" : false, // 캘린더 디테일 - 처음 메모 작성 시 챌린지 성공
-                    "04" : false, // 메인 - 총 30개 채웠을 경우 챌린지 성공
-                    "05" : false, // 투두 - 처음 투두 프로그레스바가 100%완료 시 챌린지 성공 / 12시 기준 투두 5개 이상
-                    "06" : false, // 마이페이지 - 30일 채우면 챌린지 성공
-                ],
+                "signup-areed": self.signUpAreed
             ]
             
             Firestore.firestore().collection("user-info").document(uid).setData(userData) { error in
@@ -864,6 +918,19 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         passwordDoubleCheckTextField.text = ""
     }
     
+    // MARK: - privacyPolicyTapped
+    @objc private func privacyPolicyTapped() {
+        let privacyVC = PrivacyPolicyViewController()
+        privacyVC.delegate = self
+        navigationController?.pushViewController(privacyVC, animated: true)
+    }
+    
+    func didAgreeToPrivacyPolicy(_ agreed: Bool) {
+        print("privacy policy \(agreed)")
+        signUpAreed = agreed
+        setupSignUpButton()
+    }
+    
     // MARK: - Keyboard Dimiss
     @objc private func dismissKeyboard() {
         view.endEditing(true)
@@ -877,5 +944,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             self.alertBack.removeFromSuperview()
         }
     }
+    
+
 }
 
