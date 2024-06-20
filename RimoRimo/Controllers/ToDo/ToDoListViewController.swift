@@ -476,6 +476,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             tableView.reloadRows(at: [previousIndexPath], with: .automatic)
         }
         
+        // 키보드를 숨기고 textFieldStack을 원래 위치로 이동
+        dismissKeyboard()
+        textFieldStack.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
+
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
         let todo = todos[indexPath.row]
         guard let todoText = todo["todo"] as? String else { return }
