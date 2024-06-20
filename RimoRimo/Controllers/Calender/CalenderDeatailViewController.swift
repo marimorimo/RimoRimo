@@ -134,7 +134,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         }
         
         memoView.snp.makeConstraints { make in
-            make.top.equalTo(marimoMessage.snp.bottom).offset(37)
+            make.top.equalTo(marimoMessage.snp.bottom).offset(45)
             make.centerX.equalToSuperview()
             make.width.equalTo(345)
             make.height.equalTo(127)
