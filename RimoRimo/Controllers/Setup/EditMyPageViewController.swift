@@ -718,10 +718,7 @@ class EditMyPageViewController: UIViewController {
                 if self?.isTodayIncluded == true {
                     targetDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
                 }
-                let daysRemaining = self?.calculateDaysRemaining(to: targetDate) ?? 0
-                let dDayMessage = "D-\(daysRemaining)"
                 updateData["d-day-date"] = selectedDate
-                updateData["d-day"] = dDayMessage
                 updateData["isTodayIncluded"] = self?.isTodayIncluded ?? false
                 
                 userDocRef.updateData(updateData) { error in
