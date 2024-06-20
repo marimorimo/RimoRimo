@@ -68,6 +68,7 @@
 		4500E9C62C1C6BFA005BB8DF /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4500E9C72C1C6BFA005BB8DF /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */; };
+		785232C32C234F28004BC5C4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 785232C22C234F28004BC5C4 /* GoogleService-Info.plist */; };
 		7863C0D62C1C6D6B00D91E8C /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
 		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
@@ -152,6 +153,7 @@
 		1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockedUITableViewCell.swift; path = RimoRimo/Views/BlockedUITableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoPopupCalendarViewController.swift; sourceTree = "<group>"; };
 		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		785232C22C234F28004BC5C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,7 +216,7 @@
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
 				0B1808302C19936D00081B2A /* Info.plist */,
-				11CB1AB22C22E162007134E5 /* GoogleService-Info.plist */,
+				785232C22C234F28004BC5C4 /* GoogleService-Info.plist */,
 			);
 			path = RimoRimo;
 			sourceTree = "<group>";
@@ -472,7 +474,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11CB1AB32C22E162007134E5 /* GoogleService-Info.plist in Resources */,
+				785232C32C234F28004BC5C4 /* GoogleService-Info.plist in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
