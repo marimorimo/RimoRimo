@@ -166,18 +166,28 @@ class SetupViewController: UIViewController {
         }
     }
 
-   
+    private let START_TIME_KEY = "startTime"
+    private let STOP_TIME_KEY = "stopTime"
+    private let COUNTING_KEY = "countingKey"
     private let saveAutoLoginInfo = "userEmail"
     @objc private func performLogout() {
         do {
             try Auth.auth().signOut()
             // 로그아웃 후 저장된 로그인 정보 삭제
             UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
-            // 로그아웃 후 처리 (예: 로그인 화면으로 이동)
+            UserDefaults.standard.removeObject(forKey: START_TIME_KEY)
+            UserDefaults.standard.removeObject(forKey: STOP_TIME_KEY)
+            UserDefaults.standard.removeObject(forKey: COUNTING_KEY)
+            // 로그인 화면으로 이동
             let loginViewController = LoginViewController()
-            // MARK: - 네비게이션으로 이동하기!
             let navController = UINavigationController(rootViewController: loginViewController)
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(navController)
+            
+            // 화면 전환
+            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                sceneDelegate.changeRootViewController(navController)
+                navController.navigationBar.topItem?.title = ""  // 타이틀을 빈 문자열로 설정
+                navController.navigationItem.hidesBackButton = true
+            }
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
             
@@ -269,10 +279,10 @@ extension SetupViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.row {
         case 0:
             let nextVC = EditMyPageViewController()
-            self.navigationController?.pushViewController(nextVC, animated: false)
+            self.navigationController?.pushViewController(nextVC, animated: true)
         case 1:
             let nextVC = AccountInfoViewController()
-            self.navigationController?.pushViewController(nextVC, animated: false)
+            self.navigationController?.pushViewController(nextVC, animated: true)
         default:
             debugPrint("invalid indexPath")
         }
