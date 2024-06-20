@@ -1,10 +1,13 @@
 import UIKit
+import WidgetKit
 import FirebaseFirestore
 import FirebaseAuth
 import SnapKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-    
+
+    var todolistArr: [String] = []
+
     //MARK: - UI Components
     var textField: UITextField!
     var saveButton: UIButton!
@@ -199,6 +202,8 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
         
+        let todoText = textField.text ?? ""
+      
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
@@ -327,6 +332,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func loadTodos(for date: Date) {
+        todolistArr = []
         addSnapshotListener(for: selectedDate)
     }
     
@@ -415,6 +421,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         let todo = todos[indexPath.row]
         let todoText = todo["todo"] as? String ?? ""
+
+
+        todolistArr.append(todoText)
+        UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
+        WidgetCenter.shared.reloadAllTimelines()
+
         let isCompleted = todo["completed"] as? Bool ?? false
         cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
         
