@@ -24,6 +24,7 @@ class AccountInfoViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.rowHeight = 58
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.isScrollEnabled = false
         return tableView
     }()
     
