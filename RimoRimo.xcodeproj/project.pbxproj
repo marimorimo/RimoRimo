@@ -54,6 +54,7 @@
 		119FEBC82C1C227300BCC845 /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808622C19965700081B2A /* Pretendard-SemiBold.ttf */; };
 		119FEBC92C1C227500BCC845 /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1808642C19965700081B2A /* Pretendard-Bold.ttf */; };
 		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
+		11CB1AB32C22E162007134E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11CB1AB22C22E162007134E5 /* GoogleService-Info.plist */; };
 		11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */; };
 		11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */; };
 		11F836142C1E7E6700711581 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836132C1E7E6700711581 /* Color.swift */; };
@@ -141,6 +142,7 @@
 		119FEBD22C1C231000BCC845 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoRimo.entitlements; sourceTree = "<group>"; };
+		11CB1AB22C22E162007134E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupCalendarViewController.swift; sourceTree = "<group>"; };
 		11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectMarimoViewController.swift; sourceTree = "<group>"; };
 		11F836132C1E7E6700711581 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };

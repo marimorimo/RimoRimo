@@ -41,28 +41,28 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         return stack
     }()
     
-    let prevButton: UIButton = {
+    lazy var prevButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "chevron-left-md")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.MainColor
-        button.addTarget(nil, action: #selector(didTapPrevButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapPrevButton), for: .touchUpInside)
         return button
     }()
     
-    let nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "chevron-right-md")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.MainColor
-        button.addTarget(nil, action: #selector(didTapNextButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
         return button
     }()
     
-    let confirmButton: UIButton = {
+    lazy var confirmButton: UIButton = {
         let button = TabButtonUIFactory.tapButton(buttonTitle: "확인", textColor: .white , cornerRadius: 22, backgroundColor: MySpecialColors.MainColor)
         button.titleLabel?.font = UIFont.pretendard(style: .semiBold, size: 16)
-        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         return button
     }()
     

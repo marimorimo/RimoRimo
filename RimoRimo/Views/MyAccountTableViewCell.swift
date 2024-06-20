@@ -30,11 +30,11 @@ class MyAccountTableViewCell: UITableViewCell {
         return label
     }()
     
-    let resetPasswordButton: UIButton = {
+    lazy var resetPasswordButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(MySpecialColors.MainColor, for: .normal)
         button.titleLabel?.font = UIFont.pretendard(style: .regular, size: 12)
-        button.addTarget(nil, action: #selector(resetPasswordButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(resetPasswordButtonTapped), for: .touchUpInside)
         return button
     }()
 

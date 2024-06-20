@@ -46,21 +46,21 @@ class EditMyPageViewController: UIViewController {
         label.textColor = MySpecialColors.Black
         return label
     }()
-    private let changeProfile: UIButton = {
+    lazy var changeProfile: UIButton = {
         let button = UIButton()
             button.setImage(UIImage(named: "Group 5"), for: .normal)
             button.imageView?.contentMode = .scaleAspectFit
-            button.addTarget(nil, action: #selector(changeProfileButtonTapped(_:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(changeProfileButtonTapped(_:)), for: .touchUpInside)
             return button
     }()
-    private let plusButton: UIButton = {
+    private lazy var plusButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "add-plus-circle")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.MainColor
         button.layer.cornerRadius = 20
         button.backgroundColor = MySpecialColors.Gray1
-        button.addTarget(nil, action: #selector(changeProfileButtonTapped(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(changeProfileButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
     
@@ -88,10 +88,10 @@ class EditMyPageViewController: UIViewController {
         view.backgroundColor = MySpecialColors.Gray3
         return view
     }()
-    private let nameDoubleCheckButton: UIButton = {
+    private lazy var nameDoubleCheckButton: UIButton = {
         let button = TabButtonUIFactory.doubleCheckButton(buttonTitle: "중복 확인", textColor: MySpecialColors.MainColor, cornerRadius: 12, backgroundColor: MySpecialColors.Gray1)
         button.titleLabel?.font = UIFont.pretendard(style: .bold, size: 12)
-        button.addTarget(nil, action: #selector(duplicateCheckButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(duplicateCheckButtonTapped), for: .touchUpInside)
         return button
     }()
     private let nickNameErrorMessage: UILabel = {
@@ -201,12 +201,12 @@ class EditMyPageViewController: UIViewController {
         label.textColor = MySpecialColors.Black
         return label
     }()
-    private let includeTodayButton: UIButton = {
+    private lazy var includeTodayButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "square")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
         button.tintColor = MySpecialColors.Gray3
-        button.addTarget(nil, action: #selector(includeTodayButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(includeTodayButtonTapped), for: .touchUpInside)
         return button
     }()
     private let calendarButton: UIButton = {
@@ -233,10 +233,10 @@ class EditMyPageViewController: UIViewController {
         return view
     }()
     // Confirm
-    private let confirmButton: UIButton = {
+    private lazy var confirmButton: UIButton = {
         let button = TabButtonUIFactory.tapButton(buttonTitle: "확인", textColor: .white , cornerRadius: 22, backgroundColor: MySpecialColors.MainColor)
         button.titleLabel?.font = UIFont.pretendard(style: .semiBold, size: 16)
-        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         return button
     }()
     
