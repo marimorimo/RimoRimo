@@ -113,9 +113,21 @@ class EditMyPageViewController: UIViewController {
         view.backgroundColor = MySpecialColors.Gray3
         return view
     }()
+    private func alertTextLabel(alertText: String, textColor: UIColor) -> UILabel {
+        let text = UILabel()
+        text.text = alertText
+        text.textColor = textColor
+        text.textAlignment = .left
+        text.font = UIFont.pretendard(style: .regular, size: 10, isScaled: true)
+        return text
+    }
+    private var nicknameCheck: Bool = true
+    lazy var nameAlertTextLabel: UILabel = alertTextLabel(alertText: "", textColor: MySpecialColors.Red)
+    
     private lazy var nameDoubleCheckButton: UIButton = {
-        let button = TabButtonUIFactory.doubleCheckButton(buttonTitle: "중복 확인", textColor: MySpecialColors.MainColor, cornerRadius: 12, backgroundColor: MySpecialColors.Gray1)
+        let button = TabButtonUIFactory.doubleCheckButton(buttonTitle: "중복 확인", textColor: MySpecialColors.Gray3, cornerRadius: 12, backgroundColor: MySpecialColors.Gray1)
         button.titleLabel?.font = UIFont.pretendard(style: .bold, size: 12)
+        button.layer.borderColor = MySpecialColors.Gray3.cgColor
         button.addTarget(self, action: #selector(duplicateCheckButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -287,7 +299,7 @@ class EditMyPageViewController: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [rimoMessage, changeProfile, plusButton, outerNickNameStackView, nickNameErrorMessage, focusTimeMessage, focusTimeBox, focusTimeStack, scheduleLabel, editScheduleName, scheduleLine, dateLabel, includeTodayView, includeTodayLabel, includeTodayButton, dateStack, dateLine, confirmButton].forEach {
+        [rimoMessage, changeProfile, plusButton, outerNickNameStackView, nameAlertTextLabel, nickNameErrorMessage, focusTimeMessage, focusTimeBox, focusTimeStack, scheduleLabel, editScheduleName, scheduleLine, dateLabel, includeTodayView, includeTodayLabel, includeTodayButton, dateStack, dateLine, confirmButton].forEach {
             contentView.addSubview($0)
         }
         // NickName
@@ -357,6 +369,10 @@ class EditMyPageViewController: UIViewController {
             make.top.equalTo(outerNickNameStackView.snp.bottom).offset(9)
             make.leading.equalTo(outerNickNameStackView.snp.leading)
         }
+        nameAlertTextLabel.snp.makeConstraints { make in
+            make.top.equalTo(outerNickNameStackView.snp.bottom).offset(9)
+            make.leading.equalTo(outerNickNameStackView.snp.leading)
+        }
         
         // FocusTime
         focusTimeMessage.snp.makeConstraints { make in
@@ -392,7 +408,7 @@ class EditMyPageViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().inset(24)
-            make.height.equalTo(0.8)
+            make.height.equalTo(0.75)
         }
         
         // Date
@@ -434,7 +450,7 @@ class EditMyPageViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().inset(24)
-            make.height.equalTo(0.8)
+            make.height.equalTo(0.75)
         }
         
         // Confirm
@@ -512,7 +528,6 @@ class EditMyPageViewController: UIViewController {
     // MARK: - Func
     
     // Edit Profile
-    private var isNicknameAvailable: Bool = false
     @objc private func changeProfileButtonTapped(_ sender: UIButton) {
         let selectMarimoVC = SelectMarimoViewController()
         selectMarimoVC.didSelectImage = { [weak self] imageName in
@@ -537,34 +552,32 @@ class EditMyPageViewController: UIViewController {
             isNickNameEdited = true
         }
     }
+    private var isNicknameAvailable: Bool = false
     @objc private func duplicateCheckButtonTapped() {
+        nickNameErrorMessage.isHidden = true
         guard let nickname = editNickName.text, !nickname.isEmpty else {
-            let alert = UIAlertController(title: "Error", message: "닉네임을 입력해주세요.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            nameAlertTextLabel.isHidden = false
             return
         }
+        nameAlertTextLabel.isHidden = true
         Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
-                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
                 return
             }
             
             if let documents = querySnapshot?.documents, documents.isEmpty {
-                let alert = UIAlertController(title: "Available", message: "이 닉네임을 사용할 수 있습니다.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
                 self.isNicknameAvailable = true
+                self.nameAlertTextLabel.text = "사용할 수 있는 닉네임입니다."
+                self.nameAlertTextLabel.textColor = MySpecialColors.MainColor
             } else {
-                let alert = UIAlertController(title: "Unavailable", message: "이 닉네임은 이미 사용 중입니다.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
                 self.isNicknameAvailable = false
+                self.nameAlertTextLabel.text = "이미 사용 중인 닉네임입니다."
+                self.nameAlertTextLabel.textColor = MySpecialColors.Red
             }
+            self.nameAlertTextLabel.isHidden = false
         }
+        
     }
     
     // Edit Schedule
@@ -805,6 +818,11 @@ extension EditMyPageViewController: UITextFieldDelegate {
         textField.placeholder = ""
         textField.textColor = MySpecialColors.Gray4
         
+        if textField == editNickName {
+            nameDoubleCheckButton.layer.borderColor = MySpecialColors.MainColor.cgColor
+            nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.MainColor
+        }
+        
         if textField == editScheduleName {
             // editScheduleName이 편집되기 시작할 때 키보드 노티피케이션을 추가
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -817,8 +835,13 @@ extension EditMyPageViewController: UITextFieldDelegate {
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == editNickName {
+            nameAlertTextLabel.isHidden = true
             if textField.text?.isEmpty ?? true {
                 textField.placeholder = "닉네임을 입력해 주세요"
+            }
+            if textField == editNickName {
+                nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
+                nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.Gray3
             }
         } else if textField == editScheduleName {
             if textField.text?.isEmpty ?? true {
@@ -837,6 +860,7 @@ extension EditMyPageViewController: UITextFieldDelegate {
             if let text = textField.text, text.count > 8 {
                 textField.text = String(text.prefix(8))
                 nickNameErrorMessage.isHidden = false
+                nameAlertTextLabel.isHidden = true
             } else {
                 nickNameErrorMessage.isHidden = true
             }
