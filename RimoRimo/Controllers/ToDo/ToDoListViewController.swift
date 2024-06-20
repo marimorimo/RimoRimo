@@ -5,8 +5,7 @@ import SnapKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
-//MARK: - UI Components
-
+    //MARK: - UI Components
     var textField: UITextField!
     var saveButton: UIButton!
     var tableView: UITableView!
@@ -20,7 +19,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedDate: Date = Date()
     var listener: ListenerRegistration?
     
-    
     // PickDate Setup
     let dateStack: UIStackView = {
         let stack = UIStackView()
@@ -28,6 +26,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         stack.spacing = 8
         return stack
     }()
+    
     let calendarButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "calendar")?.withRenderingMode(.alwaysTemplate)
@@ -35,7 +34,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         button.tintColor = MySpecialColors.MainColor
         return button
     }()
-
+    
     let editDate: UITextField = {
         let date = UITextField()
         date.font = UIFont.pretendard(style: .regular, size: 14)
@@ -51,8 +50,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "todo"
-
         setupUI()
         setupConstraints()
         setupActions()
@@ -60,17 +57,23 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         addSnapshotListener(for: selectedDate)
         fetchDateData()
+        
+        // Hide keyboard when tapping outside
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
+        // Keyboard event observers
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - UI Setup
-    
     func setupUI() {
         view.backgroundColor = MySpecialColors.Gray1
         view.addSubview(dateStack)
         [calendarButton, editDate].forEach {
             dateStack.addArrangedSubview($0)
         }
-        
         
         // TextField Setup
         textField = UITextField()
@@ -109,7 +112,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - Constraints Setup
-    
     func setupConstraints() {
         dateStack.snp.makeConstraints { make in
             make.top.equalTo(view).offset(100)
@@ -151,7 +153,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - Actions Setup
-    
     func setupActions() {
         saveButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
     }
@@ -165,11 +166,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - Actions
-    
     @objc private func editDateTapped() {
         print("taptap")
         showCalendarPopup()
     }
+    
     private func showCalendarPopup() {
         let popupCalendarVC = ToDoPopupCalendarViewController()
         popupCalendarVC.didSelectDate = { [weak self] selectedDate, formattedDate in
@@ -259,8 +260,29 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         updateCompletionStatus(todoIndex: rowIndex, isCompleted: updatedStatus)
     }
     
-    // MARK: - Firebase Functions
+    // MARK: - Keyboard Handlers
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            textFieldStack.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
     
+    @objc func keyboardWillHide(notification: NSNotification) {
+        textFieldStack.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    // MARK: - Firebase Functions
     func addSnapshotListener(for date: Date) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("User not authenticated")
@@ -346,21 +368,36 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     let date = timestamp.dateValue()
                     let dateFormatter = DateFormatter()
                     dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    dateFormatter.dateFormat = "yyyy.MM.dd"
                     self.editDate.text = dateFormatter.string(from: date)
                 } else {
                     let currentDate = Date()
                     let dateFormatter = DateFormatter()
                     dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
+                    dateFormatter.dateFormat = "yyyy.MM.dd"
                     self.editDate.text = dateFormatter.string(from: currentDate)
                 }
             }
         }
     }
     
-    // MARK: - UITableViewDataSource
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+        print("키보드 내려감")
+    }
     
+    // MARK: - UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        saveToDo()
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        print("텍스트 필드 편집 시작")
+    }
+    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todos.count
     }
@@ -385,7 +422,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - UITableViewDelegate
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let previousIndexPath = editingIndexPath {
             guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? ToDoTableViewCell else { return }
@@ -402,7 +438,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - Swipe to Delete
-    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
             guard let self = self else { return }
@@ -444,10 +479,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - UIViewController Lifecycle
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         listener?.remove()
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

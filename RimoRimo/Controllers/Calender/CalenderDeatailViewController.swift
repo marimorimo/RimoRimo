@@ -48,7 +48,7 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
         return label
     }()
     
-    let editButton: UIButton = {
+    lazy var editButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "edit-pencil-01")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
