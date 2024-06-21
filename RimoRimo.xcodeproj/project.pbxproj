@@ -52,7 +52,8 @@
 		0B4A5B1A2C243EDC000F8DDE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B192C243EDC000F8DDE /* Then */; };
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
-		0BAB50482C2543D6006971A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BAB50472C2543D6006971A5 /* GoogleService-Info.plist */; };
+		0BAB50492C259AC9006971A5 /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
+		0BAB504B2C259ADF006971A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BAB504A2C259ADE006971A5 /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -144,7 +145,7 @@
 		0B4A5B0C2C243B6E000F8DDE /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
 		0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
-		0BAB50472C2543D6006971A5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Swift-Study/study-marimo/study-marimo/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0BAB504A2C259ADE006971A5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../리모리모 최종 파이어베이스 키/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -229,8 +230,8 @@
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
+				0BAB504A2C259ADE006971A5 /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
-				0BAB50472C2543D6006971A5 /* GoogleService-Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
 			path = RimoRimo;
@@ -499,7 +500,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BAB50482C2543D6006971A5 /* GoogleService-Info.plist in Resources */,
+				0BAB50492C259AC9006971A5 /* RimoWidgetExtension.appex in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
@@ -512,6 +513,7 @@
 				0B18086D2C19965700081B2A /* Pretendard-ExtraLight.ttf in Resources */,
 				0B1808692C19965700081B2A /* Pretendard-Medium.ttf in Resources */,
 				0B18086A2C19965700081B2A /* Pretendard-Black.ttf in Resources */,
+				0BAB504B2C259ADF006971A5 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,6 +737,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = RimoRimo/RimoRimo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -742,6 +745,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KWVJ99C465;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "리모리모";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -755,10 +759,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.teamremo.RimoRimo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "team RimoRimo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "RimoRimo Debug";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -769,13 +776,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = RimoRimo/RimoRimo.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KWVJ99C465;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RimoRimo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "리모리모";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -789,10 +798,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.teamremo.RimoRimo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "iOS Team RimoRimo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "RimoRimo Debug";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
