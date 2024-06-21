@@ -190,7 +190,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.checkAndResetTimerIfNeeded()
             self.updateImageView()
-            self.loadTimerState()
+//            self.loadTimerState()
             self.hideLoadingIndicator()
         }
     }
@@ -619,7 +619,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             startTimerButtonTapped()
         }
         
-        timerIsCounting.toggle()
+        checkAndResetTimerIfNeeded()
     }
     
     // MARK: - Reset Actions
@@ -728,7 +728,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 targetTimeData = Double(hours)
                 updateImageView()
                 
-//                loadTimerState()
+                loadTimerState()
             } else {
                 print("No target-time")
             }
@@ -820,6 +820,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 print("오늘 날짜인 문서가 존재하지 않습니다. 타이머를 초기화합니다.")
 
                 self.resetTimer()
+                self.startTimer()
+                self.startTimerButtonTapped()
             }
         }
     }
