@@ -62,8 +62,6 @@
 		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
 		11BDE4622C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */; };
 		11BDE4632C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */; };
-		11BDE4692C24B2D400BC0E8C /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
-		11BDE46A2C24B34700BC0E8C /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */; };
 		11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */; };
 		11F836142C1E7E6700711581 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836132C1E7E6700711581 /* Color.swift */; };
@@ -100,7 +98,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				11BDE46A2C24B34700BC0E8C /* RimoWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -503,7 +500,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
-				11BDE4692C24B2D400BC0E8C /* RimoWidgetExtension.appex in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
 				11BDE4622C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */,
