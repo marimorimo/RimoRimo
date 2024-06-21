@@ -53,6 +53,7 @@
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
 		0BAB504B2C259ADF006971A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BAB504A2C259ADE006971A5 /* GoogleService-Info.plist */; };
+		0BAB504F2C25D4B4006971A5 /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -101,6 +102,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				0BAB504F2C25D4B4006971A5 /* RimoWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
