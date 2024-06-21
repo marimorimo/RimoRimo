@@ -78,6 +78,9 @@
 		4500E9C72C1C6BFA005BB8DF /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */; };
 		4574B3A42C22AF6800B3E161 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */; };
+		4574B3B32C2556A300B3E161 /* AppInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B22C2556A300B3E161 /* AppInfoViewController.swift */; };
+		4574B3B52C2559E400B3E161 /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B42C2559E400B3E161 /* LicenseViewController.swift */; };
+		4574B3B92C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B82C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift */; };
 		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
 /* End PBXBuildFile section */
@@ -167,6 +170,9 @@
 		4500E9CD2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoPopupCalendarViewController.swift; sourceTree = "<group>"; };
 		45011B842C1A93AF00961E3F /* RimoRimo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RimoRimo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4574B3A32C22AF6800B3E161 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		4574B3B22C2556A300B3E161 /* AppInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoViewController.swift; sourceTree = "<group>"; };
+		4574B3B42C2559E400B3E161 /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
+		4574B3B82C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,6 +335,9 @@
 				11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */,
 				11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */,
 				0B18087E2C19966D00081B2A /* SetupViewController.swift */,
+				4574B3B22C2556A300B3E161 /* AppInfoViewController.swift */,
+				4574B3B42C2559E400B3E161 /* LicenseViewController.swift */,
+				4574B3B82C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift */,
 			);
 			path = Setup;
 			sourceTree = "<group>";
@@ -543,6 +552,7 @@
 				0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */,
 				7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */,
 				11F836172C1E7E9500711581 /* UserDefaults+.swift in Sources */,
+				4574B3B52C2559E400B3E161 /* LicenseViewController.swift in Sources */,
 				4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
 				1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */,
@@ -568,6 +578,8 @@
 				0B4A5B102C243B6F000F8DDE /* UIView+.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,
+				4574B3B92C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift in Sources */,
+				4574B3B32C2556A300B3E161 /* AppInfoViewController.swift in Sources */,
 				0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */,
 				0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */,
 				11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */,
