@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "arrow-sub-down-right.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -9,22 +9,38 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    let saveAutoLoginInfo: String = "userEmail"
+
     var window: UIWindow?
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
+        
         window = UIWindow(windowScene: windowScene)
+        
+        let marimoViewController: UIViewController
+        
+        if let userEmail = UserDefaults.standard.string(forKey: saveAutoLoginInfo), !userEmail.isEmpty {
+            marimoViewController = TabBarViewController()
+            window?.rootViewController = marimoViewController
+        } else {
+            marimoViewController = LoginViewController()
+            let navController = UINavigationController(rootViewController: marimoViewController)
 
-        let marimoViewController = ViewController()
-        let navController = UINavigationController(rootViewController: marimoViewController)
-        navController.navigationBar.isHidden = false
-
-        window?.rootViewController = navController
-
+            window?.rootViewController = navController
+        }
+        
         window?.makeKeyAndVisible()
     }
+    
+    func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
+        guard let window = self.window else {
+          return
+        }
+        // change the root view controller to your specific view controller
+        window.rootViewController = vc
+      }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

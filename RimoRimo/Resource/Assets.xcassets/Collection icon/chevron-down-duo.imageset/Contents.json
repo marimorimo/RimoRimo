@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "chevron-down-duo.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
