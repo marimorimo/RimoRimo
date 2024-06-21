@@ -484,7 +484,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     private func calculateCurrentGroup(difference: TimeInterval) -> (currentGroup: Int, totalGroups: Int) {
-        interval = (targetTimeData ?? 7.0) * 60
+        interval = (targetTimeData ?? 7.0) * 3600
         let totalGroups = 5
         let intervalBetweenImages = interval / Double(totalGroups - 1)
         let currentGroupNumber = Int(difference / intervalBetweenImages) + 1
@@ -553,7 +553,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         let timeString = makeTimeString(hour: time.0, min: time.1, sec: time.2)
         timeLabel.text = timeString
         
-        interval = (targetTimeData ?? 7.0) * 60
+        interval = (targetTimeData ?? 7.0) * 3600
         
         if value >= Int(interval) {
             showSuccessView()
@@ -633,7 +633,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             self.deleteTodayStudySessionData()
         }
         
-        alertPaths.setAlertView(title: "타이머 초기화", subTitle: "타이머를 초기화하시겠습니까?", in: self)
+        alertPaths.setAlertView(title: "타이머 초기화", subTitle: "초기화 시 마리모도 함께 초기화됩니다.", in: self)
     }
     
     // MARK: - Load Timer State
@@ -652,7 +652,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 let difference = Date().timeIntervalSince(time) // 현재 시간과의 차이 계산
                 setTimeLabel(Int(difference)) // 시간 라벨 업데이트
                 
-                interval = (targetTimeData ?? 7.0) * 60
+                interval = (targetTimeData ?? 7.0) * 3600
                 print("loadTimerState\(interval)")
                 
                 let (currentGroup, totalGroups) = calculateCurrentGroup(difference: difference)
@@ -977,7 +977,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     private func scheduleNotification() {
         var dateComponents = DateComponents()
-        dateComponents.hour = 22
+        dateComponents.hour = 21
         dateComponents.minute = 00
         
         let content = UNMutableNotificationContent()
