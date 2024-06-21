@@ -71,7 +71,6 @@ class AccountInfoViewController: UIViewController {
     }
     
     // MARK: - 비밀번호 재설정
-    
     var userEmail: String?
     private func fetchUserEmail() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
