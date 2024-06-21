@@ -235,12 +235,20 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func saveEditedText(_ sender: UIButton) {
         guard let indexPath = editingIndexPath else { return }
+        saveEditedText(at: indexPath)
+    }
+    
+    func saveEditedText(at indexPath: IndexPath) {
         let todo = todos[indexPath.row]
         guard let documentId = todo["id"] as? String else { return }
         let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
         
-        guard !updatedText.isEmpty else {
-            print("할 일 텍스트가 비어있습니다.")
+        guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
+
+        if updatedText.isEmpty {
+            cell.textField.text = cell.previousText
+            cell.resetContent()
+            editingIndexPath = nil
             return
         }
         
@@ -269,10 +277,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         
-        if let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell {
-            cell.resetContent()
-        }
-        
+        cell.resetContent()
         editingIndexPath = nil
     }
     
@@ -288,24 +293,33 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             let keyboardHeight = keyboardFrame.height
-            textFieldStack.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
-            }
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+            tableView.contentInset = contentInsets
+            tableView.scrollIndicatorInsets = contentInsets
+
+            // 스크롤 위치 조정
+            if let editingIndexPath = editingIndexPath {
+                if tableView.numberOfRows(inSection: editingIndexPath.section) > editingIndexPath.row {
+                    tableView.scrollToRow(at: editingIndexPath, at: .middle, animated: true)
+                }
+            } else {
+                textFieldStack.snp.updateConstraints { make in
+                    make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
+                }
             }
         }
     }
-    
+
     @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+
         textFieldStack.snp.updateConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
-    
+
     // MARK: - Firebase Functions
     func addSnapshotListener(for date: Date) {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -413,7 +427,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        saveToDo()
+        if let indexPath = editingIndexPath {
+            saveEditedText(at: indexPath)
+        } else {
+            saveToDo()
+        }
         textField.resignFirstResponder()
         return true
     }
@@ -466,6 +484,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         cell.setEditMode(todoText: todoText, target: self)
         
         editingIndexPath = indexPath
+        // textFieldStack 위치를 원래대로 되돌립니다.
+        textFieldStack.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
     }
     
     // MARK: - Swipe to Delete
@@ -524,6 +546,7 @@ class ToDoTableViewCell: UITableViewCell {
     var underline: UIView!
     var textField: UITextField!
     var saveButton: UIButton!
+    var previousText: String?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -581,36 +604,43 @@ class ToDoTableViewCell: UITableViewCell {
     
     func setEditMode(todoText: String, target: Any) {
         todoTextLabel.isHidden = true
+
+        textField?.removeFromSuperview()
+        saveButton?.removeFromSuperview()
         
         textField = UITextField()
         textField.text = todoText
+        previousText = todoText // Store the original text
         textField.borderStyle = .none
         textField.tag = toggleButton.tag
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.delegate = target as? UITextFieldDelegate
         contentView.addSubview(textField)
-        
+
         saveButton = UIButton(type: .system)
         saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
         saveButton.tintColor = MySpecialColors.MainColor
         saveButton.addTarget(target, action: #selector(ToDoListViewController.saveEditedText(_:)), for: .touchUpInside)
         saveButton.tag = toggleButton.tag
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(saveButton)
-        
-        textField.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.centerY.equalTo(contentView)
-            make.trailing.equalTo(saveButton.snp.leading).offset(-10)
-            make.height.equalTo(30)
-        }
-        
+
         saveButton.snp.makeConstraints { make in
             make.trailing.equalTo(contentView).offset(-10)
             make.centerY.equalTo(contentView)
             make.width.height.equalTo(30)
         }
-        
+
+        textField.snp.makeConstraints { make in
+            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
+            make.trailing.equalTo(saveButton.snp.leading).offset(-10)
+            make.centerY.equalTo(contentView)
+            make.height.equalTo(30)
+        }
+
         textField.becomeFirstResponder()
         if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
-            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) //텍스트 필드 활성화 되면 텍스트 맨 끝으로 커서 보내기
+            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) // 텍스트 필드 활성화 시 텍스트 끝으로 커서 이동
         }
     }
     
