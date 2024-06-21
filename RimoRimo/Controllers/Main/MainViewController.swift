@@ -15,6 +15,7 @@ import Then
 class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let notificationCenter = UNUserNotificationCenter.current()
     private let userDefaults = UserDefaults.standard
+    private var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Firebase Properties
     private let db = Firestore.firestore()
@@ -164,6 +165,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = MySpecialColors.Gray1
+        
         formatter.dateFormat = "yyyy-MM-dd"
         
         notificationCenter.delegate = self
@@ -179,8 +181,45 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         requestNotificationAuthorization()
         
+        setupActivityIndicator()
+        
         fetchUserDataAndBindUI()
-        updateImageView()
+        
+        showLoadingIndicator()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.checkAndResetTimerIfNeeded()
+            self.updateImageView()
+            self.loadTimerState()
+            self.hideLoadingIndicator()
+        }
+    }
+    
+    // MARK: - setupActivityIndicator
+    private func setupActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.center = view.center
+        activityIndicator.color = MySpecialColors.MainColor
+        activityIndicator.hidesWhenStopped = true
+        
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+         
+         NSLayoutConstraint.activate([
+             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+         ])
+    }
+    
+    private func showLoadingIndicator() {
+        activityIndicator.startAnimating()
+        view.isUserInteractionEnabled = false // 사용자 상호작용 비활성화
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+        view.isUserInteractionEnabled = true // 사용자 상호작용 활성화
     }
     
     // MARK: - UI Setup
@@ -198,6 +237,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         setSuccessView()
     }
     
+    // MARK: - setSuccessView
     private func setSuccessView() {
         successView.snp.makeConstraints {
             $0.centerX.equalTo(view.snp.centerX)
@@ -444,7 +484,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     private func calculateCurrentGroup(difference: TimeInterval) -> (currentGroup: Int, totalGroups: Int) {
-        interval = (targetTimeData ?? 7.0) * 3600
+        interval = (targetTimeData ?? 7.0) * 60
         let totalGroups = 5
         let intervalBetweenImages = interval / Double(totalGroups - 1)
         let currentGroupNumber = Int(difference / intervalBetweenImages) + 1
@@ -456,7 +496,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         if currentGroup < 5 {
             imageView.image = UIImage(named: "Group \(currentGroup)")
         } else {
-            imageView.image = UIImage(named: "Group 9")
+            imageView.image = UIImage(named: profileImageName)
         }
         
         NSLayoutConstraint.deactivate(imageView.constraints)
@@ -512,6 +552,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         let time = secToHoursMinSec(value)
         let timeString = makeTimeString(hour: time.0, min: time.1, sec: time.2)
         timeLabel.text = timeString
+        
+        interval = (targetTimeData ?? 7.0) * 60
         
         if value >= Int(interval) {
             showSuccessView()
@@ -577,7 +619,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             startTimerButtonTapped()
         }
         
-        checkAndResetTimerIfNeeded()
+        timerIsCounting.toggle()
     }
     
     // MARK: - Reset Actions
@@ -610,7 +652,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 let difference = Date().timeIntervalSince(time) // 현재 시간과의 차이 계산
                 setTimeLabel(Int(difference)) // 시간 라벨 업데이트
                 
-                interval = (targetTimeData ?? 7.0) * 3600
+                interval = (targetTimeData ?? 7.0) * 60
                 print("loadTimerState\(interval)")
                 
                 let (currentGroup, totalGroups) = calculateCurrentGroup(difference: difference)
@@ -623,6 +665,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 updateImageView() // 이미지뷰 업데이트
             }
         }
+        hideLoadingIndicator() // 로딩 인디케이터 중지
     }
     
     // MARK: - Helper Methods >> "00:00:00" formatTime
@@ -673,6 +716,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             
             if let imageName = documentData["profile-image"] as? String {
                 self.profileImageName = imageName
+                print("profileImageNameprofileImageNameprofileImageName \(profileImageName)")
             } else {
                 print("No profile-image")
                 self.profileImageName = "Group 9"
@@ -684,7 +728,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 targetTimeData = Double(hours)
                 updateImageView()
                 
-                loadTimerState()
+//                loadTimerState()
             } else {
                 print("No target-time")
             }
@@ -743,13 +787,6 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 self.dayLabel.text = "프로필에서 설정할 수 있어요."
                 self.dayView.backgroundColor = .clear
             }
-            
-            if let profileImageName = data["profile-image"] as? String {
-                self.profileImageName = profileImageName
-            } else {
-                print("No profile-image")
-                self.profileImageName = "Group 9"
-            }
         }
     }
     
@@ -781,14 +818,14 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 print("오늘 날짜인 문서가 이미 존재합니다.")
             } else {
                 print("오늘 날짜인 문서가 존재하지 않습니다. 타이머를 초기화합니다.")
-                
+
                 self.resetTimer()
             }
         }
     }
     
     private func resetTimer() {
-        print("집중 모드 데이터 삭제")
+        print("문서 존재 X: 집중 모드 데이터 삭제")
         self.setStopTime(date: nil)
         self.setStartTime(date: nil)
         self.timeLabel.text = self.makeTimeString(hour: 0, min: 0, sec: 0)
