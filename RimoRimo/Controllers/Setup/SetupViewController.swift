@@ -10,7 +10,8 @@ import FirebaseAuth
 
 class SetupViewController: UIViewController {
     let settingDescriptionString = [("프로필 수정", "내 프로필을 수정합니다."),
-                                    ("계정 관리", "내 계정 정보를 관리합니다.")]
+                                    ("계정 관리", "내 계정 정보를 관리합니다."),
+                                    ("정보", "앱과 관련된 정보를 확인합니다.")]
     
     private lazy var settingTableView: UITableView = {
         let tableView = UITableView()
@@ -282,6 +283,9 @@ extension SetupViewController: UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(nextVC, animated: true)
         case 1:
             let nextVC = AccountInfoViewController()
+            self.navigationController?.pushViewController(nextVC, animated: true)
+        case 2:
+            let nextVC = AppInfoViewController()
             self.navigationController?.pushViewController(nextVC, animated: true)
         default:
             debugPrint("invalid indexPath")

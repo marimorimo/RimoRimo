@@ -318,7 +318,7 @@ extension MyPageViewController {
 
                 self.nicknameLabel.text = "\(data?["nickname"] as? String ?? "N/A")"
                 self.emailLabel.text = "\(data?["email"] as? String ?? "N/A")"
-                self.goalLabel.text = "\(data?["d-day-title"] as? String ?? "N/A")" == "" ? "목표 미설정" : "\(data?["d-day-title"] as? String ?? "N/A")"
+                self.goalLabel.text = "\(data?["d-day-title"] as? String ?? "N/A")" == "" ? "목표 일정" : "\(data?["d-day-title"] as? String ?? "N/A")"
 
                 if let timestamp = data?["d-day-date"] as? Timestamp {
                     let targetDate = timestamp.dateValue() // Convert Timestamp to Date
