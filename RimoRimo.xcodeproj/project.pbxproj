@@ -52,7 +52,6 @@
 		0B4A5B1A2C243EDC000F8DDE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B192C243EDC000F8DDE /* Then */; };
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
-		0BAB50492C259AC9006971A5 /* RimoWidgetExtension.appex in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; };
 		0BAB504B2C259ADF006971A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BAB504A2C259ADE006971A5 /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
@@ -509,7 +508,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BAB50492C259AC9006971A5 /* RimoWidgetExtension.appex in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,

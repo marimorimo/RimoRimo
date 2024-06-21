@@ -81,6 +81,8 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     // MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupBackground()
+        setupBubbleEmitter()
         
         setupUI()
         setupContent()
@@ -93,6 +95,58 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
            
     }
     
+    private func setupBackground() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+        
+        let gray1Color = MySpecialColors.Gray1.cgColor
+        let blueColor = MySpecialColors.Blue.cgColor
+        
+        gradientLayer.colors = [
+            gray1Color,
+            blueColor
+        ]
+        
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 2.0)
+        view.layer.addSublayer(gradientLayer)
+    }
+    
+    // MARK: - Bubble
+    private func setupBubbleEmitter() {
+        let bubbleEmitter = CAEmitterLayer()
+        bubbleEmitter.emitterPosition = CGPoint(x: view.bounds.width / 2, y: view.bounds.height)
+        bubbleEmitter.emitterShape = .line
+        bubbleEmitter.emitterSize = CGSize(width: view.bounds.width, height: 1)
+        
+        let bubbleCell = CAEmitterCell()
+        bubbleCell.contents = UIImage(named: "bubble")?.cgImage ?? createBubbleImage().cgImage
+        bubbleCell.birthRate = 10
+        bubbleCell.lifetime = 5.0
+        bubbleCell.velocity = -50
+        bubbleCell.velocityRange = -20
+        bubbleCell.yAcceleration = -30
+        bubbleCell.scale = 0.1
+        bubbleCell.scaleRange = 0.2
+        bubbleCell.alphaRange = 0.5
+        bubbleCell.alphaSpeed = -0.1
+        
+        bubbleEmitter.emitterCells = [bubbleCell]
+        view.layer.addSublayer(bubbleEmitter)
+    }
+    
+    private func createBubbleImage() -> UIImage {
+        let size = CGSize(width: 20, height: 20)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        UIColor.white.setFill()
+        UIBezierPath(ovalIn: CGRect(origin: .zero, size: size)).fill()
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         loadMemoData()
@@ -101,7 +155,6 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Setup func
     private func setupUI() {
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "GradientBackground")!)
         self.title = "오늘의 집중 시간"
 
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "chevron-left")
