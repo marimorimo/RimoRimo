@@ -162,7 +162,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, PrivacyPolicy
         nameTextField.returnKeyType = .next
         emailTextField.returnKeyType = .next
         passwordTextField.returnKeyType = .next
-        passwordDoubleCheckTextField.returnKeyType = .done
+        passwordDoubleCheckTextField.returnKeyType = .next
         
         passwordTextField.isSecureTextEntry = true
         passwordDoubleCheckTextField.isSecureTextEntry = true
@@ -214,7 +214,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, PrivacyPolicy
             passwordDoubleCheckTextField.becomeFirstResponder()
         case passwordDoubleCheckTextField:
             textField.resignFirstResponder()
-            registerButtonTapped()
+            privacyPolicyTapped()
         default:
             break
         }
