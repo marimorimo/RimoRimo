@@ -437,8 +437,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 
                 let calendarDetailVC = CalendarDetailViewController()
                 calendarDetailVC.data = data
-                CalendarDetailViewController()
                 
+                calendarDetailVC.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(calendarDetailVC, animated: true)
             } else {
                 print("도큐먼트 데이터 없음")

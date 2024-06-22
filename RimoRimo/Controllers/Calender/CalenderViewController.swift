@@ -40,7 +40,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         return stack
     }()
     
-    let prevButton: UIButton = {
+    lazy var prevButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "chevron-left")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
@@ -49,7 +49,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         return button
     }()
     
-    let nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "chevron-right")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
@@ -256,7 +256,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     // MARK: - FSCalendarDelegate
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         let dateString = formatDate(date: date)
-        if let data = sessionData[dateString] as? [String: Any] {
+        if let data = sessionData[dateString] {
             let detailVC = CalendarDetailViewController()
             detailVC.data = data
             detailVC.hidesBottomBarWhenPushed = true

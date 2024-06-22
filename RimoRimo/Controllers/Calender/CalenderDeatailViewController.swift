@@ -95,6 +95,12 @@ class CalendarDetailViewController: UIViewController, UITextViewDelegate {
            
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+            self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
     private func setupBackground() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
