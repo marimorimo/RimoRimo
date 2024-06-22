@@ -743,9 +743,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         let targetDateStripped = calendar.startOfDay(for: targetDate)
 
         var components = calendar.dateComponents([.day], from: currentDateStripped, to: targetDateStripped)
-        if isTodayIncluded {
-            components.day = (components.day ?? 0) + 1
-        }
+
         guard let days = components.day else {
             return "No days"
         }
