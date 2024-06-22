@@ -5,9 +5,9 @@ import FirebaseAuth
 import SnapKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-
+    
     var todolistArr: [String] = []
-
+    
     //MARK: - UI Components
     var textField: UITextField!
     var saveButton: UIButton!
@@ -71,12 +71,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            
+        super.viewWillAppear(animated)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
     
     // MARK: - UI Setup
     func setupUI() {
@@ -92,6 +91,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         textField.placeholder = "할 일을 입력하세요"
         textField.borderStyle = .none
         textField.delegate = self
+        view.addSubview(textField)
         
         // Underline Setup
         underline = UIView()
@@ -102,10 +102,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         saveButton = UIButton(type: .system)
         saveButton.setImage(UIImage(named: "add-plus-circle"), for: .normal)
         saveButton.tintColor = MySpecialColors.MainColor
+        view.addSubview(saveButton)
         
         // ImageView Setup
         imageView = UIImageView(image: UIImage(named: "Group 591"))
         imageView.contentMode = .scaleAspectFit
+        view.addSubview(imageView)
         
         // TextField Stack Setup
         textFieldStack = UIStackView(arrangedSubviews: [imageView, textField, saveButton])
@@ -223,7 +225,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
-      
+        
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
@@ -252,11 +254,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
         
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
-
+        
         if updatedText.isEmpty {
             cell.textField.text = cell.previousText
             cell.resetContent()
             editingIndexPath = nil
+            tableView.reloadRows(at: [indexPath], with: .none)
             return
         }
         
@@ -287,14 +290,26 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         cell.resetContent()
         editingIndexPath = nil
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
     
     @objc func toggleButtonTapped(_ sender: UIButton) {
+        guard editingIndexPath == nil else {
+            return
+        }
+        
         let rowIndex = sender.tag
         let todo = todos[rowIndex]
         let isCompleted = todo["completed"] as? Bool ?? false
         let updatedStatus = !isCompleted
+        
+        todos[rowIndex]["completed"] = updatedStatus
+        
         updateCompletionStatus(todoIndex: rowIndex, isCompleted: updatedStatus)
+        
+        if let cell = tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)) as? ToDoTableViewCell {
+            cell.configure(with: todos[rowIndex]["todo"] as? String ?? "", isCompleted: updatedStatus, index: rowIndex, target: self)
+        }
     }
     
     // MARK: - Keyboard Handlers
@@ -304,8 +319,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
             tableView.contentInset = contentInsets
             tableView.scrollIndicatorInsets = contentInsets
-
-            // 스크롤 위치 조정
+            
             if let editingIndexPath = editingIndexPath {
                 if tableView.numberOfRows(inSection: editingIndexPath.section) > editingIndexPath.row {
                     tableView.scrollToRow(at: editingIndexPath, at: .middle, animated: true)
@@ -317,17 +331,17 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
-
+    
     @objc func keyboardWillHide(notification: NSNotification) {
         let contentInsets = UIEdgeInsets.zero
         tableView.contentInset = contentInsets
         tableView.scrollIndicatorInsets = contentInsets
-
+        
         textFieldStack.snp.updateConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
     }
-
+    
     // MARK: - Firebase Functions
     func addSnapshotListener(for date: Date) {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -459,12 +473,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         let todo = todos[indexPath.row]
         let todoText = todo["todo"] as? String ?? ""
-
-
+        
         todolistArr.append(todoText)
         UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
         WidgetCenter.shared.reloadAllTimelines()
-
+        
         let isCompleted = todo["completed"] as? Bool ?? false
         cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
         
@@ -480,10 +493,14 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard editingIndexPath == nil else {
+            return
+        }
+        
         if let previousIndexPath = editingIndexPath {
             guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? ToDoTableViewCell else { return }
             previousCell.resetContent()
-            tableView.reloadRows(at: [previousIndexPath], with: .automatic)
+            tableView.reloadRows(at: [previousIndexPath], with: .none)
         }
         
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
@@ -492,7 +509,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         cell.setEditMode(todoText: todoText, target: self)
         
         editingIndexPath = indexPath
-        // textFieldStack 위치를 원래대로 되돌립니다.
+        
         textFieldStack.snp.updateConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
@@ -613,19 +630,19 @@ class ToDoTableViewCell: UITableViewCell {
     
     func setEditMode(todoText: String, target: Any) {
         todoTextLabel.isHidden = true
-
+        
         textField?.removeFromSuperview()
         saveButton?.removeFromSuperview()
         
         textField = UITextField()
         textField.text = todoText
-        previousText = todoText // Store the original text
+        previousText = todoText
         textField.borderStyle = .none
         textField.tag = toggleButton.tag
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.delegate = target as? UITextFieldDelegate
         contentView.addSubview(textField)
-
+        
         saveButton = UIButton(type: .system)
         saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
         saveButton.tintColor = MySpecialColors.MainColor
@@ -633,20 +650,20 @@ class ToDoTableViewCell: UITableViewCell {
         saveButton.tag = toggleButton.tag
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(saveButton)
-
+        
         saveButton.snp.makeConstraints { make in
             make.trailing.equalTo(contentView).offset(-10)
             make.centerY.equalTo(contentView)
             make.width.height.equalTo(30)
         }
-
+        
         textField.snp.makeConstraints { make in
             make.leading.equalTo(toggleButton.snp.trailing).offset(10)
             make.trailing.equalTo(saveButton.snp.leading).offset(-10)
             make.centerY.equalTo(contentView)
             make.height.equalTo(30)
         }
-
+        
         textField.becomeFirstResponder()
         if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
             textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) // 텍스트 필드 활성화 시 텍스트 끝으로 커서 이동
