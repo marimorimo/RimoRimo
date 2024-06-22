@@ -529,6 +529,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     } else {
                         print("ToDo가 성공적으로 삭제되었습니다.")
                         completionHandler(true) // 삭제 성공 시
+                        self.loadTodos(for: self.selectedDate ?? Date())
                     }
                 }
         }
