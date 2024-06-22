@@ -62,6 +62,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         setupActions()
         setupEditDateTapGesture()
         
+        
         addSnapshotListener(for: selectedDate)
         fetchDateData()
         
@@ -69,6 +70,14 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
     
     // MARK: - UI Setup
     func setupUI() {
@@ -318,6 +327,18 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         textFieldStack.snp.updateConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
+    }
+    
+    private func tapBackground() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundViewTapped))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func backgroundViewTapped() {
+        dismiss(animated: true, completion: nil)
+        view.endEditing(true)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     // MARK: - Firebase Functions
