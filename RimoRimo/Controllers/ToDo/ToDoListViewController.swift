@@ -517,6 +517,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Swipe to Delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // 수정 모드일 때 삭제 스와이프 비활성화
+        if indexPath == editingIndexPath {
+            return nil
+        }
+        
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
             guard let self = self else { return }
             let todo = self.todos[indexPath.row]
@@ -664,6 +669,7 @@ class ToDoTableViewCell: UITableViewCell {
             make.height.equalTo(30)
         }
         
+        textField.isUserInteractionEnabled = true
         textField.becomeFirstResponder()
         if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
             textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) // 텍스트 필드 활성화 시 텍스트 끝으로 커서 이동
