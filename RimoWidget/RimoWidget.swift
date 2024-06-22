@@ -164,9 +164,18 @@ struct RimoWidgetEntryView : View {
 
                 Spacer()
 
-                CircularProgressView(progress: entry.percentage, image: marimoImage)
-                    .frame(width: 80, height: 80)
-                    .padding(.trailing, 16)
+                VStack(alignment: .leading) {
+                    Spacer()
+                    Text("D\(entry.dday)")
+                        .font(.custom("Pretendard-Bold", size: 16))
+                        .foregroundStyle(MySpecialColors.Green4)
+                        .frame(alignment: .leading)
+                    CircularProgressView(progress: entry.percentage, image: marimoImage)
+                        .frame(width: 92, height: 92)
+                        .padding(.trailing, 16)
+                    Spacer()
+
+                }
             }.widgetBackground(backgroundView: backgroundColor)
         default:
             Text("default")
