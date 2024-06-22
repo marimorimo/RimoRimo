@@ -56,15 +56,15 @@ struct Provider: TimelineProvider {
 
     func getTodoList() -> [String] {
         if let todoList = UserDefaults.shared.array(forKey: "\(Date().onlyDate)") as? [String] {
-            if todoList.count < 3 {
+            if todoList.count < 3 && !todoList.isEmpty {
                 return todoList
             }else if todoList.isEmpty {
-                return ["오늘의 할일이 없습니다"]
+                return ["오늘의 남은 할일이 없습니다"]
             }else {
                 return Array(todoList[0...2])
             }
         } else {
-            return ["오늘의 할일이 없습니다"]
+            return ["오늘의 남은 할일이 없습니다"]
         }
     }
 

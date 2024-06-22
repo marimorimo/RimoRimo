@@ -474,13 +474,15 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let todo = todos[indexPath.row]
         let todoText = todo["todo"] as? String ?? ""
         
-        todolistArr.append(todoText)
-        UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
-        WidgetCenter.shared.reloadAllTimelines()
-        
         let isCompleted = todo["completed"] as? Bool ?? false
         cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
         
+        if isCompleted == false {
+            todolistArr.append(todoText)
+        }
+        UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
+        WidgetCenter.shared.reloadAllTimelines()
+
         // Cell Background color gray
         cell.backgroundColor = MySpecialColors.Gray1
         
