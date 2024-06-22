@@ -8,7 +8,7 @@ struct Provider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), dday: getDday(), percentage: 0.5, goal: "목표", todo: ["토익 시험", "운동"])
+        let entry = SimpleEntry(date: Date(), dday: "12", percentage: 0.5, goal: "목표", todo: ["토익 시험", "운동"])
         completion(entry)
     }
 
@@ -27,7 +27,7 @@ struct Provider: TimelineProvider {
     }
 
     func remainDays() -> Int {
-        let date = UserDefaults.shared.object(forKey: "endDate") as! Date
+        let date = UserDefaults.shared.object(forKey: "endDate") as? Date ?? Date()
 
         let calendar = Calendar.current
 
@@ -51,7 +51,7 @@ struct Provider: TimelineProvider {
     }
 
     func getGoal() -> String {
-        return UserDefaults.shared.string(forKey: "goal") ?? ""
+        return UserDefaults.shared.string(forKey: "goal") ?? "목표를 설정하세요"
     }
 
     func getTodoList() -> [String] {
@@ -69,8 +69,8 @@ struct Provider: TimelineProvider {
     }
 
     func getPercentage() -> Double {
-        let startDate = UserDefaults.shared.object(forKey: "startDate") as! Date
-        let endDate = UserDefaults.shared.object(forKey: "endDate") as! Date
+        let startDate = UserDefaults.shared.object(forKey: "startDate") as? Date ?? Date()
+        let endDate = UserDefaults.shared.object(forKey: "endDate") as? Date ?? Date()
 
         let calendar = Calendar.current
         let components = calendar.dateComponents([.day], from: startDate.onlyDate, to: endDate.onlyDate)
