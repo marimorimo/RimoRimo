@@ -556,6 +556,7 @@ class EditMyPageViewController: UIViewController {
     private var isNicknameAvailable: Bool = false
     @objc private func duplicateCheckButtonTapped() {
         nickNameErrorMessage.isHidden = true
+        nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
         guard let nickname = editNickName.text, !nickname.isEmpty else {
             nameAlertTextLabel.isHidden = false
             return
