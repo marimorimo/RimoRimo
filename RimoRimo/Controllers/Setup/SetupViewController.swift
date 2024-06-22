@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import WidgetKit
 
 class SetupViewController: UIViewController {
     let settingDescriptionString = [("프로필 수정", "내 프로필을 수정합니다."),
@@ -179,6 +180,12 @@ class SetupViewController: UIViewController {
             UserDefaults.standard.removeObject(forKey: START_TIME_KEY)
             UserDefaults.standard.removeObject(forKey: STOP_TIME_KEY)
             UserDefaults.standard.removeObject(forKey: COUNTING_KEY)
+
+            UserDefaults.shared.dictionaryRepresentation().keys.forEach { key in
+                UserDefaults.shared.removeObject(forKey: key)
+            }
+            WidgetCenter.shared.reloadAllTimelines()
+
             // 로그인 화면으로 이동
             let loginViewController = LoginViewController()
             let navController = UINavigationController(rootViewController: loginViewController)
