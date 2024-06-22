@@ -70,6 +70,14 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    
     // MARK: - UI Setup
     func setupUI() {
         view.backgroundColor = MySpecialColors.Gray1
@@ -521,6 +529,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     } else {
                         print("ToDo가 성공적으로 삭제되었습니다.")
                         completionHandler(true) // 삭제 성공 시
+                        self.loadTodos(for: self.selectedDate ?? Date())
                     }
                 }
         }
