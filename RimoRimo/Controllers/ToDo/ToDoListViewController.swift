@@ -518,7 +518,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Swipe to Delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // 수정 모드일 때 삭제 스와이프 비활성화
-        if indexPath == editingIndexPath {
+        if editingIndexPath != nil {
             return nil
         }
         
