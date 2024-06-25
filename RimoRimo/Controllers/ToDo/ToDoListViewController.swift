@@ -22,11 +22,17 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedDate: Date = Date()
     var listener: ListenerRegistration?
     
+    let tapGestureView: UIView = {
+        let tapGestureView = UIView()
+        return tapGestureView
+    }()
+    
     // PickDate Setup
     let dateView: UIView = {
         let view = UIView()
         return view
     }()
+    
     let dateStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -56,11 +62,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupUI()
         setupConstraints()
         setupActions()
         setupEditDateTapGesture()
+        setUpKeyboardHideTapGesture()
         
         addSnapshotListener(for: selectedDate)
         fetchDateData()
@@ -78,7 +85,9 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - UI Setup
+    
     func setupUI() {
+        view.addSubview(tapGestureView)
         view.backgroundColor = MySpecialColors.Gray1
         view.addSubview(dateStack)
         view.addSubview(dateView)
@@ -127,6 +136,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Constraints Setup
     func setupConstraints() {
+        tapGestureView.snp.makeConstraints { make in
+            make.top.equalTo(view)
+            make.bottom.equalTo(tableView.snp.top)
+            make.leading.equalTo(view)
+            make.trailing.equalTo(view)
+        }
         
         dateView.snp.makeConstraints { make in
             make.top.equalTo(view).offset(95)
@@ -188,10 +203,21 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         dateView.addGestureRecognizer(tapGesture3)
     }
     
+    //tapGesture keyboard
+    private func setUpKeyboardHideTapGesture() {
+        let keyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(keyboardHideTapped))
+        tapGestureView.addGestureRecognizer(keyboardTapGesture)
+    }
+    
     // MARK: - Actions
     @objc private func editDateTapped() {
         print("taptap")
         showCalendarPopup()
+    }
+    
+    @objc private func keyboardHideTapped() {
+        print("뷰 쳤더니 키보드 내려감")
+        self.view.endEditing(true)
     }
     
     private func showCalendarPopup() {
@@ -553,7 +579,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     } else {
                         print("ToDo가 성공적으로 삭제되었습니다.")
                         completionHandler(true) // 삭제 성공 시
-                        self.loadTodos(for: self.selectedDate ?? Date())
+                        self.loadTodos(for: self.selectedDate)
                     }
                 }
         }
