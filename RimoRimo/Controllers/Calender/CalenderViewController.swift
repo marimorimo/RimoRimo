@@ -126,7 +126,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             }
         }
     }
-  
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -140,21 +140,25 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         
         monthLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(70)//90
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(30)
+            make.leading.equalTo(view).offset(30) //trailing은 버튼스택에서 잡아주면 될 듯...?
+            
         }
         
         [prevButton, nextButton].forEach {
             buttonStack.addArrangedSubview($0)
+            $0.snp.makeConstraints { make in
+                make.height.equalTo(48)
+                make.width.equalTo(48)
+            }
         }
         
         buttonStack.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(70) //90
-            make.leading.equalTo(monthLabel.snp.trailing).offset(10)
+            buttonStack.axis = .horizontal // 수평으로 정렬
+            buttonStack.distribution = .fillEqually // 뷰들을 동일한 크기로 채움
+            buttonStack.spacing = 24 // 이미지 간의 간격 설정
             make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(30)
-            make.width.equalTo(100)
+            make.width.equalTo(96+24)
+            make.centerY.equalTo(monthLabel.snp.centerY)
         }
         
         updateMonthLabel() // 초기 설정 시 월 라벨 업데이트
