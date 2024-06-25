@@ -477,7 +477,10 @@ class EditMyPageViewController: UIViewController {
                     
                     // Update Date
                     if let timestamp = data?["d-day-date"] as? Timestamp {
-                        let date = timestamp.dateValue() // Convert Timestamp to Date
+                        var date = timestamp.dateValue() // Convert Timestamp to Date
+                        if let isTodayIncluded = data?["isTodayIncluded"] as? Bool, isTodayIncluded == true {
+                            date = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date // Subtract one day
+                        }
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "yyyy년 MM월 dd일"
                         self.editDate.text = dateFormatter.string(from: date)
