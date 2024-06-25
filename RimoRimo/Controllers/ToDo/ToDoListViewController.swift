@@ -60,6 +60,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         return date
     }()
     
+    let emptyTodoView: UIView = {
+        let emptyTodoView = UIView()
+        emptyTodoView.backgroundColor = .blue
+        return emptyTodoView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
