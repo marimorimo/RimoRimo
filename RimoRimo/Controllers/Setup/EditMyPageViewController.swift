@@ -835,30 +835,65 @@ class EditMyPageViewController: UIViewController {
     }
     
     // 키보드
+    private var keyboardHeight: CGFloat = 0.0
     @objc func keyboardWillShow(_ noti: NSNotification){
-        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            
-            // editScheduleName 텍스트 필드의 현재 위치
+        guard let userInfo = noti.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+            return
+        }
+        
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        let screenHeight = UIScreen.main.bounds.height
+        
+        // 현재 활성화된 텍스트 필드나 뷰 가져오기
+        guard let activeField = findFirstResponder(view: scrollView) else {
+            return
+        }
+        
+        // editScheduleName 텍스트 필드인 경우에만 처리
+        if activeField == editScheduleName {
             let textFieldFrame = editScheduleName.frame
-            
-            let keyboardHeight = keyboardRectangle.height
-            let screenHeight = UIScreen.main.bounds.height
             let textFieldBottomY = textFieldFrame.origin.y + textFieldFrame.height
             
             // 텍스트 필드가 키보드보다 위에 있을 때만 뷰를 올림
             if textFieldBottomY > (screenHeight - keyboardHeight - 100) {
                 let offsetY = textFieldBottomY - (screenHeight - keyboardHeight - 120)
-                self.view.frame.origin.y = -offsetY
+                self.view.frame.origin.y = CGFloat(-offsetY)
             }
         }
+        
+        // contentInset 설정 및 스크롤
+        var contentInset = scrollView.contentInset
+        contentInset.bottom = keyboardHeight
+        scrollView.contentInset = contentInset
+        
+        let scrollRect = activeField.convert(activeField.bounds, to: scrollView)
+        scrollView.scrollRectToVisible(scrollRect, animated: true)
     }
 
     @objc func keyboardWillHide(_ noti: NSNotification){
         UIView.animate(withDuration: 0.3) {
                self.view.frame.origin.y = 0
            }
+        var contentInset = scrollView.contentInset
+                contentInset.bottom = 0
+                scrollView.contentInset = contentInset
     }
+    
+    private func findFirstResponder(view: UIView) -> UIView? {
+           if view.isFirstResponder {
+               return view
+           }
+           
+           for subview in view.subviews {
+               if let firstResponder = findFirstResponder(view: subview) {
+                   return firstResponder
+               }
+           }
+           
+           return nil
+       }
     
     private func tapView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
@@ -896,15 +931,8 @@ extension EditMyPageViewController: UITextFieldDelegate {
             confirmButton.backgroundColor = MySpecialColors.Gray2
         }
         
-        if textField == editScheduleName {
-            // editScheduleName이 편집되기 시작할 때 키보드 노티피케이션을 추가
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        } else {
-            // 다른 텍스트 필드 선택 시 키보드 노티피케이션 제거
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == editNickName {
