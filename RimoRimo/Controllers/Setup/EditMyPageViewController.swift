@@ -562,27 +562,76 @@ class EditMyPageViewController: UIViewController {
         nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
         guard let nickname = editNickName.text, !nickname.isEmpty else {
             nameAlertTextLabel.isHidden = false
+            updateConfirmButtonState()
             return
         }
+        
+        guard nickname.count >= 2 else {
+            nameAlertTextLabel.isHidden = false
+            nameAlertTextLabel.text = "닉네임은 2자 이상 입력해야 합니다."
+            nameAlertTextLabel.textColor = MySpecialColors.Red
+            self.isNicknameAvailable = false
+            updateConfirmButtonState()
+            return
+        }
+        
+        guard isValidNicknameFormat(nickname) else {
+            nameAlertTextLabel.isHidden = false
+            nameAlertTextLabel.text = "닉네임 형식이 올바르지 않습니다."
+            nameAlertTextLabel.textColor = MySpecialColors.Red
+            self.isNicknameAvailable = false
+            updateConfirmButtonState()
+            return
+        }
+        
         nameAlertTextLabel.isHidden = true
-        Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Firestore.firestore().collection("user-info").document(uid).getDocument { (document, error) in
             if let error = error {
                 print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
                 return
             }
             
-            if let documents = querySnapshot?.documents, documents.isEmpty {
+            if let document = document, document.exists, let currentNickname = document.data()?["nickname"] as? String, currentNickname == nickname {
+                // 사용자 닉네임과 파이어베이스에 저장된 닉네임이 동일할 경우
                 self.isNicknameAvailable = true
-                self.nameAlertTextLabel.text = "사용할 수 있는 닉네임입니다."
+                self.nameAlertTextLabel.text = "현재 사용 중인 닉네임입니다."
                 self.nameAlertTextLabel.textColor = MySpecialColors.MainColor
+                self.nameAlertTextLabel.isHidden = false
+                self.updateConfirmButtonState()
             } else {
-                self.isNicknameAvailable = false
-                self.nameAlertTextLabel.text = "이미 사용 중인 닉네임입니다."
-                self.nameAlertTextLabel.textColor = MySpecialColors.Red
+                // 닉네임 중복 확인
+                Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    if let documents = querySnapshot?.documents, documents.isEmpty {
+                        self.isNicknameAvailable = true
+                        self.nameAlertTextLabel.text = "사용할 수 있는 닉네임입니다."
+                        self.nameAlertTextLabel.textColor = MySpecialColors.MainColor
+                    } else {
+                        self.isNicknameAvailable = false
+                        self.nameAlertTextLabel.text = "이미 사용 중인 닉네임입니다."
+                        self.nameAlertTextLabel.textColor = MySpecialColors.Red
+                    }
+                    self.nameAlertTextLabel.isHidden = false
+                    self.updateConfirmButtonState()
+                }
             }
-            self.nameAlertTextLabel.isHidden = false
         }
-        
+    }
+    
+    private func updateConfirmButtonState() {
+        confirmButton.isEnabled = self.isNicknameAvailable
+        confirmButton.backgroundColor = self.isNicknameAvailable ? MySpecialColors.MainColor : MySpecialColors.Gray2
+    }
+    private func isValidNicknameFormat(_ nickname: String) -> Bool {
+        let nicknameRegex = "^[a-zA-Z0-9가-힣]{2,}$"
+        let nicknamePredicate = NSPredicate(format: "SELF MATCHES %@", nicknameRegex)
+        return nicknamePredicate.evaluate(with: nickname)
     }
     
     // Edit Schedule
@@ -663,6 +712,11 @@ class EditMyPageViewController: UIViewController {
     var selectedProfileImageName: String?
     
     @objc private func confirmButtonTapped() {
+        
+        guard self.isNicknameAvailable else {
+            print("Nickname is not available")
+            return
+        }
         
         guard let uid = Auth.auth().currentUser?.uid else {
             print("User not authenticated")
@@ -830,10 +884,16 @@ extension EditMyPageViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.placeholder = ""
         textField.textColor = MySpecialColors.Gray4
-        
+        confirmButton.isEnabled = false
         if textField == editNickName {
             nameDoubleCheckButton.layer.borderColor = MySpecialColors.MainColor.cgColor
             nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.MainColor
+            
+            nameAlertTextLabel.isHidden = false
+            nameAlertTextLabel.text = "중복확인을 진행해주세요."
+            nameAlertTextLabel.textColor = MySpecialColors.Red
+            confirmButton.isEnabled = false
+            confirmButton.backgroundColor = MySpecialColors.Gray2
         }
         
         if textField == editScheduleName {
@@ -848,14 +908,28 @@ extension EditMyPageViewController: UITextFieldDelegate {
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == editNickName {
-            nameAlertTextLabel.isHidden = true
-            if textField.text?.isEmpty ?? true {
+            if let nickname = textField.text, !nickname.isEmpty {
+                if isNicknameAvailable {
+                    // 중복 확인 완료된 경우
+                    nameAlertTextLabel.isHidden = true
+                    confirmButton.isEnabled = true
+                    confirmButton.backgroundColor = MySpecialColors.MainColor
+                } else {
+                    // 중복 확인이 아직 안 된 경우
+                    nameAlertTextLabel.isHidden = false
+                    nameAlertTextLabel.text = "중복확인을 진행해주세요."
+                    nameAlertTextLabel.textColor = MySpecialColors.Red
+                    confirmButton.isEnabled = false
+                    confirmButton.backgroundColor = MySpecialColors.Gray2
+                }
+            } else {
+                nameAlertTextLabel.isHidden = true
                 textField.placeholder = "닉네임을 입력해 주세요"
+                confirmButton.isEnabled = false
+                confirmButton.backgroundColor = MySpecialColors.Gray2
             }
-            if textField == editNickName {
-                nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
-                nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.Gray3
-            }
+            nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
+            nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.Gray3
         } else if textField == editScheduleName {
             if textField.text?.isEmpty ?? true {
                 textField.placeholder = "일정 이름을 입력해 주세요"
@@ -870,6 +944,8 @@ extension EditMyPageViewController: UITextFieldDelegate {
         }
         // Edit NickName
         if textField == editNickName {
+            nameDoubleCheckButton.layer.borderColor = MySpecialColors.MainColor.cgColor
+            nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.MainColor
             if let text = textField.text, text.count > 8 {
                 textField.text = String(text.prefix(8))
                 nickNameErrorMessage.isHidden = false
