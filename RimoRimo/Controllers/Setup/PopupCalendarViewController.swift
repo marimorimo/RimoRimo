@@ -255,7 +255,13 @@ class PopupCalendarViewController: UIViewController, FSCalendarDelegate, FSCalen
         userDocRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 if let selectedTimestamp = document.data()?["d-day-date"] as? Timestamp {
-                    let selectedDate = selectedTimestamp.dateValue()
+                    var selectedDate = selectedTimestamp.dateValue()
+                    
+                    // Check if isTodayIncluded is true and subtract one day if it is
+                    if let isTodayIncluded = document.data()?["isTodayIncluded"] as? Bool, isTodayIncluded == true {
+                        selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
+                    }
+                    
                     self.lastSelectedDate = selectedDate
                     self.mainCalendar.select(selectedDate)
                     self.mainCalendar.setCurrentPage(selectedDate, animated: true)

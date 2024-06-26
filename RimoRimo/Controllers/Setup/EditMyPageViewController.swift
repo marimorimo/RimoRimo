@@ -477,7 +477,10 @@ class EditMyPageViewController: UIViewController {
                     
                     // Update Date
                     if let timestamp = data?["d-day-date"] as? Timestamp {
-                        let date = timestamp.dateValue() // Convert Timestamp to Date
+                        var date = timestamp.dateValue() // Convert Timestamp to Date
+                        if let isTodayIncluded = data?["isTodayIncluded"] as? Bool, isTodayIncluded == true {
+                            date = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date // Subtract one day
+                        }
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "yyyy년 MM월 dd일"
                         self.editDate.text = dateFormatter.string(from: date)
@@ -543,6 +546,7 @@ class EditMyPageViewController: UIViewController {
     
     // Edit NickName
     private var isNickNameEdited = false
+    private var isNicknameAvailable: Bool = false
     
     private func setupNickName() {
         editNickName.delegate = self
@@ -553,33 +557,82 @@ class EditMyPageViewController: UIViewController {
             isNickNameEdited = true
         }
     }
-    private var isNicknameAvailable: Bool = false
+    
     @objc private func duplicateCheckButtonTapped() {
         nickNameErrorMessage.isHidden = true
         nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
         guard let nickname = editNickName.text, !nickname.isEmpty else {
             nameAlertTextLabel.isHidden = false
+            updateConfirmButtonState()
             return
         }
+        
+        guard nickname.count >= 2 else {
+            nameAlertTextLabel.isHidden = false
+            nameAlertTextLabel.text = "닉네임은 2자 이상 입력해야 합니다."
+            nameAlertTextLabel.textColor = MySpecialColors.Red
+            self.isNicknameAvailable = false
+            updateConfirmButtonState()
+            return
+        }
+        
+        guard isValidNicknameFormat(nickname) else {
+            nameAlertTextLabel.isHidden = false
+            nameAlertTextLabel.text = "닉네임 형식이 올바르지 않습니다."
+            nameAlertTextLabel.textColor = MySpecialColors.Red
+            self.isNicknameAvailable = false
+            updateConfirmButtonState()
+            return
+        }
+        
         nameAlertTextLabel.isHidden = true
-        Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Firestore.firestore().collection("user-info").document(uid).getDocument { (document, error) in
             if let error = error {
                 print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
                 return
             }
             
-            if let documents = querySnapshot?.documents, documents.isEmpty {
+            if let document = document, document.exists, let currentNickname = document.data()?["nickname"] as? String, currentNickname == nickname {
+                // 사용자 닉네임과 파이어베이스에 저장된 닉네임이 동일할 경우
                 self.isNicknameAvailable = true
-                self.nameAlertTextLabel.text = "사용할 수 있는 닉네임입니다."
+                self.nameAlertTextLabel.text = "현재 사용 중인 닉네임입니다."
                 self.nameAlertTextLabel.textColor = MySpecialColors.MainColor
+                self.nameAlertTextLabel.isHidden = false
+                self.updateConfirmButtonState()
             } else {
-                self.isNicknameAvailable = false
-                self.nameAlertTextLabel.text = "이미 사용 중인 닉네임입니다."
-                self.nameAlertTextLabel.textColor = MySpecialColors.Red
+                // 닉네임 중복 확인
+                Firestore.firestore().collection("user-info").whereField("nickname", isEqualTo: nickname).getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print("닉네임 확인 중 오류 발생: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    if let documents = querySnapshot?.documents, documents.isEmpty {
+                        self.isNicknameAvailable = true
+                        self.nameAlertTextLabel.text = "사용할 수 있는 닉네임입니다."
+                        self.nameAlertTextLabel.textColor = MySpecialColors.MainColor
+                    } else {
+                        self.isNicknameAvailable = false
+                        self.nameAlertTextLabel.text = "이미 사용 중인 닉네임입니다."
+                        self.nameAlertTextLabel.textColor = MySpecialColors.Red
+                    }
+                    self.nameAlertTextLabel.isHidden = false
+                    self.updateConfirmButtonState()
+                }
             }
-            self.nameAlertTextLabel.isHidden = false
         }
-        
+    }
+    
+    private func updateConfirmButtonState() {
+        confirmButton.isEnabled = self.isNicknameAvailable
+        confirmButton.backgroundColor = self.isNicknameAvailable ? MySpecialColors.MainColor : MySpecialColors.Gray2
+    }
+    private func isValidNicknameFormat(_ nickname: String) -> Bool {
+        let nicknameRegex = "^[a-zA-Z0-9가-힣]{2,}$"
+        let nicknamePredicate = NSPredicate(format: "SELF MATCHES %@", nicknameRegex)
+        return nicknamePredicate.evaluate(with: nickname)
     }
     
     // Edit Schedule
@@ -778,30 +831,65 @@ class EditMyPageViewController: UIViewController {
     }
     
     // 키보드
+    private var keyboardHeight: CGFloat = 0.0
     @objc func keyboardWillShow(_ noti: NSNotification){
-        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            
-            // editScheduleName 텍스트 필드의 현재 위치
+        guard let userInfo = noti.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+            return
+        }
+        
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        let screenHeight = UIScreen.main.bounds.height
+        
+        // 현재 활성화된 텍스트 필드나 뷰 가져오기
+        guard let activeField = findFirstResponder(view: scrollView) else {
+            return
+        }
+        
+        // editScheduleName 텍스트 필드인 경우에만 처리
+        if activeField == editScheduleName {
             let textFieldFrame = editScheduleName.frame
-            
-            let keyboardHeight = keyboardRectangle.height
-            let screenHeight = UIScreen.main.bounds.height
             let textFieldBottomY = textFieldFrame.origin.y + textFieldFrame.height
             
             // 텍스트 필드가 키보드보다 위에 있을 때만 뷰를 올림
             if textFieldBottomY > (screenHeight - keyboardHeight - 100) {
                 let offsetY = textFieldBottomY - (screenHeight - keyboardHeight - 120)
-                self.view.frame.origin.y = -offsetY
+                self.view.frame.origin.y = CGFloat(-offsetY)
             }
         }
+        
+        // contentInset 설정 및 스크롤
+        var contentInset = scrollView.contentInset
+        contentInset.bottom = keyboardHeight
+        scrollView.contentInset = contentInset
+        
+        let scrollRect = activeField.convert(activeField.bounds, to: scrollView)
+        scrollView.scrollRectToVisible(scrollRect, animated: true)
     }
 
     @objc func keyboardWillHide(_ noti: NSNotification){
         UIView.animate(withDuration: 0.3) {
                self.view.frame.origin.y = 0
            }
+        var contentInset = scrollView.contentInset
+                contentInset.bottom = 0
+                scrollView.contentInset = contentInset
     }
+    
+    private func findFirstResponder(view: UIView) -> UIView? {
+           if view.isFirstResponder {
+               return view
+           }
+           
+           for subview in view.subviews {
+               if let firstResponder = findFirstResponder(view: subview) {
+                   return firstResponder
+               }
+           }
+           
+           return nil
+       }
     
     private func tapView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
@@ -827,32 +915,46 @@ extension EditMyPageViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.placeholder = ""
         textField.textColor = MySpecialColors.Gray4
-        
+
         if textField == editNickName {
             nameDoubleCheckButton.layer.borderColor = MySpecialColors.MainColor.cgColor
             nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.MainColor
+            
+            nameAlertTextLabel.isHidden = false
+            nameAlertTextLabel.text = "중복확인을 진행해주세요."
+            nameAlertTextLabel.textColor = MySpecialColors.Red
+            
+            confirmButton.isEnabled = false
+            confirmButton.backgroundColor = MySpecialColors.Gray2
         }
         
-        if textField == editScheduleName {
-            // editScheduleName이 편집되기 시작할 때 키보드 노티피케이션을 추가
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        } else {
-            // 다른 텍스트 필드 선택 시 키보드 노티피케이션 제거
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == editNickName {
-            nameAlertTextLabel.isHidden = true
-            if textField.text?.isEmpty ?? true {
+            if let nickname = textField.text, !nickname.isEmpty {
+                if isNicknameAvailable {
+                    // 중복 확인 완료된 경우
+                    nameAlertTextLabel.isHidden = true
+                    confirmButton.isEnabled = true
+                    confirmButton.backgroundColor = MySpecialColors.MainColor
+                } else {
+                    // 중복 확인이 아직 안 된 경우
+                    nameAlertTextLabel.isHidden = false
+                    nameAlertTextLabel.text = "중복확인을 진행해주세요."
+                    nameAlertTextLabel.textColor = MySpecialColors.Red
+                    confirmButton.isEnabled = false
+                    confirmButton.backgroundColor = MySpecialColors.Gray2
+                }
+            } else {
+                nameAlertTextLabel.isHidden = true
                 textField.placeholder = "닉네임을 입력해 주세요"
+                confirmButton.isEnabled = true
+                confirmButton.backgroundColor = MySpecialColors.Gray2
             }
-            if textField == editNickName {
-                nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
-                nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.Gray3
-            }
+            nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
+            nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.Gray3
         } else if textField == editScheduleName {
             if textField.text?.isEmpty ?? true {
                 textField.placeholder = "일정 이름을 입력해 주세요"
@@ -860,6 +962,7 @@ extension EditMyPageViewController: UITextFieldDelegate {
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         }
+        
     }
     @objc private func textFieldDidChange(_ notification: Notification) {
         guard let textField = notification.object as? UITextField else {
@@ -867,6 +970,8 @@ extension EditMyPageViewController: UITextFieldDelegate {
         }
         // Edit NickName
         if textField == editNickName {
+            nameDoubleCheckButton.layer.borderColor = MySpecialColors.MainColor.cgColor
+            nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.MainColor
             if let text = textField.text, text.count > 8 {
                 textField.text = String(text.prefix(8))
                 nickNameErrorMessage.isHidden = false

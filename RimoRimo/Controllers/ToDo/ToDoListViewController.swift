@@ -461,7 +461,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                     let date = timestamp.dateValue()
                     let dateFormatter = DateFormatter()
                     dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd"
+                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
                     self.editDate.text = dateFormatter.string(from: date)
                 } else {
                     let currentDate = Date()
