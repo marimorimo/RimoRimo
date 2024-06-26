@@ -75,7 +75,7 @@ class MyPageViewController: UIViewController {
 
     private let profileBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = MySpecialColors.Mint
+        view.backgroundColor = .clear
 
         return view
     }()
@@ -171,11 +171,19 @@ class MyPageViewController: UIViewController {
         let button = UIButton()
         button.setTitle("최근 성장한 마리모 보기", for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .pretendard(style: .semiBold, size: 14)
+
         button.setImage(UIImage(named: "mypageIcon1"), for: .normal)
         button.tintColor = MySpecialColors.Gray2
+        button.backgroundColor = .white
         button.semanticContentAttribute = .forceRightToLeft
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
-        button.setPreferredSymbolConfiguration(.init(scale: .large), forImageIn: .normal)
+        button.setPreferredSymbolConfiguration(.init(scale: .default), forImageIn: .normal)
+
+        button.layer.cornerRadius = 24
+        button.clipsToBounds = true
+        button.layer.borderWidth = 1
+        button.layer.borderColor = MySpecialColors.MainColor.cgColor
 
         button.addTarget(self, action: #selector(showMarimoButtonTapped), for: .touchUpInside)
 
@@ -184,7 +192,6 @@ class MyPageViewController: UIViewController {
 
     private lazy var buttonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [showMarimoButton])
-        stackView.distribution = .fillEqually
         stackView.alignment = .trailing
         stackView.spacing = 20
 
@@ -223,7 +230,9 @@ class MyPageViewController: UIViewController {
     }
 
     private func setupViews() {
-        view.backgroundColor = MySpecialColors.Gray1
+//        view.backgroundColor = MySpecialColors.Gray1
+        setupBackground()
+        setupBubbleEmitter()
 
         view.addSubview(profileBackgroundView)
         profileBackgroundView.addSubview(settingButton)
@@ -231,6 +240,59 @@ class MyPageViewController: UIViewController {
         profileBackgroundView.addSubview(statusStackView)
 
         view.addSubview(buttonStackView)
+    }
+
+    // MARK: - Setup Background
+    private func setupBackground() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+
+        let gray1Color = MySpecialColors.Gray1.cgColor
+        let blueColor = MySpecialColors.Blue.cgColor
+
+        gradientLayer.colors = [
+            gray1Color,
+            blueColor
+        ]
+
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 2.0)
+        view.layer.addSublayer(gradientLayer)
+    }
+
+    // MARK: - Bubble
+    private func setupBubbleEmitter() {
+        let bubbleEmitter = CAEmitterLayer()
+        bubbleEmitter.emitterPosition = CGPoint(x: view.bounds.width / 2, y: view.bounds.height * 0.85)
+        bubbleEmitter.emitterShape = .line
+        bubbleEmitter.emitterSize = CGSize(width: view.bounds.width, height: 1)
+
+        let bubbleCell = CAEmitterCell()
+        bubbleCell.contents = UIImage(named: "bubble")?.cgImage ?? createBubbleImage().cgImage
+        bubbleCell.birthRate = 10
+        bubbleCell.lifetime = 5.0
+        bubbleCell.velocity = -50
+        bubbleCell.velocityRange = -20
+        bubbleCell.yAcceleration = -30
+        bubbleCell.scale = 0.1
+        bubbleCell.scaleRange = 0.2
+        bubbleCell.alphaRange = 0.5
+        bubbleCell.alphaSpeed = -0.1
+
+        bubbleEmitter.emitterCells = [bubbleCell]
+        view.layer.addSublayer(bubbleEmitter)
+    }
+
+    private func createBubbleImage() -> UIImage {
+        let size = CGSize(width: 20, height: 20)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        UIColor.white.setFill()
+        UIBezierPath(ovalIn: CGRect(origin: .zero, size: size)).fill()
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+
+        return image
     }
 
     func safeAreaTopInset() -> CGFloat {
@@ -276,9 +338,14 @@ class MyPageViewController: UIViewController {
         }
 
         buttonStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(28)
+            make.trailing.equalToSuperview().inset(28)
             make.top.equalTo(profileBackgroundView.snp.bottom).offset(20)
-            make.height.equalTo(24)
+            make.height.equalTo(46)
+        }
+
+        showMarimoButton.snp.makeConstraints { make in
+            make.width.equalTo(200)
+            make.height.equalTo(46)
         }
 
     }
@@ -426,6 +493,7 @@ extension MyPageViewController {
             imageView.backgroundColor = .clear
             imageView.layer.cornerRadius = ballSize / 2
             imageView.clipsToBounds = true
+            imageView.contentMode = .scaleAspectFit
             imageView.image = UIImage(named: marimoNameList[i])
             imageView.isUserInteractionEnabled = true
 
@@ -443,7 +511,7 @@ extension MyPageViewController {
         animator = UIDynamicAnimator(referenceView: view)
 
         gravityBehavior = UIGravityBehavior(items: animatingMarimoImageViews)
-        gravityBehavior.magnitude = 0.2
+        gravityBehavior.magnitude = 0.1
         animator.addBehavior(gravityBehavior)
 
         collisionBehavior = UICollisionBehavior(items: animatingMarimoImageViews)
