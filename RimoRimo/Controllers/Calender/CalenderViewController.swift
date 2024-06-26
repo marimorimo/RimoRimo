@@ -62,6 +62,10 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     private var listener: ListenerRegistration?
     private var sessionData: [String: [String: Any]] = [:]
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
     // MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
