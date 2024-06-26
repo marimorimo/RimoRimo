@@ -22,17 +22,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var selectedDate: Date = Date()
     var listener: ListenerRegistration?
     
-    let tapGestureView: UIView = {
-        let tapGestureView = UIView()
-        return tapGestureView
-    }()
-    
-    // PickDate Setup
     let dateView: UIView = {
         let view = UIView()
         return view
     }()
-    
     let dateStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -60,25 +53,28 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         return date
     }()
     
-    let emptyTodoView: UIView = {
-        let emptyTodoView = UIView()
-        emptyTodoView.backgroundColor = .blue
-        return emptyTodoView
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupUI()
         setupConstraints()
         setupActions()
         setupEditDateTapGesture()
-        setUpKeyboardHideTapGesture()
         
-        addSnapshotListener(for: selectedDate)
-        fetchDateData()
+        fetchTodoData(for: selectedDate) { todoData, error in
+            if let error = error {
+                print("Error fetching todo data: \(error.localizedDescription)")
+            } else {
+                if let todoData = todoData {
+                    print("Fetched todo data: \(todoData)")
+                    self.todos = todoData["todos"] as? [[String: Any]] ?? []
+                    self.tableView.reloadData()
+                } else {
+                    print("Todo data nil")
+                }
+            }
+        }
         
-        // Keyboard event observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -91,9 +87,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - UI Setup
-    
     func setupUI() {
-        view.addSubview(tapGestureView)
         view.backgroundColor = MySpecialColors.Gray1
         view.addSubview(dateStack)
         view.addSubview(dateView)
@@ -142,12 +136,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Constraints Setup
     func setupConstraints() {
-        tapGestureView.snp.makeConstraints { make in
-            make.top.equalTo(view)
-            make.bottom.equalTo(tableView.snp.top)
-            make.leading.equalTo(view)
-            make.trailing.equalTo(view)
-        }
         
         dateView.snp.makeConstraints { make in
             make.top.equalTo(view).offset(95)
@@ -209,21 +197,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         dateView.addGestureRecognizer(tapGesture3)
     }
     
-    //tapGesture keyboard
-    private func setUpKeyboardHideTapGesture() {
-        let keyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(keyboardHideTapped))
-        tapGestureView.addGestureRecognizer(keyboardTapGesture)
-    }
-    
     // MARK: - Actions
     @objc private func editDateTapped() {
         print("taptap")
         showCalendarPopup()
-    }
-    
-    @objc private func keyboardHideTapped() {
-        print("뷰 쳤더니 키보드 내려감")
-        self.view.endEditing(true)
     }
     
     private func showCalendarPopup() {
@@ -232,15 +209,27 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             DispatchQueue.main.async {
                 self?.editDate.text = formattedDate
                 self?.selectedDate = selectedDate
-                self?.addSnapshotListener(for: selectedDate)
+                self?.fetchTodoData(for: selectedDate) { todoData, error in
+                    if let error = error {
+                        print("Error fetching todo data: \(error.localizedDescription)")
+                    } else {
+                        if let todoData = todoData {
+                            print("Fetched todo data: \(todoData)")
+                            self?.todos = todoData["todos"] as? [[String: Any]] ?? []
+                            self?.tableView.reloadData()
+                        } else {
+                            print("Todo data nil")
+                        }
+                    }
+                }
             }
         }
         
-        addSnapshotListener(for: selectedDate)
         popupCalendarVC.modalPresentationStyle = .overCurrentContext
         present(popupCalendarVC, animated: true, completion: nil)
     }
     
+    // MARK: - 저장
     @objc func saveToDo() {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("사용자가 인증되지 않았습니다.")
@@ -250,7 +239,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let todoText = textField.text ?? ""
         
         guard !todoText.isEmpty else {
-            print("할 일 텍스트가 비어있습니다.") // 텍스트 필드 비어있으면 셀에 추가 안 됨 그냥 취소 됨
+            print("할 일 텍스트가 비어있습니다.")
             return
         }
         
@@ -258,43 +247,133 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
         
-        Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .collection("todo-list")
-            .document(day)
-            .collection("sub-collection")
-            .addDocument(data: ["todo": todoText, "date": Timestamp(date: Date()), "completed": false]) { [weak self] error in
-                if let error = error {
-                    print("Error saving ToDo: \(error.localizedDescription)")
-                } else {
-                    print("ToDo가 성공적으로 저장되었습니다.")
-                    self?.textField.text = ""
-                    self?.loadTodos(for: self?.selectedDate ?? Date())
+        let todoData = [
+            "todoText": todoText,
+            "success": false
+        ] as [String : Any]
+        
+        addTodoToFirestore(uid: uid, day: day, todoData: todoData) { error in
+            if let error = error {
+                print("Error add todo \(error.localizedDescription)")
+            } else {
+                print("Todo add successfully")
+                self.fetchTodoData(for: self.selectedDate) { todoData, error in
+                    if let error = error {
+                        print("Error fetching todo data: \(error.localizedDescription)")
+                    } else {
+                        if let todoData = todoData {
+                            print("Fetched todo data: \(todoData)")
+                            self.todos = todoData["todos"] as? [[String: Any]] ?? []
+                            self.tableView.reloadData()
+                        } else {
+                            print("Todo data nil")
+                        }
+                    }
                 }
+                self.textField.text = ""
             }
+        }
     }
     
-    @objc func saveEditedText(_ sender: UIButton) {
-        guard let indexPath = editingIndexPath else { return }
-        saveEditedText(at: indexPath)
-    }
-    
-    func saveEditedText(at indexPath: IndexPath) {
-        let todo = todos[indexPath.row]
-        guard let documentId = todo["id"] as? String else { return }
-        let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
-        
-        guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
-        
-        if updatedText.isEmpty {
-            cell.textField.text = cell.previousText
-            cell.resetContent()
-            editingIndexPath = nil
-            tableView.reloadRows(at: [indexPath], with: .none)
+    // MARK: - Firebase Firestore Data Fetch
+    func fetchTodoData(for date: Date, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("사용자가 인증되지 않았습니다.")
+            completion(nil, nil)
             return
         }
         
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let day = formatter.string(from: date)
+        
+        let db = Firestore.firestore()
+        let docRef = db.collection("user-info").document(uid).collection("todo-list").document(day)
+        
+        docRef.getDocument { document, error in
+            if let error = error {
+                completion(nil, error)
+            } else if let document = document, document.exists {
+                completion(document.data(), nil)
+            } else {
+                completion(nil, nil)
+            }
+        }
+    }
+    
+    func addTodoToFirestore(uid: String, day: String, todoData: [String: Any], completion: @escaping (Error?) -> Void) {
+        let db = Firestore.firestore()
+        let docRef = db.collection("user-info").document(uid).collection("todo-list").document(day)
+        
+        docRef.updateData([
+            "todos": FieldValue.arrayUnion([todoData])
+        ]) { error in
+            if let error = error {
+                if (error as NSError).code == FirestoreErrorCode.notFound.rawValue {
+                    docRef.setData([
+                        "todos": [todoData]
+                    ]) { error in
+                        completion(error)
+                    }
+                } else {
+                    completion(error)
+                }
+            } else {
+                completion(nil)
+            }
+        }
+    }
+    
+    // MARK: - TableView DataSource and Delegate
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return todos.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ToDoTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        let todo = todos[indexPath.row]
+        let todoText = todo["todoText"] as? String ?? ""
+        let success = todo["success"] as? Bool ?? false
+        
+        cell.todoLabel.text = todoText
+        cell.successButton.isSelected = success
+        
+        // deleteButtonAction 설정
+        cell.deleteButtonAction = { [weak self] in
+            self?.deleteButtonAction(at: indexPath)
+        }
+        
+        cell.selectionStyle = .none
+        
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let todo = todos[indexPath.row]
+        let todoText = todo["todoText"] as? String ?? ""
+        let alertController = UIAlertController(title: "할 일 편집", message: nil, preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.text = todoText
+        }
+        
+        let saveAction = UIAlertAction(title: "저장", style: .default) { [weak self] _ in
+            if let updatedText = alertController.textFields?.first?.text, !updatedText.isEmpty {
+                self?.updateTodoText(at: indexPath, with: updatedText)
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func toggleTodoSuccess(at indexPath: IndexPath) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("사용자가 인증되지 않았습니다.")
             return
@@ -304,121 +383,28 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
         
-        Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .collection("todo-list")
-            .document(day)
-            .collection("sub-collection")
-            .document(documentId)
-            .updateData(["todo": updatedText]) { [weak self] error in
-                if let error = error {
-                    print("Error updating todo text: \(error.localizedDescription)")
-                } else {
-                    print("Todo 텍스트가 성공적으로 업데이트되었습니다.")
-                    self?.loadTodos(for: self?.selectedDate ?? Date())
-                }
-            }
+        var todo = todos[indexPath.row]
+        let success = todo["success"] as? Bool ?? false
+        todo["success"] = !success
+        todos[indexPath.row] = todo
         
-        cell.resetContent()
-        editingIndexPath = nil
-        tableView.reloadRows(at: [indexPath], with: .none)
-    }
-    
-    @objc func toggleButtonTapped(_ sender: UIButton) {
-        guard editingIndexPath == nil else {
-            return
-        }
+        let db = Firestore.firestore()
+        let docRef = db.collection("user-info").document(uid).collection("todo-list").document(day)
         
-        let rowIndex = sender.tag
-        let todo = todos[rowIndex]
-        let isCompleted = todo["completed"] as? Bool ?? false
-        let updatedStatus = !isCompleted
-        
-        todos[rowIndex]["completed"] = updatedStatus
-        
-        updateCompletionStatus(todoIndex: rowIndex, isCompleted: updatedStatus)
-        
-        if let cell = tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)) as? ToDoTableViewCell {
-            cell.configure(with: todos[rowIndex]["todo"] as? String ?? "", isCompleted: updatedStatus, index: rowIndex, target: self)
-        }
-    }
-    
-    // MARK: - Keyboard Handlers
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            let keyboardHeight = keyboardFrame.height
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
-            tableView.contentInset = contentInsets
-            tableView.scrollIndicatorInsets = contentInsets
-            
-            if let editingIndexPath = editingIndexPath {
-                if tableView.numberOfRows(inSection: editingIndexPath.section) > editingIndexPath.row {
-                    tableView.scrollToRow(at: editingIndexPath, at: .middle, animated: true)
-                }
-            } else {
-                textFieldStack.snp.updateConstraints { make in
-                    make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(80-keyboardHeight)
-                }
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        let contentInsets = UIEdgeInsets.zero
-        tableView.contentInset = contentInsets
-        tableView.scrollIndicatorInsets = contentInsets
-        
-        textFieldStack.snp.updateConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-        }
-    }
-    
-    // MARK: - Firebase Functions
-    func addSnapshotListener(for date: Date) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("User not authenticated")
-            return
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let day = formatter.string(from: date)
-        
-        listener?.remove()
-        
-        let collectionRef = Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .collection("todo-list")
-            .document(day)
-            .collection("sub-collection")
-            .order(by: "date", descending: false)
-        
-        self.listener = collectionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
-            guard let self = self else { return }
+        docRef.updateData([
+            "todos": todos
+        ]) { error in
             if let error = error {
-                print("Error getting documents: \(error)")
+                print("Error update: \(error.localizedDescription)")
             } else {
-                self.todos.removeAll()
-                for document in querySnapshot!.documents {
-                    var todoData = document.data()
-                    todoData["id"] = document.documentID
-                    self.todos.append(todoData)
-                }
-                self.tableView.reloadData()
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
         }
     }
     
-    func loadTodos(for date: Date) {
-        todolistArr = []
-        addSnapshotListener(for: selectedDate)
-    }
-    
-    func updateCompletionStatus(todoIndex: Int, isCompleted: Bool) {
+    func updateTodoText(at indexPath: IndexPath, with newText: String) {
         guard let uid = Auth.auth().currentUser?.uid else {
-            print("User not authenticated")
+            print("사용자가 인증되지 않았습니다.")
             return
         }
         
@@ -426,293 +412,167 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
         
-        let todo = todos[todoIndex]
-        guard let documentId = todo["id"] as? String else {
-            print("Document ID not found")
+        todos[indexPath.row]["todoText"] = newText
+        
+        let db = Firestore.firestore()
+        let docRef = db.collection("user-info").document(uid).collection("todo-list").document(day)
+        
+        docRef.updateData([
+            "todos": todos
+        ]) { error in
+            if let error = error {
+                print("Error update: \(error.localizedDescription)")
+            } else {
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
+    }
+    
+    // MARK: - Delete Todo Item
+    func deleteButtonAction(at indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("사용자가 인증되지 않았습니다.")
             return
         }
         
-        Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .collection("todo-list")
-            .document(day)
-            .collection("sub-collection")
-            .document(documentId)
-            .updateData(["completed": isCompleted]) { [weak self] error in
-                if let error = error {
-                    print("Error updating completion status: \(error.localizedDescription)")
-                } else {
-                    print("완료 상태가 성공적으로 업데이트되었습니다.")
-                    self?.loadTodos(for: self?.selectedDate ?? Date())
-                }
-            }
-    }
-    
-    private func fetchDateData() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let day = formatter.string(from: selectedDate)
         
-        Firestore.firestore().collection("user-info").document(uid).getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                
-                // Update Date
-                if let timestamp = data?["day"] as? Timestamp {
-                    let date = timestamp.dateValue()
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd"
-                    self.editDate.text = dateFormatter.string(from: date)
-                } else {
-                    let currentDate = Date()
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd"
-                    self.editDate.text = dateFormatter.string(from: currentDate)
-                }
-            }
-        }
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-        print("키보드 내려감")
-    }
-    
-    // MARK: - UITextFieldDelegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let indexPath = editingIndexPath {
-            saveEditedText(at: indexPath)
-        } else {
-            saveToDo()
-        }
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("텍스트 필드 편집 시작")
-    }
-    
-    // MARK: - UITableViewDataSource
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return todos.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ToDoTableViewCell else {
-            return UITableViewCell()
-        }
-        let todo = todos[indexPath.row]
-        let todoText = todo["todo"] as? String ?? ""
-        
-        let isCompleted = todo["completed"] as? Bool ?? false
-        cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
-        
-        if isCompleted == false {
-            todolistArr.append(todoText)
-        }
-        UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
-        WidgetCenter.shared.reloadAllTimelines()
-
-        // Cell Background color gray
-        cell.backgroundColor = MySpecialColors.Gray1
-        
-        // Cell Selection color gray
-        let bgColorView = UIView()
-        bgColorView.backgroundColor = MySpecialColors.Gray1
-        cell.selectedBackgroundView = bgColorView
-        return cell
-    }
-    
-    // MARK: - UITableViewDelegate
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard editingIndexPath == nil else {
+        guard indexPath.row < todos.count else {
+            print("Index out of range")
             return
         }
         
-        if let previousIndexPath = editingIndexPath {
-            guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? ToDoTableViewCell else { return }
-            previousCell.resetContent()
-            tableView.reloadRows(at: [previousIndexPath], with: .none)
-        }
+        tableView.beginUpdates()
+        todos.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        tableView.endUpdates()
         
-        guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
-        let todo = todos[indexPath.row]
-        guard let todoText = todo["todo"] as? String else { return }
-        cell.setEditMode(todoText: todoText, target: self)
+        let db = Firestore.firestore()
+        let docRef = db.collection("user-info").document(uid).collection("todo-list").document(day)
         
-        editingIndexPath = indexPath
-        
-        textFieldStack.snp.updateConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-        }
-    }
-    
-    // MARK: - Swipe to Delete
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // 수정 모드일 때 삭제 스와이프 비활성화
-        if editingIndexPath != nil {
-            return nil
-        }
-        
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
-            guard let self = self else { return }
-            let todo = self.todos[indexPath.row]
-            guard let documentId = todo["id"] as? String else { return }
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("User not authenticated")
-                return
-            }
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            let day = formatter.string(from: self.selectedDate)
-            
-            // Firestore에서 데이터를 삭제합니다.
-            Firestore.firestore()
-                .collection("user-info")
-                .document(uid)
-                .collection("todo-list")
-                .document(day)
-                .collection("sub-collection")
-                .document(documentId)
-                .delete { [weak self] error in
-                    guard let self = self else { return }
+        docRef.updateData([
+            "todos": todos
+        ]) { error in
+            if let error = error {
+                print("Error delete todo item: \(error.localizedDescription)")
+                self.fetchTodoData(for: self.selectedDate) { todoData, error in
                     if let error = error {
-                        print("Error deleting todo: \(error.localizedDescription)")
-                        completionHandler(false) // 삭제 실패 시
+                        print("Error fetching todo data: \(error.localizedDescription)")
                     } else {
-                        print("ToDo가 성공적으로 삭제되었습니다.")
-                        completionHandler(true) // 삭제 성공 시
-                        self.loadTodos(for: self.selectedDate)
+                        if let todoData = todoData {
+                            print("Fetched todo data: \(todoData)")
+                            self.todos = todoData["todos"] as? [[String: Any]] ?? []
+                            self.tableView.reloadData()
+                        } else {
+                            print("Todo data nil")
+                        }
                     }
                 }
+            } else {
+                print("item delete successfully")
+            }
         }
-        
-        deleteAction.backgroundColor = MySpecialColors.MainColor
-        
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
-        return configuration
     }
     
-    // MARK: - UIViewController Lifecycle
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        listener?.remove()
-        NotificationCenter.default.removeObserver(self)
+    // MARK: - Keyboard Handling
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let keyboardHeight = keyboardFrame.height
+        
+        UIView.animate(withDuration: 0.3) {
+            self.textFieldStack.snp.updateConstraints { make in
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-keyboardHeight)
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        UIView.animate(withDuration: 0.3) {
+            self.textFieldStack.snp.updateConstraints { make in
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            }
+            self.view.layoutIfNeeded()
+        }
     }
 }
 
 class ToDoTableViewCell: UITableViewCell {
     
-    var toggleButton: UIButton!
-    var todoTextLabel: UILabel!
-    var underline: UIView!
-    var textField: UITextField!
-    var saveButton: UIButton!
-    var previousText: String?
+    var todoLabel: UILabel!
+    var successButton: UIButton!
+    var deleteButton: UIButton!
+    var successButtonAction: (() -> Void)?
+    var deleteButtonAction: (() -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupCellUI()
-        setupCellConstraints()
+        setupUI()
+        setupConstraints()
+        setupActions()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setupUI()
+        setupConstraints()
+        setupActions()
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        toggleButton.setImage(nil, for: .normal)
-    }
-    
-    func setupCellUI() {
-        toggleButton = UIButton()
-        todoTextLabel = UILabel()
-        underline = UIView()
-        underline.backgroundColor = MySpecialColors.Gray2
+    // MARK: - UI Setup
+    private func setupUI() {
+        backgroundColor = MySpecialColors.Gray1
         
-        contentView.addSubview(toggleButton)
-        contentView.addSubview(todoTextLabel)
-        contentView.addSubview(underline)
+        todoLabel = UILabel()
+        todoLabel.font = UIFont.pretendard(style: .regular, size: 14)
+        todoLabel.textColor = MySpecialColors.Gray4
+        contentView.addSubview(todoLabel)
+        
+        successButton = UIButton(type: .system)
+        successButton.setImage(UIImage(systemName: "check-circle"), for: .normal)
+        successButton.tintColor = MySpecialColors.MainColor
+        contentView.addSubview(successButton)
+        
+        deleteButton = UIButton(type: .system)
+        deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
+        deleteButton.tintColor = MySpecialColors.Gray4
+        contentView.addSubview(deleteButton)
     }
     
-    func setupCellConstraints() {
-        toggleButton.snp.makeConstraints { make in
-            make.leading.equalTo(contentView).offset(10)
+    // MARK: - Constraints Setup
+    private func setupConstraints() {
+        todoLabel.snp.makeConstraints { make in
+            make.leading.equalTo(contentView).offset(20)
             make.centerY.equalTo(contentView)
-            make.width.height.equalTo(30)
         }
         
-        todoTextLabel.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.trailing.equalTo(contentView).offset(-10)
+        successButton.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView).offset(-60)
             make.centerY.equalTo(contentView)
         }
         
-        underline.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.trailing.equalTo(contentView).offset(-10)
-            make.bottom.equalTo(contentView.snp.bottom).offset(-1)
-            make.height.equalTo(1)
-        }
-    }
-    
-    func configure(with todoText: String, isCompleted: Bool, index: Int, target: Any) {
-        todoTextLabel.text = todoText
-        toggleButton.setImage(UIImage(named: isCompleted ? "Group 583" : "Group 582"), for: .normal)
-        toggleButton.tag = index
-        toggleButton.addTarget(target, action: #selector(ToDoListViewController.toggleButtonTapped(_:)), for: .touchUpInside)
-    }
-    
-    func setEditMode(todoText: String, target: Any) {
-        todoTextLabel.isHidden = true
-        
-        textField?.removeFromSuperview()
-        saveButton?.removeFromSuperview()
-        
-        textField = UITextField()
-        textField.text = todoText
-        previousText = todoText
-        textField.borderStyle = .none
-        textField.tag = toggleButton.tag
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.delegate = target as? UITextFieldDelegate
-        contentView.addSubview(textField)
-        
-        saveButton = UIButton(type: .system)
-        saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
-        saveButton.tintColor = MySpecialColors.MainColor
-        saveButton.addTarget(target, action: #selector(ToDoListViewController.saveEditedText(_:)), for: .touchUpInside)
-        saveButton.tag = toggleButton.tag
-        saveButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(saveButton)
-        
-        saveButton.snp.makeConstraints { make in
-            make.trailing.equalTo(contentView).offset(-10)
+        deleteButton.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView).offset(-100)
             make.centerY.equalTo(contentView)
-            make.width.height.equalTo(30)
-        }
-        
-        textField.snp.makeConstraints { make in
-            make.leading.equalTo(toggleButton.snp.trailing).offset(10)
-            make.trailing.equalTo(saveButton.snp.leading).offset(-10)
-            make.centerY.equalTo(contentView)
-            make.height.equalTo(30)
-        }
-        
-        textField.isUserInteractionEnabled = true
-        textField.becomeFirstResponder()
-        if let newPosition = textField.position(from: textField.endOfDocument, offset: 0) {
-            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition) // 텍스트 필드 활성화 시 텍스트 끝으로 커서 이동
         }
     }
     
-    func resetContent() {
-        textField?.removeFromSuperview()
-        saveButton?.removeFromSuperview()
-        todoTextLabel.isHidden = false
+    // MARK: - Actions Setup
+    private func setupActions() {
+        successButton.addTarget(self, action: #selector(successButtonTapped), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+    }
+    
+    // MARK: - Actions
+    @objc private func successButtonTapped() {
+        successButtonAction?()
+    }
+    
+    @objc private func deleteButtonTapped() {
+        deleteButtonAction?()
     }
 }
