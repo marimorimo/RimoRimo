@@ -23,7 +23,7 @@ class TabButtonUIFactory: UIViewController {
     static func doubleCheckButton(buttonTitle: String, textColor: UIColor, cornerRadius: Int, backgroundColor: UIColor) -> UIButton {
         let button = UIButton()
         button.setTitle(buttonTitle, for: .normal)
-        button.titleLabel?.font = UIFont.pretendard(style: .semiBold, size: 16, isScaled: true)
+        button.titleLabel?.font = UIFont.pretendard(style: .semiBold, size: 14, isScaled: true)
         button.setTitleColor(textColor, for: .normal)
         button.backgroundColor = backgroundColor
         button.layer.borderColor = MySpecialColors.MainColor.cgColor

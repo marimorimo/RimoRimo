@@ -2,7 +2,7 @@
 //  AlertOnlyViewController.swift
 //  MarimoMainTimer
 //
-//  Created by 밀가루 on 6/16/24.
+//  Created by wxxd-fxrest on 6/16/24.
 //
 
 import UIKit
@@ -16,6 +16,8 @@ class AlertOnly: NSObject {
     private let alertTitle: UILabel
     private let alertSubTitle: UILabel
     private let checkLabel: UILabel
+    
+    var completionHandler: (() -> Void)?
     
     override init() {
         self.alertTitle = AlertUIFactory.alertTitle(titleText: "차단 해제", textColor: MySpecialColors.Black, fontSize: 16)
@@ -31,6 +33,7 @@ class AlertOnly: NSObject {
             self.alertView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         }) { _ in
             self.alertBack.removeFromSuperview()
+            self.completionHandler?() 
         }
     }
     

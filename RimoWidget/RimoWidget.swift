@@ -8,7 +8,7 @@ struct Provider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), dday: "12", percentage: 0.5, goal: "목표", todo: ["토익 시험", "운동"])
+        let entry = SimpleEntry(date: Date(), dday: "-?", percentage: 0.5, goal: "목표", todo: ["토익 시험", "운동"])
         completion(entry)
     }
 
@@ -27,7 +27,9 @@ struct Provider: TimelineProvider {
     }
 
     func remainDays() -> Int {
-        let date = UserDefaults.shared.object(forKey: "endDate") as? Date ?? Date()
+        guard let date = UserDefaults.shared.object(forKey: "endDate") as? Date else {
+            return Int.min
+        }
 
         let calendar = Calendar.current
 
@@ -38,8 +40,10 @@ struct Provider: TimelineProvider {
 
     func getDday() -> String {
         switch remainDays() {
-        case let remainDays where remainDays < 0:
+        case let remainDays where remainDays < 0 && remainDays > Int.min:
             return "\(remainDays)"
+        case let remainDays where remainDays == Int.min:
+            return "-?"
         case let remainDays where remainDays == 0:
             return "-Day"
         case let remainDays where remainDays > 0:
@@ -78,7 +82,7 @@ struct Provider: TimelineProvider {
         let fullDays = Double(components.day!)
 
         let remainDays = fullDays + Double(remainDays())
-        var percentage = remainDays / fullDays
+        var percentage = (remainDays + 1) / (fullDays + 1)
         if percentage > 1 { percentage = 1 }
 
         return percentage

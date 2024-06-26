@@ -11,6 +11,10 @@ import FirebaseFirestore
 import FirebaseStorage
 
 class AccountInfoViewController: UIViewController {
+    private let START_TIME_KEY = "startTime"
+    private let STOP_TIME_KEY = "stopTime"
+    private let COUNTING_KEY = "countingKey"
+    private let saveAutoLoginInfo = "userEmail"
     
     let titleLables = ["계정 정보", "비밀번호 변경"]
     let descriptionLabels = ["가입한 이메일 정보입니다.", "비밀번호를 변경합니다."]
@@ -491,57 +495,128 @@ class AccountInfoViewController: UIViewController {
             }
             
             // 재인증 성공 시 사용자 계정 삭제
-            self.deleteUserFromFirebase()
-            self.deleteUserDocumentFromFirestore()
-        }
-    }
-    private func deleteUserFromFirebase() {
-        let user = Auth.auth().currentUser
-        
-        user?.delete { error in
-            if let error = error {
-                print("Error deleting user: \(error.localizedDescription)")
-                // 계정 삭제 오류 처리
-                DispatchQueue.main.async {
-                    let errorAlert = UIAlertController(title: "계정 삭제 오류", message: "계정을 삭제하는 중 오류가 발생했습니다.", preferredStyle: .alert)
-                    errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-                    self.present(errorAlert, animated: true, completion: nil)
+            self.deleteUserDocumentFromFirestore() { error in
+                if let error = error {
+                    print("Error deleting: \(error.localizedDescription)")
+                } else {
+                    print("User deleted successfully")
                 }
-            } else {
-                print("User deleted successfully from Firebase Authentication")
             }
         }
     }
-    
-    private func deleteUserDocumentFromFirestore() {
+
+    private func deleteUserDocumentFromFirestore(completion: @escaping (Error?) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("No user logged in")
             return
         }
         
-        let userRef = Firestore.firestore().collection("user-info").document(uid)
+        let db = Firestore.firestore()
+        let userDocRef = db.collection("user-info").document(uid)
+        let studySessionsCollectionRef = userDocRef.collection("study-sessions")
+        let toodoListCollectionRef = userDocRef.collection("todo-list")
         
-        userRef.delete { error in
+        // Step 1: Delete all documents in the 'study-sessions'
+        studySessionsCollectionRef.getDocuments { (querySnapshot, error) in
             if let error = error {
-                print("Error removing document from Firestore: \(error.localizedDescription)")
-                // Firestore 문서 삭제 오류 처리
-                DispatchQueue.main.async {
-                    let errorAlert = UIAlertController(title: "문서 삭제 오류", message: "사용자 정보를 삭제하는 중 오류가 발생했습니다.", preferredStyle: .alert)
-                    errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-                    self.present(errorAlert, animated: true, completion: nil)
+                completion(error)
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                completion(nil)
+                return
+            }
+            
+            let batch = db.batch()
+            
+            for document in documents {
+                batch.deleteDocument(document.reference)
+            }
+            
+            batch.commit { (error) in
+                if let error = error {
+                    completion(error)
+                    return
                 }
-            } else {
-                print("Document successfully removed from Firestore")
-                // 로그인 화면으로 이동
-                let loginViewController = LoginViewController()
-                let navController = UINavigationController(rootViewController: loginViewController)
                 
-                // 화면 전환
-                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-                    sceneDelegate.changeRootViewController(navController)
-                    navController.navigationBar.topItem?.title = ""  // 타이틀을 빈 문자열로 설정
-                    navController.navigationItem.hidesBackButton = true
-                } else { return }
+                // Step 2: Delete 'user-info'
+                toodoListCollectionRef.getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        completion(error)
+                        return
+                    }
+                    
+                    guard let documents = querySnapshot?.documents else {
+                        completion(nil)
+                        return
+                    }
+                    
+                    let batch = db.batch()
+                    
+                    for document in documents {
+                        batch.deleteDocument(document.reference)
+                    }
+                    
+                    batch.commit { (error) in
+                        if let error = error {
+                            completion(error)
+                            return
+                        }
+                        
+                        // Step 2: Delete 'user-info'
+                        userDocRef.delete { error in
+                            if let error = error {
+                                print("Error removing document from Firestore: \(error.localizedDescription)")
+                                // Firestore 문서 삭제 오류 처리
+                                DispatchQueue.main.async {
+                                    let errorAlert = UIAlertController(title: "문서 삭제 오류", message: "사용자 정보를 삭제하는 중 오류가 발생했습니다.", preferredStyle: .alert)
+                                    errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                                    self.present(errorAlert, animated: true, completion: nil)
+                                }
+                                completion(error)
+                                return
+                            }
+                            
+                            Auth.auth().currentUser?.delete { error in
+                                if let error = error {
+                                    print("Error deleting user: \(error.localizedDescription)")
+                                    // 계정 삭제 오류 처리
+                                    DispatchQueue.main.async {
+                                        let errorAlert = UIAlertController(title: "계정 삭제 오류", message: "계정을 삭제하는 중 오류가 발생했습니다.", preferredStyle: .alert)
+                                        errorAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                                        self.present(errorAlert, animated: true, completion: nil)
+                                    }
+                                    completion(error)
+                                } else {
+                                    print("deleted successfully.")
+                                    UserDefaults.standard.removeObject(forKey: self.saveAutoLoginInfo)
+                                    UserDefaults.standard.removeObject(forKey: self.START_TIME_KEY)
+                                    UserDefaults.standard.removeObject(forKey: self.STOP_TIME_KEY)
+                                    UserDefaults.standard.removeObject(forKey: self.COUNTING_KEY)
+                                    
+                                    UserDefaults.shared.dictionaryRepresentation().keys.forEach { key in
+                                        UserDefaults.shared.removeObject(forKey: key)
+                                    }
+                                    
+                                    completion(nil)
+                                    
+                                    print("Document successfully removed from Firestore")
+                                    // 로그인 화면으로 이동
+                                    let loginViewController = LoginViewController()
+                                    let navController = UINavigationController(rootViewController: loginViewController)
+                                    
+                                    // 화면 전환
+                                    if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                                        sceneDelegate.changeRootViewController(navController)
+                                        navController.navigationBar.topItem?.title = ""  // 타이틀을 빈 문자열로 설정
+                                        navController.navigationItem.hidesBackButton = true
+                                    } else { return }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
