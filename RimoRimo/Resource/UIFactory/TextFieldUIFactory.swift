@@ -33,6 +33,8 @@ class TextFieldUIFactory {
         field.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor : MySpecialColors.Gray3])
         field.textColor = MySpecialColors.Gray4
         field.tintColor = MySpecialColors.MainColor
+        field.autocorrectionType = .no
+        field.spellCheckingType = .no
         return field
     }
     
@@ -71,6 +73,7 @@ extension CALayer {
             default:
                 break
             }
+            
             border.backgroundColor = color.cgColor
             self.addSublayer(border)
         }
