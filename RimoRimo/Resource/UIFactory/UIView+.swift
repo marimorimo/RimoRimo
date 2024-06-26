@@ -2,7 +2,7 @@
 //  UIFactory+.swift
 //  MarimoMainTimer
 //
-//  Created by 밀가루 on 6/16/24.
+//  Created by wxxd-fxrest on 6/16/24.
 //
 
 import UIKit

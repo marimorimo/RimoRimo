@@ -8,46 +8,12 @@
 import UIKit
 import MarkdownView
 
-protocol PrivacyPolicyViewControllerDelegate: AnyObject {
-    func didAgreeToPrivacyPolicy(_ agreed: Bool)
-}
-
 class PrivacyPolicyViewController: UIViewController {
-    
-    private var agree: Bool = false
-    weak var delegate: PrivacyPolicyViewControllerDelegate?
 
     private let markdownView: MarkdownView = {
         let mark = MarkdownView()
         mark.isScrollEnabled = true
         return mark
-    }()
-    
-    // MARK: - PrivacyPolicyView
-    private let privacyPolicyView: UIView = {
-        let view = UIView()
-        return view
-    }()
-    
-    private lazy var privacyPolicyButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(privacyPolicyTapped), for: .touchUpInside)
-        return button
-    }()
-
-    private let privacyPolicyCheckBox: UIImageView = {
-        let image = UIImageView()
-        image.image = UIImage(named: "square")?.withRenderingMode(.alwaysTemplate)
-        image.tintColor = MySpecialColors.Gray3
-        return image
-    }()
-    
-    private let privacyPolicyText: UILabel = {
-        let text = UILabel()
-        text.text = "동의합니다."
-        text.textColor = MySpecialColors.Black
-        text.font = UIFont.pretendard(style: .regular, size: 14, isScaled: true)
-        return text
     }()
 
     override func viewDidLoad() {
@@ -56,7 +22,6 @@ class PrivacyPolicyViewController: UIViewController {
 
         setupNavigationBar()
         setupMarkdownView()
-        setupPrivacyPolicyViewUI()
     }
 
     // MARK: - Setup Navigation Bar
@@ -76,7 +41,7 @@ class PrivacyPolicyViewController: UIViewController {
             markdownView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             markdownView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             markdownView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            markdownView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+            markdownView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         let markdownText = """
@@ -141,56 +106,5 @@ class PrivacyPolicyViewController: UIViewController {
                                 }
                                """
         )
-    }
-    
-    private func setupPrivacyPolicyViewUI() {
-        view.addSubview(privacyPolicyView)
-        privacyPolicyView.addSubview(privacyPolicyButton)
-        privacyPolicyButton.addSubviews(privacyPolicyText)
-        privacyPolicyButton.addSubviews(privacyPolicyCheckBox)
-
-        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
-        privacyPolicyButton.translatesAutoresizingMaskIntoConstraints = false
-        privacyPolicyText.translatesAutoresizingMaskIntoConstraints = false
-        privacyPolicyCheckBox.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            privacyPolicyView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60),
-            privacyPolicyView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            privacyPolicyView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            privacyPolicyView.heightAnchor.constraint(equalToConstant: 20),
-            
-            privacyPolicyButton.topAnchor.constraint(equalTo: privacyPolicyView.topAnchor),
-            privacyPolicyButton.leadingAnchor.constraint(equalTo: privacyPolicyView.leadingAnchor),
-            privacyPolicyButton.trailingAnchor.constraint(equalTo: privacyPolicyView.trailingAnchor),
-            privacyPolicyButton.bottomAnchor.constraint(equalTo: privacyPolicyView.bottomAnchor),
-            
-            privacyPolicyText.centerYAnchor.constraint(equalTo: privacyPolicyView.centerYAnchor),
-            privacyPolicyText.trailingAnchor.constraint(equalTo: privacyPolicyCheckBox.trailingAnchor, constant: -34),
-            
-            privacyPolicyCheckBox.centerYAnchor.constraint(equalTo: privacyPolicyButton.centerYAnchor),
-            privacyPolicyCheckBox.trailingAnchor.constraint(equalTo: privacyPolicyButton.trailingAnchor),
-            privacyPolicyCheckBox.heightAnchor.constraint(equalToConstant: 24),
-            privacyPolicyCheckBox.widthAnchor.constraint(equalToConstant: 24),
-        ])
-    }
-    
-    // MARK: - privacyPolicyTapped
-    @objc private func privacyPolicyTapped() {
-         if privacyPolicyCheckBox.image == UIImage(named: "square")?.withRenderingMode(.alwaysTemplate) {
-             privacyPolicyCheckBox.image = UIImage(named: "square-check")?.withRenderingMode(.alwaysTemplate)
-             privacyPolicyCheckBox.tintColor = MySpecialColors.MainColor
-             agree = true
-         } else {
-             privacyPolicyCheckBox.image = UIImage(named: "square")?.withRenderingMode(.alwaysTemplate)
-             privacyPolicyCheckBox.tintColor = MySpecialColors.Gray3
-             agree = false
-         }
-     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        delegate?.didAgreeToPrivacyPolicy(agree)
     }
 }

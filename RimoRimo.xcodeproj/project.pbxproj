@@ -19,9 +19,6 @@
 		0B18084D2C19956B00081B2A /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18084C2C19956B00081B2A /* FirebaseDatabase */; };
 		0B18084F2C19956B00081B2A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0B18084E2C19956B00081B2A /* FirebaseFirestore */; };
 		0B1808512C19956B00081B2A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0B1808502C19956B00081B2A /* FirebaseStorage */; };
-		0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808562C19964C00081B2A /* TextFieldUIFactory.swift */; };
-		0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808572C19964D00081B2A /* AlertUIFactory.swift */; };
-		0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808582C19964D00081B2A /* TabButtonUIFactory.swift */; };
 		0B1808692C19965700081B2A /* Pretendard-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085D2C19965700081B2A /* Pretendard-Medium.ttf */; };
 		0B18086A2C19965700081B2A /* Pretendard-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085E2C19965700081B2A /* Pretendard-Black.ttf */; };
 		0B18086B2C19965700081B2A /* Pretendard-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B18085F2C19965700081B2A /* Pretendard-Regular.ttf */; };
@@ -44,16 +41,27 @@
 		0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808842C19966D00081B2A /* SignUpViewController.swift */; };
 		0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808852C19966D00081B2A /* FindPasswordViewController.swift */; };
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
-		0B4A5B0E2C243B6F000F8DDE /* AlertOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B0A2C243B6E000F8DDE /* AlertOnboarding.swift */; };
-		0B4A5B0F2C243B6F000F8DDE /* AlertOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B0B2C243B6E000F8DDE /* AlertOnly.swift */; };
-		0B4A5B102C243B6F000F8DDE /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B0C2C243B6E000F8DDE /* UIView+.swift */; };
-		0B4A5B112C243B6F000F8DDE /* AlertPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */; };
+		0B4996D92C2AE21500EB2B27 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996D72C2AE21500EB2B27 /* SignupView.swift */; };
+		0B4996DA2C2AE21500EB2B27 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996D82C2AE21500EB2B27 /* LoginView.swift */; };
+		0B4996DD2C2AE27F00EB2B27 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996DC2C2AE27F00EB2B27 /* FirebaseManager.swift */; };
+		0B4996DF2C2AE2AA00EB2B27 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996DE2C2AE2AA00EB2B27 /* UserModel.swift */; };
+		0B4996EC2C2AE30A00EB2B27 /* AlertUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E12C2AE30A00EB2B27 /* AlertUIFactory.swift */; };
+		0B4996ED2C2AE30A00EB2B27 /* TabButtonUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E22C2AE30A00EB2B27 /* TabButtonUIFactory.swift */; };
+		0B4996EE2C2AE30A00EB2B27 /* TextFieldUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E32C2AE30A00EB2B27 /* TextFieldUIFactory.swift */; };
+		0B4996EF2C2AE30A00EB2B27 /* PasswordFieldSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E42C2AE30A00EB2B27 /* PasswordFieldSetup.swift */; };
+		0B4996F02C2AE30A00EB2B27 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E52C2AE30A00EB2B27 /* UIView+.swift */; };
+		0B4996F12C2AE30A00EB2B27 /* AlertOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E62C2AE30A00EB2B27 /* AlertOnly.swift */; };
+		0B4996F22C2AE30A00EB2B27 /* AlertOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E72C2AE30A00EB2B27 /* AlertOnboarding.swift */; };
+		0B4996F32C2AE30A00EB2B27 /* KeyboardTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E82C2AE30A00EB2B27 /* KeyboardTap.swift */; };
+		0B4996F42C2AE30A00EB2B27 /* UIFactory+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E92C2AE30A00EB2B27 /* UIFactory+.swift */; };
+		0B4996F52C2AE30A00EB2B27 /* EmailFieldSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996EA2C2AE30A00EB2B27 /* EmailFieldSetup.swift */; };
+		0B4996F62C2AE30A00EB2B27 /* AlertPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996EB2C2AE30A00EB2B27 /* AlertPaths.swift */; };
+		0B4996F82C2B113A00EB2B27 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B4996F72C2B113A00EB2B27 /* GoogleService-Info.plist */; };
 		0B4A5B172C243E89000F8DDE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808822C19966D00081B2A /* MainViewController.swift */; };
 		0B4A5B1A2C243EDC000F8DDE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B192C243EDC000F8DDE /* Then */; };
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
 		0B555BD62C25DBE2000F62AF /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		0B8782DA2C2720460091FE3D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B8782D92C2720460091FE3D /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -116,9 +124,6 @@
 		0B18082B2C19936D00081B2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0B18082E2C19936D00081B2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0B1808302C19936D00081B2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0B1808562C19964C00081B2A /* TextFieldUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldUIFactory.swift; sourceTree = "<group>"; };
-		0B1808572C19964D00081B2A /* AlertUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertUIFactory.swift; sourceTree = "<group>"; };
-		0B1808582C19964D00081B2A /* TabButtonUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabButtonUIFactory.swift; sourceTree = "<group>"; };
 		0B18085D2C19965700081B2A /* Pretendard-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.ttf"; sourceTree = "<group>"; };
 		0B18085E2C19965700081B2A /* Pretendard-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.ttf"; sourceTree = "<group>"; };
 		0B18085F2C19965700081B2A /* Pretendard-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.ttf"; sourceTree = "<group>"; };
@@ -144,12 +149,23 @@
 		0B1808852C19966D00081B2A /* FindPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
 		0B1808862C19966D00081B2A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
-		0B4A5B0A2C243B6E000F8DDE /* AlertOnboarding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertOnboarding.swift; sourceTree = "<group>"; };
-		0B4A5B0B2C243B6E000F8DDE /* AlertOnly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertOnly.swift; sourceTree = "<group>"; };
-		0B4A5B0C2C243B6E000F8DDE /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
-		0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
+		0B4996D72C2AE21500EB2B27 /* SignupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		0B4996D82C2AE21500EB2B27 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		0B4996DC2C2AE27F00EB2B27 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		0B4996DE2C2AE2AA00EB2B27 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		0B4996E12C2AE30A00EB2B27 /* AlertUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertUIFactory.swift; sourceTree = "<group>"; };
+		0B4996E22C2AE30A00EB2B27 /* TabButtonUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabButtonUIFactory.swift; sourceTree = "<group>"; };
+		0B4996E32C2AE30A00EB2B27 /* TextFieldUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldUIFactory.swift; sourceTree = "<group>"; };
+		0B4996E42C2AE30A00EB2B27 /* PasswordFieldSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordFieldSetup.swift; sourceTree = "<group>"; };
+		0B4996E52C2AE30A00EB2B27 /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		0B4996E62C2AE30A00EB2B27 /* AlertOnly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertOnly.swift; sourceTree = "<group>"; };
+		0B4996E72C2AE30A00EB2B27 /* AlertOnboarding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertOnboarding.swift; sourceTree = "<group>"; };
+		0B4996E82C2AE30A00EB2B27 /* KeyboardTap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardTap.swift; sourceTree = "<group>"; };
+		0B4996E92C2AE30A00EB2B27 /* UIFactory+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFactory+.swift"; sourceTree = "<group>"; };
+		0B4996EA2C2AE30A00EB2B27 /* EmailFieldSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailFieldSetup.swift; sourceTree = "<group>"; };
+		0B4996EB2C2AE30A00EB2B27 /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
+		0B4996F72C2B113A00EB2B27 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../RimoRimo-Refactoring/RimoRimo-Refactoring/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
-		0B8782D92C2720460091FE3D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../리모리모 최종 파이어베이스 키/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -228,6 +244,7 @@
 		0B1808212C19936B00081B2A /* RimoRimo */ = {
 			isa = PBXGroup;
 			children = (
+				0B4996DB2C2AE26C00EB2B27 /* Manager */,
 				119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */,
 				0B1808522C1995D300081B2A /* Resource */,
 				11F836152C1E7E8000711581 /* Model */,
@@ -237,7 +254,7 @@
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
-				0B8782D92C2720460091FE3D /* GoogleService-Info.plist */,
+				0B4996F72C2B113A00EB2B27 /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
@@ -256,7 +273,7 @@
 		0B1808522C1995D300081B2A /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				0B1808552C19963600081B2A /* UIFactory */,
+				0B4996E02C2AE30A00EB2B27 /* UIFactory */,
 				0B1808672C19965700081B2A /* Color */,
 				0B18085C2C19965700081B2A /* Fonts */,
 				0B18082B2C19936D00081B2A /* Assets.xcassets */,
@@ -276,20 +293,6 @@
 				0B1808812C19966D00081B2A /* Main */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		0B1808552C19963600081B2A /* UIFactory */ = {
-			isa = PBXGroup;
-			children = (
-				0B1808572C19964D00081B2A /* AlertUIFactory.swift */,
-				0B1808582C19964D00081B2A /* TabButtonUIFactory.swift */,
-				0B1808562C19964C00081B2A /* TextFieldUIFactory.swift */,
-				0B4A5B0A2C243B6E000F8DDE /* AlertOnboarding.swift */,
-				0B4A5B0B2C243B6E000F8DDE /* AlertOnly.swift */,
-				0B4A5B0D2C243B6F000F8DDE /* AlertPaths.swift */,
-				0B4A5B0C2C243B6E000F8DDE /* UIView+.swift */,
-			);
-			path = UIFactory;
 			sourceTree = "<group>";
 		};
 		0B18085C2C19965700081B2A /* Fonts */ = {
@@ -362,12 +365,47 @@
 		0B1808832C19966D00081B2A /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				0B1808862C19966D00081B2A /* LoginViewController.swift */,
 				0B1808842C19966D00081B2A /* SignUpViewController.swift */,
 				0B1808852C19966D00081B2A /* FindPasswordViewController.swift */,
-				0B1808862C19966D00081B2A /* LoginViewController.swift */,
 				0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		0B4996D62C2AE20300EB2B27 /* AuthViews */ = {
+			isa = PBXGroup;
+			children = (
+				0B4996D82C2AE21500EB2B27 /* LoginView.swift */,
+				0B4996D72C2AE21500EB2B27 /* SignupView.swift */,
+			);
+			path = AuthViews;
+			sourceTree = "<group>";
+		};
+		0B4996DB2C2AE26C00EB2B27 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				0B4996DC2C2AE27F00EB2B27 /* FirebaseManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		0B4996E02C2AE30A00EB2B27 /* UIFactory */ = {
+			isa = PBXGroup;
+			children = (
+				0B4996E12C2AE30A00EB2B27 /* AlertUIFactory.swift */,
+				0B4996E22C2AE30A00EB2B27 /* TabButtonUIFactory.swift */,
+				0B4996E32C2AE30A00EB2B27 /* TextFieldUIFactory.swift */,
+				0B4996E42C2AE30A00EB2B27 /* PasswordFieldSetup.swift */,
+				0B4996E52C2AE30A00EB2B27 /* UIView+.swift */,
+				0B4996E62C2AE30A00EB2B27 /* AlertOnly.swift */,
+				0B4996E72C2AE30A00EB2B27 /* AlertOnboarding.swift */,
+				0B4996E82C2AE30A00EB2B27 /* KeyboardTap.swift */,
+				0B4996E92C2AE30A00EB2B27 /* UIFactory+.swift */,
+				0B4996EA2C2AE30A00EB2B27 /* EmailFieldSetup.swift */,
+				0B4996EB2C2AE30A00EB2B27 /* AlertPaths.swift */,
+			);
+			path = UIFactory;
 			sourceTree = "<group>";
 		};
 		119FEBB82C1C21E700BCC845 /* RimoWidget */ = {
@@ -385,6 +423,7 @@
 		11F836072C1C611E00711581 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B4996D62C2AE20300EB2B27 /* AuthViews */,
 				1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */,
 				1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */,
 				1B2969122C1C2EF400685F5E /* MyAccountTableViewCell.swift */,
@@ -397,6 +436,7 @@
 			isa = PBXGroup;
 			children = (
 				11F836162C1E7E9500711581 /* UserDefaults+.swift */,
+				0B4996DE2C2AE2AA00EB2B27 /* UserModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -510,7 +550,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B8782DA2C2720460091FE3D /* GoogleService-Info.plist in Resources */,
+				0B4996F82C2B113A00EB2B27 /* GoogleService-Info.plist in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
@@ -548,43 +588,51 @@
 				0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */,
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
+				0B4996F32C2AE30A00EB2B27 /* KeyboardTap.swift in Sources */,
 				1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */,
-				0B18085A2C19964D00081B2A /* AlertUIFactory.swift in Sources */,
 				7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */,
 				11F836172C1E7E9500711581 /* UserDefaults+.swift in Sources */,
 				4574B3B52C2559E400B3E161 /* LicenseViewController.swift in Sources */,
 				4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
+				0B4996DF2C2AE2AA00EB2B27 /* UserModel.swift in Sources */,
+				0B4996D92C2AE21500EB2B27 /* SignupView.swift in Sources */,
+				0B4996F12C2AE30A00EB2B27 /* AlertOnly.swift in Sources */,
+				0B4996ED2C2AE30A00EB2B27 /* TabButtonUIFactory.swift in Sources */,
 				1B2969172C1C2EF400685F5E /* SettingTableViewCell.swift in Sources */,
-				0B18085B2C19964D00081B2A /* TabButtonUIFactory.swift in Sources */,
 				0B18088E2C19966D00081B2A /* SetupViewController.swift in Sources */,
-				0B4A5B0E2C243B6F000F8DDE /* AlertOnboarding.swift in Sources */,
-				0B4A5B0F2C243B6F000F8DDE /* AlertOnly.swift in Sources */,
+				0B4996EF2C2AE30A00EB2B27 /* PasswordFieldSetup.swift in Sources */,
+				0B4996EC2C2AE30A00EB2B27 /* AlertUIFactory.swift in Sources */,
 				0B1808712C19965700081B2A /* UIFont.swift in Sources */,
+				0B4996F62C2AE30A00EB2B27 /* AlertPaths.swift in Sources */,
 				0B4A5B172C243E89000F8DDE /* MainViewController.swift in Sources */,
 				0B18088D2C19966D00081B2A /* EditMyPageViewController.swift in Sources */,
 				0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */,
+				0B4996F42C2AE30A00EB2B27 /* UIFactory+.swift in Sources */,
+				0B4996F52C2AE30A00EB2B27 /* EmailFieldSetup.swift in Sources */,
 				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */,
+				0B4996F22C2AE30A00EB2B27 /* AlertOnboarding.swift in Sources */,
 				7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */,
+				0B4996DD2C2AE27F00EB2B27 /* FirebaseManager.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
 				4574B3A42C22AF6800B3E161 /* ResetPasswordViewController.swift in Sources */,
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
-				0B1808592C19964D00081B2A /* TextFieldUIFactory.swift in Sources */,
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
+				0B4996F02C2AE30A00EB2B27 /* UIView+.swift in Sources */,
 				4500E9C62C1C6BFA005BB8DF /* (null) in Sources */,
-				0B4A5B102C243B6F000F8DDE /* UIView+.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,
 				4574B3B92C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift in Sources */,
 				4574B3B32C2556A300B3E161 /* AppInfoViewController.swift in Sources */,
+				0B4996EE2C2AE30A00EB2B27 /* TextFieldUIFactory.swift in Sources */,
+				0B4996DA2C2AE21500EB2B27 /* LoginView.swift in Sources */,
 				0B1808892C19966D00081B2A /* CalenderDeatailViewController.swift in Sources */,
 				0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */,
 				11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */,
 				1B2969182C1C2EF400685F5E /* MarimoCollectionButton.swift in Sources */,
-				0B4A5B112C243B6F000F8DDE /* AlertPaths.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

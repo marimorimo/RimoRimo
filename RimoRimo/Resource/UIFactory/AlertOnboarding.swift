@@ -2,7 +2,7 @@
 //  AlertOnboarding.swift
 //  MarimoMainTimer
 //
-//  Created by 밀가루 on 6/20/24.
+//  Created by wxxd-fxrest on 6/20/24.
 //
 
 import UIKit
