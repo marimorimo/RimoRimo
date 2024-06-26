@@ -546,6 +546,7 @@ class EditMyPageViewController: UIViewController {
     
     // Edit NickName
     private var isNickNameEdited = false
+    private var isNicknameAvailable: Bool = false
     
     private func setupNickName() {
         editNickName.delegate = self
@@ -556,7 +557,7 @@ class EditMyPageViewController: UIViewController {
             isNickNameEdited = true
         }
     }
-    private var isNicknameAvailable: Bool = false
+    
     @objc private func duplicateCheckButtonTapped() {
         nickNameErrorMessage.isHidden = true
         nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
@@ -712,11 +713,6 @@ class EditMyPageViewController: UIViewController {
     var selectedProfileImageName: String?
     
     @objc private func confirmButtonTapped() {
-        
-        guard self.isNicknameAvailable else {
-            print("Nickname is not available")
-            return
-        }
         
         guard let uid = Auth.auth().currentUser?.uid else {
             print("User not authenticated")
@@ -919,7 +915,7 @@ extension EditMyPageViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.placeholder = ""
         textField.textColor = MySpecialColors.Gray4
-        confirmButton.isEnabled = false
+
         if textField == editNickName {
             nameDoubleCheckButton.layer.borderColor = MySpecialColors.MainColor.cgColor
             nameDoubleCheckButton.titleLabel?.textColor = MySpecialColors.MainColor
@@ -927,6 +923,7 @@ extension EditMyPageViewController: UITextFieldDelegate {
             nameAlertTextLabel.isHidden = false
             nameAlertTextLabel.text = "중복확인을 진행해주세요."
             nameAlertTextLabel.textColor = MySpecialColors.Red
+            
             confirmButton.isEnabled = false
             confirmButton.backgroundColor = MySpecialColors.Gray2
         }
@@ -953,7 +950,7 @@ extension EditMyPageViewController: UITextFieldDelegate {
             } else {
                 nameAlertTextLabel.isHidden = true
                 textField.placeholder = "닉네임을 입력해 주세요"
-                confirmButton.isEnabled = false
+                confirmButton.isEnabled = true
                 confirmButton.backgroundColor = MySpecialColors.Gray2
             }
             nameDoubleCheckButton.layer.borderColor = MySpecialColors.Gray3.cgColor
@@ -965,6 +962,7 @@ extension EditMyPageViewController: UITextFieldDelegate {
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         }
+        
     }
     @objc private func textFieldDidChange(_ notification: Notification) {
         guard let textField = notification.object as? UITextField else {
