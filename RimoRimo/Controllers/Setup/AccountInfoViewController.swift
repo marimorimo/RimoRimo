@@ -516,6 +516,20 @@ class AccountInfoViewController: UIViewController {
         let studySessionsCollectionRef = userDocRef.collection("study-sessions")
         let toodoListCollectionRef = userDocRef.collection("todo-list")
         
+        UserDefaults.standard.removeObject(forKey: self.saveAutoLoginInfo)
+        UserDefaults.standard.removeObject(forKey: self.START_TIME_KEY)
+        UserDefaults.standard.removeObject(forKey: self.STOP_TIME_KEY)
+        UserDefaults.standard.removeObject(forKey: self.COUNTING_KEY)
+
+        let defaults = UserDefaults.standard
+        for key in defaults.dictionaryRepresentation().keys {
+            defaults.removeObject(forKey: key)
+        }
+
+        defaults.synchronize()
+
+        print("UserDefaults deleted successfully")
+        
         // Step 1: Delete all documents in the 'study-sessions'
         studySessionsCollectionRef.getDocuments { (querySnapshot, error) in
             if let error = error {
@@ -589,16 +603,6 @@ class AccountInfoViewController: UIViewController {
                                     }
                                     completion(error)
                                 } else {
-                                    print("deleted successfully.")
-                                    UserDefaults.standard.removeObject(forKey: self.saveAutoLoginInfo)
-                                    UserDefaults.standard.removeObject(forKey: self.START_TIME_KEY)
-                                    UserDefaults.standard.removeObject(forKey: self.STOP_TIME_KEY)
-                                    UserDefaults.standard.removeObject(forKey: self.COUNTING_KEY)
-                                    
-                                    UserDefaults.shared.dictionaryRepresentation().keys.forEach { key in
-                                        UserDefaults.shared.removeObject(forKey: key)
-                                    }
-                                    
                                     completion(nil)
                                     
                                     print("Document successfully removed from Firestore")

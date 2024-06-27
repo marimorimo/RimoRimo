@@ -61,6 +61,7 @@
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
 		0B555BD62C25DBE2000F62AF /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0BA29DB82C2D29D2007E38F3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BA29DB72C2D29D2007E38F3 /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -88,10 +89,8 @@
 		4574B3B32C2556A300B3E161 /* AppInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B22C2556A300B3E161 /* AppInfoViewController.swift */; };
 		4574B3B52C2559E400B3E161 /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B42C2559E400B3E161 /* LicenseViewController.swift */; };
 		4574B3B92C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B82C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift */; };
-		45AC6F4C2C2AA24D00CE2347 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45AC6F4B2C2AA24D00CE2347 /* GoogleService-Info.plist */; };
 		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
-		78EC4CF42C2C4F500043F8F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78EC4CF32C2C4F500043F8F8 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +165,7 @@
 		0B4996EA2C2AE30A00EB2B27 /* EmailFieldSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailFieldSetup.swift; sourceTree = "<group>"; };
 		0B4996EB2C2AE30A00EB2B27 /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
 		0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
+		0BA29DB72C2D29D2007E38F3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Firebase Key RimoRimo-Refactoring/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -190,7 +190,6 @@
 		4574B3B22C2556A300B3E161 /* AppInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoViewController.swift; sourceTree = "<group>"; };
 		4574B3B42C2559E400B3E161 /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
 		4574B3B82C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPrivacyPolicyViewController.swift; sourceTree = "<group>"; };
-		78EC4CF32C2C4F500043F8F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,9 +254,8 @@
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
-				78EC4CF32C2C4F500043F8F8 /* GoogleService-Info.plist */,
+				0BA29DB72C2D29D2007E38F3 /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
-				45AC6F4B2C2AA24D00CE2347 /* GoogleService-Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
 			path = RimoRimo;
@@ -552,7 +550,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78EC4CF42C2C4F500043F8F8 /* GoogleService-Info.plist in Resources */,
+				0BA29DB82C2D29D2007E38F3 /* GoogleService-Info.plist in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,

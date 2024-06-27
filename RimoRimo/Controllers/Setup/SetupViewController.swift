@@ -176,14 +176,20 @@ class SetupViewController: UIViewController {
         do {
             try Auth.auth().signOut()
             // 로그아웃 후 저장된 로그인 정보 삭제
-            UserDefaults.standard.removeObject(forKey: saveAutoLoginInfo)
-            UserDefaults.standard.removeObject(forKey: START_TIME_KEY)
-            UserDefaults.standard.removeObject(forKey: STOP_TIME_KEY)
-            UserDefaults.standard.removeObject(forKey: COUNTING_KEY)
+            UserDefaults.standard.removeObject(forKey: self.saveAutoLoginInfo)
+            UserDefaults.standard.removeObject(forKey: self.START_TIME_KEY)
+            UserDefaults.standard.removeObject(forKey: self.STOP_TIME_KEY)
+            UserDefaults.standard.removeObject(forKey: self.COUNTING_KEY)
 
-            UserDefaults.shared.dictionaryRepresentation().keys.forEach { key in
-                UserDefaults.shared.removeObject(forKey: key)
+            let defaults = UserDefaults.standard
+            for key in defaults.dictionaryRepresentation().keys {
+                defaults.removeObject(forKey: key)
             }
+
+            defaults.synchronize()
+
+            print("UserDefaults deleted successfully")
+            
             WidgetCenter.shared.reloadAllTimelines()
 
             // 로그인 화면으로 이동

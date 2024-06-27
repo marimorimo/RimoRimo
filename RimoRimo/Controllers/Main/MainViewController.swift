@@ -17,6 +17,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let userDefaults = UserDefaults.standard
     private var activityIndicator: UIActivityIndicatorView!
     
+    private let defaults = UserDefaults.standard
+
     // MARK: - Firebase Properties
     private let db = Firestore.firestore()
     private let auth = Auth.auth()
@@ -166,6 +168,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         super.viewDidLoad()
         view.backgroundColor = MySpecialColors.Gray1
         
+        checkUserDefaults()
+      
         formatter.dateFormat = "yyyy-MM-dd"
         
         notificationCenter.delegate = self
@@ -191,6 +195,14 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             self.checkAndResetTimerIfNeeded()
             self.updateImageView()
             self.hideLoadingIndicator()
+        }
+    }
+    
+    private func checkUserDefaults() {
+        let userDefaultsDictionary = defaults.dictionaryRepresentation()
+
+        for (key, value) in userDefaultsDictionary {
+            print("userDefaultsDictionary \(key): \(value)")
         }
     }
     
