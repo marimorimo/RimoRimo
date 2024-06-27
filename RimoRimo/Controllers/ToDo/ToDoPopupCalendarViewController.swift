@@ -82,8 +82,8 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         
         setupContent()
         updateHeaderTitle(for: mainCalendar.currentPage)
-        
-        fetchLastSelectedDateFromFirebase()
+        selectTodayDateIfNecessary()
+//        fetchLastSelectedDateFromFirebase()
         
         tapBackground()
 
@@ -169,11 +169,7 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         myCalendar.appearance.titleDefaultColor = MySpecialColors.Black
         myCalendar.appearance.titleWeekendColor = MySpecialColors.Black
         
-        if let lastSelectedDate = lastSelectedDate {
-            myCalendar.select(lastSelectedDate)
-            myCalendar.setCurrentPage(lastSelectedDate, animated: true)
-            updateHeaderTitle(for: lastSelectedDate)
-        }
+        selectTodayDateIfNecessary()
     }
     
     
@@ -242,7 +238,7 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
         }
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
+        formatter.dateFormat = "yyyy.MM.dd.EEE"
         let day = formatter.string(from: selectedDate)
         
         Firestore.firestore()
@@ -257,28 +253,38 @@ class ToDoPopupCalendarViewController: UIViewController, FSCalendarDelegate,FSCa
             }
     }
     
-    var lastSelectedDate: Date?
-    private let db = Firestore.firestore()
-    // Firebase Fetch
-    private func fetchLastSelectedDateFromFirebase() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("User not authenticated")
-            return
+    var todayDate: String? {
+        didSet {
+            selectTodayDateIfNecessary()
         }
-        
-        let userDocRef = db.collection("user-info").document(uid)
-        userDocRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                if let selectedTimestamp = document.data()?["day"] as? Timestamp {
-                    let selectedDate = selectedTimestamp.dateValue()
-                    self.lastSelectedDate = selectedDate
-                    self.mainCalendar.select(selectedDate)
-                    self.mainCalendar.setCurrentPage(selectedDate, animated: true)
-                    self.updateHeaderTitle(for: selectedDate)
-                }
+    }
+    
+    private func selectTodayDateIfNecessary() {
+        print("확인확인확인: \(String(describing: self.todayDate))")
+        if let todayDateString = todayDate {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ko_KR")
+            formatter.dateFormat = "yyyy.MM.dd.EEE"
+            
+            if let selectedDate = formatter.date(from: todayDateString) {
+                mainCalendar.select(selectedDate)
+                mainCalendar.setCurrentPage(selectedDate, animated: true)
+                updateHeaderTitle(for: selectedDate)
             } else {
-                print("Document does not exist")
+                print("Invalid date format for todayDate")
+                // 선택되지 않은 경우 기본적으로 오늘 날짜를 선택하도록 설정
+                let today = Date()
+                mainCalendar.select(today)
+                mainCalendar.setCurrentPage(today, animated: true)
+                updateHeaderTitle(for: today)
             }
+        } else {
+            print("todayDate is nil or empty")
+            // 선택되지 않은 경우 기본적으로 오늘 날짜를 선택하도록 설정
+            let today = Date()
+            mainCalendar.select(today)
+            mainCalendar.setCurrentPage(today, animated: true)
+            updateHeaderTitle(for: today)
         }
     }
     
