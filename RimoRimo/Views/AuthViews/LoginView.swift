@@ -181,7 +181,6 @@ class LoginView: UIView {
     
     private func setupActivityIndicator() {
         activityIndicator.color = MySpecialColors.MainColor
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         activityIndicator.snp.makeConstraints {
             $0.centerX.equalToSuperview()

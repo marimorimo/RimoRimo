@@ -195,35 +195,58 @@ class SignupViewController: UIViewController {
     }
     
     @objc private func privacyPolicyButtonTapped() {
-        let isCircle = signupView.checkIconButton.currentImage == UIImage(systemName: "circle")
-        let newImage = isCircle ? "checkmark.circle.fill" : "circle"
-        isPrivacyPolicyChecked = true
+        isPrivacyPolicyChecked.toggle()
+        
+        let newImage = isPrivacyPolicyChecked ? "checkmark.circle.fill" : "circle"
         signupView.checkIconButton.setImage(UIImage(systemName: newImage), for: .normal)
-        signupView.checkIconButton.tintColor = MySpecialColors.MainColor
+        signupView.checkIconButton.tintColor = isPrivacyPolicyChecked ? MySpecialColors.MainColor : MySpecialColors.Gray3
+        
         signupViewDidChangeTextFields()
     }
     
     @objc private func signButtonTapped() {
         signupView.activityIndicator.startAnimating()
+        
         guard let email = signupView.emailFieldSetup.textField.text,
-               let password = signupView.passwordFieldSetup.textField.text,
-               let nickname = signupView.nicknameFieldSetup.textField.text else {
-             return
-         }
-                  
-        FirebaseManager.shared.registerUser(email: email, password: password, nickname: nickname, isPrivacyPolicyChecked: isPrivacyPolicyChecked) { success, error in
+              let password = signupView.passwordFieldSetup.textField.text,
+              let nickname = signupView.nicknameFieldSetup.textField.text else {
+            return
+        }
+        
+        let isNicknameValid = validateNickname(nickname)
+        let isEmailValid = validateEmail(email)
+        let isPasswordValid = validatePassword(password)
+        let isCheckPasswordValid = checkPasswordMatch()
+        
+        // Determine if privacy policy is checked
+        let isEnabled = isNicknameValid && isEmailValid && isPasswordValid && isCheckPasswordValid && isPrivacyPolicyChecked && isNicknameChecked && isEmailChecked
+
+        if isEnabled {
+            FirebaseManager.shared.registerUser(email: email, password: password, nickname: nickname, isPrivacyPolicyChecked: isPrivacyPolicyChecked) { success, error in
+                self.signupView.activityIndicator.stopAnimating()
+                
+                if let error = error {
+                    self.alertOnly.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.", in: self)
+                    print("회원가입 실패 \(error.localizedDescription)")
+                    self.signupView.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
+                    return
+                }
+                
+                self.alertOnly.setAlertView(title: "회원가입 성공", subTitle: "로그인을 시도해 주세요.", in: self)
+                self.alertOnly.completionHandler = {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        } else {
             self.signupView.activityIndicator.stopAnimating()
-             if let error = error {
-                 self.alertOnly.setAlertView(title: "회원가입 실패", subTitle: "다시 시도해 주세요.", in: self)
-                 print("회원가입 실패 \(error.localizedDescription)")
-                 self.signupView.activityIndicator.stopAnimating() // 실패 시 로딩 인디케이터를 멈춤
-                 return
-             }
-            self.alertOnly.setAlertView(title: "회원가입 성공", subTitle: "로그인을 시도해 주세요.", in: self)
-             self.alertOnly.completionHandler = {
-                 self.navigationController?.popViewController(animated: true)
-             }
-         }
+            self.alertOnly.setAlertView(title: "필수", subTitle: "필수 사항을 모두 확인해 주세요.", in: self)
+            signupViewDidChangeNicknameField()
+            signupViewDidChangeEmailField()
+            signupViewDidChangePasswordField()
+            signupViewDidChangeCheckPasswordField()
+            signupViewDidChangeCheckPasswordField()
+            print("회원가입 조건이 충족되지 않음")
+        }
     }
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -280,49 +303,150 @@ extension SignupViewController: UITextFieldDelegate {
 }
 
 extension SignupViewController: SignupViewDelegate {
-    // 교체 해야 함
+    func signupViewDidChangeNicknameField() {
+        guard let nickname = signupView.nicknameFieldSetup.textField.text else {
+            return
+        }
+        
+        if nickname.isEmpty {
+            // 닉네임 입력 필드가 비어있을 때
+            signupView.alertNicknameTextLabel.text = "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요."
+            signupView.alertNicknameTextLabel.textColor = MySpecialColors.Gray3
+        } else if !isNicknameChecked {
+            signupView.alertNicknameTextLabel.text = "닉네임 중복 확인을 진행해 주세요."
+            signupView.alertNicknameTextLabel.textColor = MySpecialColors.Gray3
+        } else if !validateNickname(nickname) {
+            // 닉네임이 유효하지 않을 때
+            signupView.alertNicknameTextLabel.text = "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요."
+            signupView.alertNicknameTextLabel.textColor = MySpecialColors.Red
+        }
+        signupViewDidChangeTextFields()
+    }
+ 
+    func signupViewDidChangeEmailField() {
+        guard let email = signupView.emailFieldSetup.textField.text else {
+            return
+        }
+        
+        if email.isEmpty {
+            // 이메일 입력 필드가 비어있을 때
+            signupView.alertEmailTextLabel.text = "예시) email@gmail.com"
+            signupView.alertEmailTextLabel.textColor = MySpecialColors.Gray3
+        } else if !isEmailChecked {
+            signupView.alertEmailTextLabel.text = "이메일 중복 확인을 진행해 주세요."
+            signupView.alertEmailTextLabel.textColor = MySpecialColors.Gray3
+        } else if !validateEmail(email) {
+            // 이메일 형식이 유효하지 않을 때
+            signupView.alertEmailTextLabel.text = "이메일 형식을 확인해 주세요."
+            signupView.alertEmailTextLabel.textColor = MySpecialColors.Red
+        }
+        signupViewDidChangeTextFields()
+    }
+    
+    func signupViewDidChangePasswordField() {
+        guard let password = signupView.passwordFieldSetup.textField.text else {
+            return
+        }
+        
+        if password.isEmpty {
+            // 비밀번호 입력 필드가 비어있을 때
+            signupView.alertPasswordTextLabel.text = "비밀번호는 대소문자와 숫자를 포함하여 8~16자여야 합니다."
+            signupView.alertPasswordTextLabel.textColor = MySpecialColors.Gray3
+        } else if !validatePassword(password) {
+            // 비밀번호 형식이 유효하지 않을 때
+            signupView.alertPasswordTextLabel.text = "비밀번호는 대소문자와 숫자를 포함하여 8~16자여야 합니다."
+            signupView.alertPasswordTextLabel.textColor = MySpecialColors.Red
+        } else {
+            // 유효한 비밀번호인 경우
+            signupView.alertPasswordTextLabel.text = "사용할 수 있는 비밀번호입니다."
+            signupView.alertPasswordTextLabel.textColor = MySpecialColors.MainColor
+        }
+        signupViewDidChangeTextFields()
+    }
+    
+    func signupViewDidChangeCheckPasswordField() {
+        guard let password = signupView.passwordFieldSetup.textField.text else {
+            return
+        }
+        
+        guard let checkPassword = signupView.checkPasswordFieldSetup.textField.text else {
+            return
+        }
+        
+        if !password.isEmpty && validatePassword(password) {
+            if checkPassword.isEmpty {
+                // 비밀번호 확인 입력 필드가 비어있을 때
+                signupView.alertCheckPasswordTextLabel.text = "비밀번호를 확인해 주세요."
+                signupView.alertCheckPasswordTextLabel.textColor = MySpecialColors.Gray3
+            } else if !checkPasswordMatch() {
+                // 비밀번호 확인이 일치하지 않을 때
+                signupView.alertCheckPasswordTextLabel.text = "비밀번호가 일치하지 않습니다."
+                signupView.alertCheckPasswordTextLabel.textColor = MySpecialColors.Red
+            } else {
+                // 비밀번호 확인이 일치할 때
+                signupView.alertCheckPasswordTextLabel.text = "비밀번호가 일치합니다."
+                signupView.alertCheckPasswordTextLabel.textColor = MySpecialColors.MainColor
+            }
+        } else {
+            signupView.checkPasswordFieldSetup.textField.text = ""
+            signupView.alertCheckPasswordTextLabel.text = "비밀번호 입력 후 진행해 주세요."
+            signupView.alertCheckPasswordTextLabel.textColor = MySpecialColors.Red
+        }
+        signupViewDidChangeTextFields()
+    }
+       
+    func signupViewDidChangeTextFields() {
+        guard let nickname = signupView.nicknameFieldSetup.textField.text, !nickname.isEmpty else {
+            updateSignupButton(enabled: false)
+            return
+        }
+        
+        guard let email = signupView.emailFieldSetup.textField.text, !email.isEmpty else {
+            updateSignupButton(enabled: false)
+            return
+        }
+        
+        guard let password = signupView.passwordFieldSetup.textField.text, !password.isEmpty else {
+            updateSignupButton(enabled: false)
+            return
+        }
+        
+        guard let checkPassword = signupView.checkPasswordFieldSetup.textField.text, !checkPassword.isEmpty else {
+            updateSignupButton(enabled: false)
+            return
+        }
+        guard let checkPassword = signupView.checkPasswordFieldSetup.textField.text, !checkPassword.isEmpty else {
+            updateSignupButton(enabled: false)
+            return
+        }
+        
+//        private var isNicknameChecked = false
+//        private var isEmailChecked = false
+//        private var isPrivacyPolicyChecked = false
+        
+        let isNicknameValid = validateNickname(nickname)
+        let isEmailValid = validateEmail(email)
+        let isPasswordValid = validatePassword(password)
+        let isCheckPasswordValid = checkPasswordMatch()
+        
+        let isEnabled = isNicknameValid && isEmailValid && isPasswordValid && isCheckPasswordValid && isPrivacyPolicyChecked && isNicknameChecked && isEmailChecked
+        
+        updateSignupButton(enabled: isEnabled)
+    }
+
+    private func updateSignupButton(enabled: Bool) {
+        DispatchQueue.main.async {
+            self.signupView.signupButton.isEnabled = enabled
+            self.signupView.signupButton.backgroundColor = enabled ? MySpecialColors.MainColor : MySpecialColors.Gray3
+        }
+    }
+
+    
     func privacyPolicyStackViewDidTap() {
         let privacyPolicyVC = PrivacyPolicyViewController()
         navigationController?.pushViewController(privacyPolicyVC, animated: true)
     }
-    
-    func signupViewDidChangeTextFields() {
-        let nicknameValid = !signupView.nicknameFieldSetup.textField.text!.isEmpty
-        let emailValid = !signupView.emailFieldSetup.textField.text!.isEmpty
-        let passwordValid = !signupView.passwordFieldSetup.textField.text!.isEmpty
-        let checkPasswordValid = !signupView.checkPasswordFieldSetup.textField.text!.isEmpty
-        let isNicknameChecked = self.isNicknameChecked
-        let isEmailChecked = self.isEmailChecked
-        let isPrivacyPolicyChecked = self.isPrivacyPolicyChecked
-        let isPasswordValid = validatePassword(signupView.passwordFieldSetup.textField.text ?? "")
-        let doPasswordsMatch = checkPasswordMatch()
-        
-        var isEnabled = nicknameValid && emailValid && passwordValid && checkPasswordValid && isNicknameChecked && isEmailChecked && isPasswordValid && doPasswordsMatch && isPrivacyPolicyChecked
-        
-        if !isPasswordValid {
-            signupView.configureAlert(for: signupView.alertPasswordTextLabel, text: "비밀번호는 최소 하나의 대문자, 소문자, 숫자를 포함해야 하며 8~16자여야 합니다.", textColor: MySpecialColors.Red)
-            isEnabled = false
-        } else {
-            signupView.configureAlert(for: signupView.alertPasswordTextLabel, text: "사용할 수 있는 비밀번호 입니다.", textColor: MySpecialColors.MainColor)
-            
-            if !doPasswordsMatch {
-                signupView.configureAlert(for: signupView.alertCheckPasswordTextLabel, text: "비밀번호가 일치하지 않습니다.", textColor: MySpecialColors.Red)
-                isEnabled = false
-            } else {
-                signupView.configureAlert(for: signupView.alertCheckPasswordTextLabel, text: "비밀번호가 일치합니다.", textColor: MySpecialColors.MainColor)
-            }
-        }
-        
-        DispatchQueue.main.async {
-            self.signupView.signupButton.isEnabled = isEnabled
-            if isEnabled {
-                self.signupView.signupButton.backgroundColor = MySpecialColors.MainColor
-            } else {
-                self.signupView.signupButton.backgroundColor = MySpecialColors.Gray3
-            }
-        }
-    }
-    
+
     // MARK: - Validation Methods
     private func validateNickname(_ nickname: String) -> Bool {
         // - 2 to 8 Korean characters (가-힣)
