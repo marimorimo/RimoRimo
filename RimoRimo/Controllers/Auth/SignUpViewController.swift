@@ -126,7 +126,7 @@ class SignupViewController: UIViewController {
         
         guard validateNickname(nickname) else {
             DispatchQueue.main.async {
-                self.signupView.alertNicknameTextLabel.text = "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요."
+                self.signupView.alertNicknameTextLabel.text = "닉네임은 한글/영어/숫자 2~8자로 입력해 주세요."
                 self.signupView.alertNicknameTextLabel.textColor = MySpecialColors.Red
             }
             return
@@ -218,7 +218,6 @@ class SignupViewController: UIViewController {
         let isPasswordValid = validatePassword(password)
         let isCheckPasswordValid = checkPasswordMatch()
         
-        // Determine if privacy policy is checked
         let isEnabled = isNicknameValid && isEmailValid && isPasswordValid && isCheckPasswordValid && isPrivacyPolicyChecked && isNicknameChecked && isEmailChecked
 
         if isEnabled {
@@ -310,14 +309,14 @@ extension SignupViewController: SignupViewDelegate {
         
         if nickname.isEmpty {
             // 닉네임 입력 필드가 비어있을 때
-            signupView.alertNicknameTextLabel.text = "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요."
+            signupView.alertNicknameTextLabel.text = "닉네임은 한글/영어/숫자 2~8자로 입력해 주세요."
             signupView.alertNicknameTextLabel.textColor = MySpecialColors.Gray3
         } else if !isNicknameChecked {
             signupView.alertNicknameTextLabel.text = "닉네임 중복 확인을 진행해 주세요."
             signupView.alertNicknameTextLabel.textColor = MySpecialColors.Gray3
         } else if !validateNickname(nickname) {
             // 닉네임이 유효하지 않을 때
-            signupView.alertNicknameTextLabel.text = "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요."
+            signupView.alertNicknameTextLabel.text = "닉네임은 한글/영어/숫자 2~8자로 입력해 주세요."
             signupView.alertNicknameTextLabel.textColor = MySpecialColors.Red
         }
         signupViewDidChangeTextFields()
@@ -419,11 +418,7 @@ extension SignupViewController: SignupViewDelegate {
             updateSignupButton(enabled: false)
             return
         }
-        
-//        private var isNicknameChecked = false
-//        private var isEmailChecked = false
-//        private var isPrivacyPolicyChecked = false
-        
+
         let isNicknameValid = validateNickname(nickname)
         let isEmailValid = validateEmail(email)
         let isPasswordValid = validatePassword(password)
@@ -441,7 +436,6 @@ extension SignupViewController: SignupViewDelegate {
         }
     }
 
-    
     func privacyPolicyStackViewDidTap() {
         let privacyPolicyVC = PrivacyPolicyViewController()
         navigationController?.pushViewController(privacyPolicyVC, animated: true)
@@ -449,10 +443,11 @@ extension SignupViewController: SignupViewDelegate {
 
     // MARK: - Validation Methods
     private func validateNickname(_ nickname: String) -> Bool {
-        // - 2 to 8 Korean characters (가-힣)
-        // - 4 to 16 English characters (a-zA-Z) or numbers (0-9)
-        let nicknameRegex = "^(?:[가-힣a-zA-Z0-9]{2,8}|(?=.*[a-zA-Z0-9]{4,16}$)[a-zA-Z0-9가-힣&&[^@#$%^&*()!{}\\[\\]\'./;,+=]]{4,16})$"
-        return NSPredicate(format: "SELF MATCHES %@", nicknameRegex).evaluate(with: nickname)
+        let forbiddenCharacters = "[!@#$%^&*()_+|}{\\[\\]\\\\;'\":.,/?><]"
+        let nicknameRegex = "^[가-힣a-zA-Z0-9]{2,8}$"
+        let noForbiddenCharacters = NSPredicate(format: "SELF MATCHES %@", forbiddenCharacters).evaluate(with: nickname) == false
+        let isValidFormat = NSPredicate(format: "SELF MATCHES %@", nicknameRegex).evaluate(with: nickname)
+        return isValidFormat && noForbiddenCharacters
     }
     
     private func validateEmail(_ email: String) -> Bool {
