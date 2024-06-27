@@ -237,6 +237,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         addSnapshotListener(for: selectedDate)
+        popupCalendarVC.todayDate = editDate.text
         popupCalendarVC.modalPresentationStyle = .overCurrentContext
         present(popupCalendarVC, animated: true, completion: nil)
     }
@@ -458,7 +459,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let currentDate = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateFormatter.dateFormat = "yyyy.MM.dd"
+        dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
         self.editDate.text = dateFormatter.string(from: currentDate)
     }
     
