@@ -65,7 +65,7 @@ class SignupView: UIView {
         )
     }
 
-    lazy var alertNicknameTextLabel: UILabel = makeAlertLabel(text: "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요.", textColor: MySpecialColors.Gray3)
+    lazy var alertNicknameTextLabel: UILabel = makeAlertLabel(text: "닉네임은 한글/영어/숫자 2~8자로 입력해 주세요.", textColor: MySpecialColors.Gray3)
     lazy var alertEmailTextLabel: UILabel = makeAlertLabel(text: "예시) email@gmail.com", textColor: MySpecialColors.Gray3)
     lazy var alertPasswordTextLabel: UILabel = makeAlertLabel(text: "비밀번호는 최소 하나의 대문자, 소문자, 숫자를 포함해야 하며 8~16자여야 합니다.", textColor: MySpecialColors.Gray3)
     lazy var alertCheckPasswordTextLabel: UILabel = makeAlertLabel(text: "비밀번호를 다시 한번 확인해 주세요.", textColor: MySpecialColors.Gray3)
