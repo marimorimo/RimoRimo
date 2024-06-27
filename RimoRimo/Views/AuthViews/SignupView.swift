@@ -11,7 +11,10 @@ import Then
 
 protocol SignupViewDelegate: AnyObject {
     func privacyPolicyStackViewDidTap()
-    func signupViewDidChangeTextFields()
+    func signupViewDidChangeNicknameField()
+    func signupViewDidChangeEmailField()
+    func signupViewDidChangePasswordField()
+    func signupViewDidChangeCheckPasswordField()
 }
 
 class SignupView: UIView {
@@ -62,13 +65,13 @@ class SignupView: UIView {
         )
     }
 
-    lazy var alertNicknameTextLabel: UILabel = makeAlertLabel(text: "닉네임은 한글 2~8자 또는 영어 4~16자로 입력해주세요.", textColor: MySpecialColors.Gray3)
+    lazy var alertNicknameTextLabel: UILabel = makeAlertLabel(text: "닉네임은 한글/숫자 2~8자 또는 영어/숫자 4~16자로 입력해주세요.", textColor: MySpecialColors.Gray3)
     lazy var alertEmailTextLabel: UILabel = makeAlertLabel(text: "예시) email@gmail.com", textColor: MySpecialColors.Gray3)
     lazy var alertPasswordTextLabel: UILabel = makeAlertLabel(text: "비밀번호는 최소 하나의 대문자, 소문자, 숫자를 포함해야 하며 8~16자여야 합니다.", textColor: MySpecialColors.Gray3)
     lazy var alertCheckPasswordTextLabel: UILabel = makeAlertLabel(text: "비밀번호를 다시 한번 확인해 주세요.", textColor: MySpecialColors.Gray3)
     
     lazy var checkIconButton = UIFactory_.makeImageButton(image: "circle", tintColor: MySpecialColors.Gray3)
-    private lazy var privacyPolicyLabel = UIFactory_.makeLabel(text: "[필수] 개인정보 처리 방침 확인하기", textColor: MySpecialColors.Black, font: UIFont.pretendard(style: .regular, size: 12, isScaled: true), textAlignment: .center)
+    private lazy var privacyPolicyLabel = UIFactory_.makeLabel(text: "[필수] 개인정보 처리 방침 확인하기", textColor: MySpecialColors.Black, font: UIFont.pretendard(style: .regular, size: 14, isScaled: true), textAlignment: .center)
     private lazy var arrowIcon = UIFactory_.makeImageButton(image: "chevron.right", tintColor: MySpecialColors.MainColor)
     
     private lazy var privacyPolicyStack: UIStackView = UIFactory_.makeStackView(
@@ -180,20 +183,21 @@ class SignupView: UIView {
         
         setAlertLabelConstraints(label: alertCheckPasswordTextLabel, topView: checkPasswordFieldSetup, topOffset: 6)
         
-        nicknameFieldSetup.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        emailFieldSetup.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        passwordFieldSetup.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        checkPasswordFieldSetup.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        nicknameFieldSetup.textField.addTarget(self, action: #selector(nicknameFieldDidChange), for: .editingChanged)
+        emailFieldSetup.textField.addTarget(self, action: #selector(emailFieldDidChange), for: .editingChanged)
+        passwordFieldSetup.textField.addTarget(self, action: #selector(passwordFieldDidChange), for: .editingChanged)
+        checkPasswordFieldSetup.textField.addTarget(self, action: #selector(checkPasswordFieldDidChange), for: .editingChanged)
     }
     
     private func setupPrivacyPolicyViewUI() {
         privacyPolicyStack.snp.makeConstraints {
             $0.bottom.equalTo(bottomView.snp.top).offset(-20)
             $0.leading.trailing.equalToSuperview().inset(38)
+            $0.height.equalTo(30)
         }
         
         checkIconButton.snp.makeConstraints {
-            $0.width.equalTo(24)
+            $0.width.equalTo(28)
         }
         
         arrowIcon.snp.makeConstraints {
@@ -222,7 +226,6 @@ class SignupView: UIView {
     
     private func setupActivityIndicator() {
         activityIndicator.color = MySpecialColors.MainColor
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         activityIndicator.snp.makeConstraints {
             $0.centerX.equalToSuperview()
@@ -257,9 +260,21 @@ class SignupView: UIView {
     func privacyPolicyButtonTarget(_ target: Any?, action: Selector, for event: UIControl.Event) {
         checkIconButton.addTarget(target, action: action, for: event)
     }
-    
-    @objc private func textFieldDidChange() {
-        delegate?.signupViewDidChangeTextFields()
+
+    @objc private func nicknameFieldDidChange() {
+        delegate?.signupViewDidChangeNicknameField()
+    }
+
+    @objc private func emailFieldDidChange() {
+        delegate?.signupViewDidChangeEmailField()
+    }
+
+    @objc private func passwordFieldDidChange() {
+        delegate?.signupViewDidChangePasswordField()
+    }
+
+    @objc private func checkPasswordFieldDidChange() {
+        delegate?.signupViewDidChangeCheckPasswordField()
     }
     
     @objc private func handlePrivacyPolicyStackTapped() {
