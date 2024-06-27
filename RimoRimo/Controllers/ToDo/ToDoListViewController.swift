@@ -257,22 +257,36 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
+
+        let todoData = [
+            "todoText": todoText,
+            "success": false
+        ] as [String : Any]
         
-        Firestore.firestore()
-            .collection("user-info")
-            .document(uid)
-            .collection("todo-list")
-            .document(day)
-            .collection("sub-collection")
-            .addDocument(data: ["todo": todoText, "date": Timestamp(date: Date()), "completed": false]) { [weak self] error in
-                if let error = error {
-                    print("Error saving ToDo: \(error.localizedDescription)")
-                } else {
-                    print("ToDo가 성공적으로 저장되었습니다.")
-                    self?.textField.text = ""
-                    self?.loadTodos(for: self?.selectedDate ?? Date())
-                }
-            }
+        let docRef = Firestore.firestore()
+                    .collection("user-info")
+                    .document(uid)
+                    .collection("todo-list")
+                    .document(day)
+
+                docRef.updateData(["todos": FieldValue.arrayUnion([todoData])]) { [weak self] error in
+                        if let error = error {
+                            print("Error saving ToDo: \(error.localizedDescription)")
+                            docRef.setData(["todos": [todoData]]) { error2 in
+                                if let error2 = error2 {
+                                    print("Error saving ToDo: \(error2.localizedDescription)")
+                                } else {
+                                    print("ToDo가 성공적으로 저장되었습니다.")
+                                    self?.textField.text = ""
+                                    self?.loadTodos(for: self?.selectedDate ?? Date())
+                                }
+                            }
+                        } else {
+                            print("ToDo가 성공적으로 저장되었습니다.")
+                            self?.textField.text = ""
+                            self?.loadTodos(for: self?.selectedDate ?? Date())
+                        }
+                    }
     }
     
     @objc func saveEditedText(_ sender: UIButton) {
@@ -281,8 +295,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func saveEditedText(at indexPath: IndexPath) {
-        let todo = todos[indexPath.row]
-        guard let documentId = todo["id"] as? String else { return }
         let updatedText = (tableView.cellForRow(at: indexPath) as? ToDoTableViewCell)?.textField.text ?? ""
         
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
@@ -303,15 +315,15 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
+
+        todos[indexPath.row]["todoText"] = updatedText
         
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
             .collection("todo-list")
             .document(day)
-            .collection("sub-collection")
-            .document(documentId)
-            .updateData(["todo": updatedText]) { [weak self] error in
+            .updateData(["todos": todos]) { [weak self] error in
                 if let error = error {
                     print("Error updating todo text: \(error.localizedDescription)")
                 } else {
@@ -332,15 +344,15 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let rowIndex = sender.tag
         let todo = todos[rowIndex]
-        let isCompleted = todo["completed"] as? Bool ?? false
-        let updatedStatus = !isCompleted
+        let success = todo["success"] as? Bool ?? false
+        let updatedStatus = !success
         
-        todos[rowIndex]["completed"] = updatedStatus
+        todos[rowIndex]["success"] = updatedStatus
         
-        updateCompletionStatus(todoIndex: rowIndex, isCompleted: updatedStatus)
+        updateCompletionStatus(todoIndex: rowIndex, success: updatedStatus)
         
         if let cell = tableView.cellForRow(at: IndexPath(row: rowIndex, section: 0)) as? ToDoTableViewCell {
-            cell.configure(with: todos[rowIndex]["todo"] as? String ?? "", isCompleted: updatedStatus, index: rowIndex, target: self)
+            cell.configure(with: todos[rowIndex]["todoText"] as? String ?? "", success: updatedStatus, index: rowIndex, target: self)
         }
     }
     
@@ -392,23 +404,20 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             .document(uid)
             .collection("todo-list")
             .document(day)
-            .collection("sub-collection")
-            .order(by: "date", descending: false)
         
         self.listener = collectionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
-                self.todos.removeAll()
-                for document in querySnapshot!.documents {
-                    var todoData = document.data()
-                    todoData["id"] = document.documentID
-                    self.todos.append(todoData)
+                    guard let self = self else { return }
+                    if let error = error {
+                        print("Error getting documents: \(error)")
+                    } else {
+                        self.todos.removeAll()
+                        if let document = querySnapshot, document.exists {
+                            var todoData = document.data()
+                            self.todos.append(contentsOf: todoData?["todos"] as? [[String: Any]] ?? [])
+                        }
+                        self.tableView.reloadData()
+                    }
                 }
-                self.tableView.reloadData()
-            }
-        }
     }
     
     func loadTodos(for date: Date) {
@@ -416,7 +425,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         addSnapshotListener(for: selectedDate)
     }
     
-    func updateCompletionStatus(todoIndex: Int, isCompleted: Bool) {
+    func updateCompletionStatus(todoIndex: Int, success: Bool) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("User not authenticated")
             return
@@ -426,20 +435,16 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         formatter.dateFormat = "yyyy-MM-dd"
         let day = formatter.string(from: selectedDate)
         
-        let todo = todos[todoIndex]
-        guard let documentId = todo["id"] as? String else {
-            print("Document ID not found")
-            return
-        }
+        var todo = todos[todoIndex]
+        todo["success"] = success
+        todos[todoIndex] = todo
         
         Firestore.firestore()
             .collection("user-info")
             .document(uid)
             .collection("todo-list")
             .document(day)
-            .collection("sub-collection")
-            .document(documentId)
-            .updateData(["completed": isCompleted]) { [weak self] error in
+            .updateData(["todos": todos]) { [weak self] error in
                 if let error = error {
                     print("Error updating completion status: \(error.localizedDescription)")
                 } else {
@@ -450,28 +455,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func fetchDateData() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        Firestore.firestore().collection("user-info").document(uid).getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                
-                // Update Date
-                if let timestamp = data?["day"] as? Timestamp {
-                    let date = timestamp.dateValue()
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd.EEE"
-                    self.editDate.text = dateFormatter.string(from: date)
-                } else {
-                    let currentDate = Date()
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.locale = Locale(identifier: "ko_KR")
-                    dateFormatter.dateFormat = "yyyy.MM.dd"
-                    self.editDate.text = dateFormatter.string(from: currentDate)
-                }
-            }
-        }
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        self.editDate.text = dateFormatter.string(from: currentDate)
     }
     
     @objc func dismissKeyboard() {
@@ -504,12 +492,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             return UITableViewCell()
         }
         let todo = todos[indexPath.row]
-        let todoText = todo["todo"] as? String ?? ""
+        let todoText = todo["todoText"] as? String ?? ""
         
-        let isCompleted = todo["completed"] as? Bool ?? false
-        cell.configure(with: todoText, isCompleted: isCompleted, index: indexPath.row, target: self)
+        let success = todo["success"] as? Bool ?? false
+        cell.configure(with: todoText, success: success, index: indexPath.row, target: self)
         
-        if isCompleted == false {
+        if success == false {
             todolistArr.append(todoText)
         }
         UserDefaults.shared.set(todolistArr, forKey: "\(self.selectedDate.onlyDate)")
@@ -539,7 +527,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoTableViewCell else { return }
         let todo = todos[indexPath.row]
-        guard let todoText = todo["todo"] as? String else { return }
+        guard let todoText = todo["todoText"] as? String else { return }
         cell.setEditMode(todoText: todoText, target: self)
         
         editingIndexPath = indexPath
@@ -558,8 +546,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
             guard let self = self else { return }
-            let todo = self.todos[indexPath.row]
-            guard let documentId = todo["id"] as? String else { return }
             guard let uid = Auth.auth().currentUser?.uid else {
                 print("User not authenticated")
                 return
@@ -568,6 +554,13 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             let day = formatter.string(from: self.selectedDate)
+
+            guard indexPath.row < todos.count else {
+                print("Index out of range")
+                return
+            }
+
+            self.todos.remove(at: indexPath.row)
             
             // Firestore에서 데이터를 삭제합니다.
             Firestore.firestore()
@@ -575,9 +568,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
                 .document(uid)
                 .collection("todo-list")
                 .document(day)
-                .collection("sub-collection")
-                .document(documentId)
-                .delete { [weak self] error in
+                .updateData(["todos": self.todos]) { [weak self] error in
                     guard let self = self else { return }
                     if let error = error {
                         print("Error deleting todo: \(error.localizedDescription)")
@@ -660,9 +651,9 @@ class ToDoTableViewCell: UITableViewCell {
         }
     }
     
-    func configure(with todoText: String, isCompleted: Bool, index: Int, target: Any) {
+    func configure(with todoText: String, success: Bool, index: Int, target: Any) {
         todoTextLabel.text = todoText
-        toggleButton.setImage(UIImage(named: isCompleted ? "Group 583" : "Group 582"), for: .normal)
+        toggleButton.setImage(UIImage(named: success ? "Group 583" : "Group 582"), for: .normal)
         toggleButton.tag = index
         toggleButton.addTarget(target, action: #selector(ToDoListViewController.toggleButtonTapped(_:)), for: .touchUpInside)
     }
