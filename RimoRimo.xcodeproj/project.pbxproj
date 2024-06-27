@@ -88,6 +88,7 @@
 		4574B3B32C2556A300B3E161 /* AppInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B22C2556A300B3E161 /* AppInfoViewController.swift */; };
 		4574B3B52C2559E400B3E161 /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B42C2559E400B3E161 /* LicenseViewController.swift */; };
 		4574B3B92C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4574B3B82C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift */; };
+		45AC6F4C2C2AA24D00CE2347 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45AC6F4B2C2AA24D00CE2347 /* GoogleService-Info.plist */; };
 		7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808942C19968400081B2A /* TabBarViewController.swift */; };
 		7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808772C19966D00081B2A /* ToDoListViewController.swift */; };
 		78EC4CF42C2C4F500043F8F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78EC4CF32C2C4F500043F8F8 /* GoogleService-Info.plist */; };
@@ -256,6 +257,7 @@
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
 				78EC4CF32C2C4F500043F8F8 /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
+				45AC6F4B2C2AA24D00CE2347 /* GoogleService-Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
 			path = RimoRimo;
