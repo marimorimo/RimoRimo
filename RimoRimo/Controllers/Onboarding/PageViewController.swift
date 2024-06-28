@@ -12,6 +12,7 @@ class PageViewController: UIPageViewController {
         $0.pageIndicatorTintColor = .systemGray2
         $0.numberOfPages = 5
         $0.currentPage = self.initialPage
+        $0.isEnabled = false
     }
     let initialPage = 0
 
