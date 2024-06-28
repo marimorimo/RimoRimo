@@ -68,6 +68,7 @@ extension OnboardingViewController {
     @objc 
     private func moveToLogin() {
         let vc = LoginViewController()
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(vc)
+        let navController = UINavigationController(rootViewController: vc)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(navController)
     }
 }
