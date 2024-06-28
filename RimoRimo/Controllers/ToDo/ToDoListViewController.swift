@@ -116,6 +116,8 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         // Save Button Setup
         saveButton = UIButton(type: .system)
         saveButton.setImage(UIImage(named: "add-plus-circle"), for: .normal)
+        saveButton.contentHorizontalAlignment = .fill
+        saveButton.contentVerticalAlignment = .fill
         saveButton.tintColor = MySpecialColors.MainColor
         view.addSubview(saveButton)
         
@@ -164,7 +166,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
             make.leading.equalTo(view).offset(26)
             make.trailing.equalTo(view).offset(-26)
-            make.height.equalTo(40)
+            make.height.equalTo(30)
         }
         
         imageView.snp.makeConstraints { make in
@@ -183,13 +185,13 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         saveButton.snp.makeConstraints { make in
-            make.width.equalTo(40)
+            make.width.equalTo(30)
         }
         
         tableView.snp.makeConstraints { make in
             make.top.equalTo(editDate.snp.bottom).offset(20)
-            make.leading.equalTo(view)
-            make.trailing.equalTo(view)
+            make.leading.equalTo(view).offset(14)
+            make.trailing.equalTo(view).offset(-16)
             make.bottom.equalTo(textFieldStack.snp.top).offset(-20)
         }
     }
