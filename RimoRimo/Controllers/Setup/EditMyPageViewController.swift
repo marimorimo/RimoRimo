@@ -578,7 +578,7 @@ class EditMyPageViewController: UIViewController {
         
         guard isValidNicknameFormat(nickname) else {
             nameAlertTextLabel.isHidden = false
-            nameAlertTextLabel.text = "닉네임 형식이 올바르지 않습니다."
+            nameAlertTextLabel.text = "닉네임은 한글/영어/숫자 2~8자로 입력해 주세요."
             nameAlertTextLabel.textColor = MySpecialColors.Red
             self.isNicknameAvailable = false
             updateConfirmButtonState()
