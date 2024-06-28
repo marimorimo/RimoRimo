@@ -61,7 +61,6 @@
 		0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */; };
 		0B4A5B282C248525000F8DDE /* MarkdownView in Frameworks */ = {isa = PBXBuildFile; productRef = 0B4A5B272C248525000F8DDE /* MarkdownView */; };
 		0B555BD62C25DBE2000F62AF /* RimoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		0BA29DB82C2D29D2007E38F3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BA29DB72C2D29D2007E38F3 /* GoogleService-Info.plist */; };
 		119FEBB52C1C21E700BCC845 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB42C1C21E600BCC845 /* WidgetKit.framework */; };
 		119FEBB72C1C21E700BCC845 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119FEBB62C1C21E700BCC845 /* SwiftUI.framework */; };
 		119FEBBA2C1C21E700BCC845 /* RimoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119FEBB92C1C21E700BCC845 /* RimoWidgetBundle.swift */; };
@@ -72,6 +71,9 @@
 		119FEBD12C1C22C300BCC845 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 119FEBD02C1C22C300BCC845 /* Assets.xcassets */; };
 		11BDE4622C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */; };
 		11BDE4632C24916D00BC0E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */; };
+		11CC27322C2D8FE9009B6B3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11CC27312C2D8FE9009B6B3F /* GoogleService-Info.plist */; };
+		11CC27352C2EA2B7009B6B3F /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC27342C2EA2B7009B6B3F /* PageViewController.swift */; };
+		11CC27372C2EA2F8009B6B3F /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11CC27362C2EA2F8009B6B3F /* OnboardingViewController.swift */; };
 		11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */; };
 		11F836042C1C5DEE00711581 /* SelectMarimoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */; };
 		11F836142C1E7E6700711581 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F836132C1E7E6700711581 /* Color.swift */; };
@@ -165,7 +167,6 @@
 		0B4996EA2C2AE30A00EB2B27 /* EmailFieldSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailFieldSetup.swift; sourceTree = "<group>"; };
 		0B4996EB2C2AE30A00EB2B27 /* AlertPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPaths.swift; sourceTree = "<group>"; };
 		0B4A5B242C2478B3000F8DDE /* PrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyViewController.swift; sourceTree = "<group>"; };
-		0BA29DB72C2D29D2007E38F3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Firebase Key RimoRimo-Refactoring/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		119FEBB32C1C21E600BCC845 /* RimoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RimoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		119FEBB42C1C21E600BCC845 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		119FEBB62C1C21E700BCC845 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -176,6 +177,9 @@
 		119FEBD42C1C23F900BCC845 /* RimoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		119FEBD52C1C240F00BCC845 /* RimoRimo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RimoRimo.entitlements; sourceTree = "<group>"; };
 		11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		11CC27312C2D8FE9009B6B3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		11CC27342C2EA2B7009B6B3F /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
+		11CC27362C2EA2F8009B6B3F /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		11F836012C1C5DEE00711581 /* PopupCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupCalendarViewController.swift; sourceTree = "<group>"; };
 		11F836022C1C5DEE00711581 /* SelectMarimoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectMarimoViewController.swift; sourceTree = "<group>"; };
 		11F836132C1E7E6700711581 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
@@ -254,8 +258,8 @@
 				0B1808242C19936B00081B2A /* SceneDelegate.swift */,
 				0B1808262C19936B00081B2A /* ViewController.swift */,
 				0B18082D2C19936D00081B2A /* LaunchScreen.storyboard */,
-				0BA29DB72C2D29D2007E38F3 /* GoogleService-Info.plist */,
 				0B1808302C19936D00081B2A /* Info.plist */,
+				11CC27312C2D8FE9009B6B3F /* GoogleService-Info.plist */,
 				11BDE4612C24916D00BC0E8C /* PrivacyInfo.xcprivacy */,
 			);
 			path = RimoRimo;
@@ -285,6 +289,7 @@
 			isa = PBXGroup;
 			children = (
 				0B1808942C19968400081B2A /* TabBarViewController.swift */,
+				11CC27332C2D90A8009B6B3F /* Onboarding */,
 				0B1808832C19966D00081B2A /* Auth */,
 				0B1808752C19966D00081B2A /* Calender */,
 				7844EF6C2C1B651C00F29A86 /* ToDo */,
@@ -420,6 +425,15 @@
 			path = RimoWidget;
 			sourceTree = "<group>";
 		};
+		11CC27332C2D90A8009B6B3F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				11CC27342C2EA2B7009B6B3F /* PageViewController.swift */,
+				11CC27362C2EA2F8009B6B3F /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		11F836072C1C611E00711581 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -550,7 +564,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BA29DB82C2D29D2007E38F3 /* GoogleService-Info.plist in Resources */,
+				11CC27322C2D8FE9009B6B3F /* GoogleService-Info.plist in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
@@ -586,6 +600,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */,
+				11CC27352C2EA2B7009B6B3F /* PageViewController.swift in Sources */,
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
 				0B4996F32C2AE30A00EB2B27 /* KeyboardTap.swift in Sources */,
@@ -621,6 +636,7 @@
 				0B18088F2C19966D00081B2A /* MyPageViewController.swift in Sources */,
 				0B1808872C19966D00081B2A /* DatePickerModalViewController.swift in Sources */,
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
+				11CC27372C2EA2F8009B6B3F /* OnboardingViewController.swift in Sources */,
 				0B4996F02C2AE30A00EB2B27 /* UIView+.swift in Sources */,
 				4500E9C62C1C6BFA005BB8DF /* (null) in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
