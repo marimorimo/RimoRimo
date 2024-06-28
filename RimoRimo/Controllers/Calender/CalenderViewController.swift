@@ -378,11 +378,11 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 if let grayImage = UIImage(named: "Gray") {
                     marimoImageView.image = grayImage
                     marimoImageView.backgroundColor = .clear
-                    print("빈 데이터에 회색 미생물 추가.")
+//                    print("빈 데이터에 회색 미생물 추가.")
                 } else {
                     marimoImageView.image = nil
                     marimoImageView.backgroundColor = .clear
-                    print("회색 이미지 없음.")
+//                    print("회색 이미지 없음.")
                 }
             }
             
