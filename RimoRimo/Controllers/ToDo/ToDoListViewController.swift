@@ -185,7 +185,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         saveButton.snp.makeConstraints { make in
-            make.width.equalTo(30)
+            make.width.height.equalTo(30)
         }
         
         tableView.snp.makeConstraints { make in
@@ -678,6 +678,7 @@ class ToDoTableViewCell: UITableViewCell {
         
         saveButton = UIButton(type: .system)
         saveButton.setImage(UIImage(named: "edit-pencil-01"), for: .normal)
+        
         saveButton.tintColor = MySpecialColors.MainColor
         saveButton.addTarget(target, action: #selector(ToDoListViewController.saveEditedText(_:)), for: .touchUpInside)
         saveButton.tag = toggleButton.tag
