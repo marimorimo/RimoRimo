@@ -35,8 +35,6 @@ extension PageViewController {
 
         scrollView?.delegate = self
 
-        pageControl.addTarget(self, action: #selector(pageControlTapped), for: .valueChanged)
-
         for i in 1...5 {
             let page = OnboardingViewController(imageName: "Onboarding-\(i)", isLast: i == 5)
             pages.append(page)
@@ -116,14 +114,6 @@ extension PageViewController: UIPageViewControllerDelegate {
     }
 
     private func animateControlsIfNeeded() {
-//        let lastPage = pageControl.currentPage == pages.count - 1
-//
-//        if lastPage {
-//            hideControls()
-//        } else {
-//            showControls()
-//        }
-
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.5, delay: 0, options: [.curveEaseOut], animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
@@ -135,14 +125,5 @@ extension PageViewController: UIPageViewControllerDelegate {
 
     private func showControls() {
         pageControl.isHidden = false
-    }
-}
-
-// MARK: - Actions
-
-extension PageViewController {
-    @objc func pageControlTapped(_ sender: UIPageControl) {
-        setViewControllers([pages[sender.currentPage]], direction: .forward, animated: true, completion: nil)
-        animateControlsIfNeeded()
     }
 }
