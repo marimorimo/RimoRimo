@@ -528,6 +528,13 @@ class AccountInfoViewController: UIViewController {
 
         defaults.synchronize()
 
+        let defaultsShared = UserDefaults.shared
+        for key in defaultsShared.dictionaryRepresentation().keys {
+            defaultsShared.removeObject(forKey: key)
+        }
+
+        defaultsShared.synchronize()
+
         print("UserDefaults deleted successfully")
         
         // Step 1: Delete all documents in the 'study-sessions'
