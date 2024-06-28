@@ -186,6 +186,12 @@ class SetupViewController: UIViewController {
                 defaults.removeObject(forKey: key)
             }
 
+            let defaultsShared = UserDefaults.shared
+            for key in defaultsShared.dictionaryRepresentation().keys {
+                defaults.removeObject(forKey: key)
+            }
+            UserDefaults.shared.set(true, forKey: "isNotInitial")
+
             defaults.synchronize()
 
             print("UserDefaults deleted successfully")
