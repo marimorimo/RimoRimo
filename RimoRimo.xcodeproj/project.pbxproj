@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B02ABF52C2F3AB30047305D /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02ABF32C2F3AB30047305D /* FirebaseAuthManager.swift */; };
+		0B02ABF62C2F3AB30047305D /* FirebaseMainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02ABF42C2F3AB30047305D /* FirebaseMainManager.swift */; };
+		0B02ABFC2C2F3B110047305D /* SuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02ABF82C2F3B100047305D /* SuccessView.swift */; };
+		0B02ABFD2C2F3B110047305D /* AnimationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02ABF92C2F3B110047305D /* AnimationHelper.swift */; };
+		0B02ABFE2C2F3B110047305D /* MarimoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02ABFA2C2F3B110047305D /* MarimoView.swift */; };
+		0B02ABFF2C2F3B110047305D /* StopwatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02ABFB2C2F3B110047305D /* StopwatchView.swift */; };
+		0B02AC012C2F3F110047305D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B02AC002C2F3F110047305D /* GoogleService-Info.plist */; };
+		0B02AC032C2F441A0047305D /* ActivityIndicatorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B02AC022C2F441A0047305D /* ActivityIndicatorHelper.swift */; };
 		0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808222C19936B00081B2A /* AppDelegate.swift */; };
 		0B1808252C19936B00081B2A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808242C19936B00081B2A /* SceneDelegate.swift */; };
 		0B1808272C19936B00081B2A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808262C19936B00081B2A /* ViewController.swift */; };
@@ -43,7 +51,6 @@
 		0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1808862C19966D00081B2A /* LoginViewController.swift */; };
 		0B4996D92C2AE21500EB2B27 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996D72C2AE21500EB2B27 /* SignupView.swift */; };
 		0B4996DA2C2AE21500EB2B27 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996D82C2AE21500EB2B27 /* LoginView.swift */; };
-		0B4996DD2C2AE27F00EB2B27 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996DC2C2AE27F00EB2B27 /* FirebaseManager.swift */; };
 		0B4996DF2C2AE2AA00EB2B27 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996DE2C2AE2AA00EB2B27 /* UserModel.swift */; };
 		0B4996EC2C2AE30A00EB2B27 /* AlertUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E12C2AE30A00EB2B27 /* AlertUIFactory.swift */; };
 		0B4996ED2C2AE30A00EB2B27 /* TabButtonUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4996E22C2AE30A00EB2B27 /* TabButtonUIFactory.swift */; };
@@ -120,6 +127,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B02ABF32C2F3AB30047305D /* FirebaseAuthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAuthManager.swift; sourceTree = "<group>"; };
+		0B02ABF42C2F3AB30047305D /* FirebaseMainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseMainManager.swift; sourceTree = "<group>"; };
+		0B02ABF82C2F3B100047305D /* SuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessView.swift; sourceTree = "<group>"; };
+		0B02ABF92C2F3B110047305D /* AnimationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
+		0B02ABFA2C2F3B110047305D /* MarimoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarimoView.swift; sourceTree = "<group>"; };
+		0B02ABFB2C2F3B110047305D /* StopwatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopwatchView.swift; sourceTree = "<group>"; };
+		0B02AC002C2F3F110047305D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0B02AC022C2F441A0047305D /* ActivityIndicatorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorHelper.swift; sourceTree = "<group>"; };
 		0B1808222C19936B00081B2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B1808242C19936B00081B2A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0B1808262C19936B00081B2A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -153,7 +168,6 @@
 		0B1808942C19968400081B2A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		0B4996D72C2AE21500EB2B27 /* SignupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		0B4996D82C2AE21500EB2B27 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		0B4996DC2C2AE27F00EB2B27 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		0B4996DE2C2AE2AA00EB2B27 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		0B4996E12C2AE30A00EB2B27 /* AlertUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertUIFactory.swift; sourceTree = "<group>"; };
 		0B4996E22C2AE30A00EB2B27 /* TabButtonUIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabButtonUIFactory.swift; sourceTree = "<group>"; };
@@ -225,6 +239,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B02ABF72C2F3B080047305D /* MainVews */ = {
+			isa = PBXGroup;
+			children = (
+				0B02ABF92C2F3B110047305D /* AnimationHelper.swift */,
+				0B02ABFA2C2F3B110047305D /* MarimoView.swift */,
+				0B02ABFB2C2F3B110047305D /* StopwatchView.swift */,
+				0B02ABF82C2F3B100047305D /* SuccessView.swift */,
+			);
+			path = MainVews;
+			sourceTree = "<group>";
+		};
 		0B1808162C19936A00081B2A = {
 			isa = PBXGroup;
 			children = (
@@ -390,7 +415,8 @@
 		0B4996DB2C2AE26C00EB2B27 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				0B4996DC2C2AE27F00EB2B27 /* FirebaseManager.swift */,
+				0B02ABF32C2F3AB30047305D /* FirebaseAuthManager.swift */,
+				0B02ABF42C2F3AB30047305D /* FirebaseMainManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -409,6 +435,7 @@
 				0B4996E92C2AE30A00EB2B27 /* UIFactory+.swift */,
 				0B4996EA2C2AE30A00EB2B27 /* EmailFieldSetup.swift */,
 				0B4996EB2C2AE30A00EB2B27 /* AlertPaths.swift */,
+				0B02AC022C2F441A0047305D /* ActivityIndicatorHelper.swift */,
 			);
 			path = UIFactory;
 			sourceTree = "<group>";
@@ -437,6 +464,7 @@
 		11F836072C1C611E00711581 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B02ABF72C2F3B080047305D /* MainVews */,
 				0B4996D62C2AE20300EB2B27 /* AuthViews */,
 				1B2969152C1C2EF400685F5E /* BlockedUITableViewCell.swift */,
 				1B2969142C1C2EF400685F5E /* MarimoCollectionButton.swift */,
@@ -564,7 +592,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78EC4CF82C2EC7AC0043F8F8 /* GoogleService-Info.plist in Resources */,
 				0B1808722C19965700081B2A /* Pretendard-Light.ttf in Resources */,
 				0B18086F2C19965700081B2A /* Pretendard-ExtraBold.ttf in Resources */,
 				0B18086E2C19965700081B2A /* Pretendard-SemiBold.ttf in Resources */,
@@ -602,11 +629,14 @@
 				0B4A5B252C2478B3000F8DDE /* PrivacyPolicyViewController.swift in Sources */,
 				11CC27352C2EA2B7009B6B3F /* PageViewController.swift in Sources */,
 				0B1808932C19966D00081B2A /* LoginViewController.swift in Sources */,
+				0B02ABF52C2F3AB30047305D /* FirebaseAuthManager.swift in Sources */,
+				0B02ABFC2C2F3B110047305D /* SuccessView.swift in Sources */,
 				0B18088A2C19966D00081B2A /* CalenderViewController.swift in Sources */,
 				0B4996F32C2AE30A00EB2B27 /* KeyboardTap.swift in Sources */,
 				1B2969162C1C2EF400685F5E /* MyAccountTableViewCell.swift in Sources */,
 				7863C0D82C1CC62000D91E8C /* TabBarViewController.swift in Sources */,
 				11F836172C1E7E9500711581 /* UserDefaults+.swift in Sources */,
+				0B02AC032C2F441A0047305D /* ActivityIndicatorHelper.swift in Sources */,
 				4574B3B52C2559E400B3E161 /* LicenseViewController.swift in Sources */,
 				4500E9CE2C1DD0A0005BB8DF /* ToDoPopupCalendarViewController.swift in Sources */,
 				0B1808272C19936B00081B2A /* ViewController.swift in Sources */,
@@ -623,13 +653,14 @@
 				0B4A5B172C243E89000F8DDE /* MainViewController.swift in Sources */,
 				0B18088D2C19966D00081B2A /* EditMyPageViewController.swift in Sources */,
 				0B1808912C19966D00081B2A /* SignUpViewController.swift in Sources */,
+				0B02ABF62C2F3AB30047305D /* FirebaseMainManager.swift in Sources */,
 				0B4996F42C2AE30A00EB2B27 /* UIFactory+.swift in Sources */,
+				0B02ABFF2C2F3B110047305D /* StopwatchView.swift in Sources */,
 				0B4996F52C2AE30A00EB2B27 /* EmailFieldSetup.swift in Sources */,
 				0B18088B2C19966D00081B2A /* ToDoDetailViewController.swift in Sources */,
 				11F836032C1C5DEE00711581 /* PopupCalendarViewController.swift in Sources */,
 				0B4996F22C2AE30A00EB2B27 /* AlertOnboarding.swift in Sources */,
 				7863C0D92C1CC62400D91E8C /* ToDoListViewController.swift in Sources */,
-				0B4996DD2C2AE27F00EB2B27 /* FirebaseManager.swift in Sources */,
 				0B1808232C19936B00081B2A /* AppDelegate.swift in Sources */,
 				0B1808732C19965700081B2A /* UIColor.swift in Sources */,
 				4574B3A42C22AF6800B3E161 /* ResetPasswordViewController.swift in Sources */,
@@ -638,7 +669,9 @@
 				0B18088C2C19966D00081B2A /* AccountInfoViewController.swift in Sources */,
 				11CC27372C2EA2F8009B6B3F /* OnboardingViewController.swift in Sources */,
 				0B4996F02C2AE30A00EB2B27 /* UIView+.swift in Sources */,
+				0B02ABFD2C2F3B110047305D /* AnimationHelper.swift in Sources */,
 				4500E9C62C1C6BFA005BB8DF /* (null) in Sources */,
+				0B02ABFE2C2F3B110047305D /* MarimoView.swift in Sources */,
 				0B1808922C19966D00081B2A /* FindPasswordViewController.swift in Sources */,
 				1B2969192C1C2EF400685F5E /* BlockedUITableViewCell.swift in Sources */,
 				4574B3B92C255AC600B3E161 /* InfoPrivacyPolicyViewController.swift in Sources */,

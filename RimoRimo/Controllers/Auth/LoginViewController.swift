@@ -11,7 +11,7 @@ import FirebaseAuth
 class LoginViewController: UIViewController {
     
     private let loginView = LoginView()
-    private let firebaseManager = FirebaseManager.shared
+    private let firebaseAuthManager = FirebaseAuthManager.shared
     private let userModel = UserModel.shared
     
     override func loadView() {
@@ -91,7 +91,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        firebaseManager.signIn(withEmail: email, password: password) { [weak self] authResult, error in
+        firebaseAuthManager.signIn(withEmail: email, password: password) { [weak self] authResult, error in
             DispatchQueue.main.async {
                 self?.loginView.activityIndicator.stopAnimating()
             }

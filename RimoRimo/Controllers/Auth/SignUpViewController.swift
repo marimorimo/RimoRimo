@@ -16,7 +16,7 @@ protocol SignupViewControllerDelegate: AnyObject {
 class SignupViewController: UIViewController {
     
     private let signupView = SignupView()
-    private let firebaseManager = FirebaseManager.shared
+    private let firebaseAuthManager = FirebaseAuthManager.shared
     private let userModel = UserModel.shared
     
     private let alertOnly = AlertOnly()
@@ -132,7 +132,7 @@ class SignupViewController: UIViewController {
             return
         }
         
-        firebaseManager.checkNicknameExists(nickname: nickname) { [weak self] exists, error in
+        firebaseAuthManager.checkNicknameExists(nickname: nickname) { [weak self] exists, error in
             DispatchQueue.main.async {
                 if let error = error {
                     self?.signupView.alertNicknameTextLabel.text = "닉네임 확인 중 오류가 발생했습니다: \(error.localizedDescription)"
@@ -171,7 +171,7 @@ class SignupViewController: UIViewController {
             return
         }
         
-        firebaseManager.checkEmailExists(email) { [weak self] exists, error in
+        firebaseAuthManager.checkEmailExists(email) { [weak self] exists, error in
             DispatchQueue.main.async {
                 if let error = error {
                     self?.signupView.alertEmailTextLabel.text = "이메일 확인 중 오류가 발생했습니다: \(error.localizedDescription)"
@@ -221,7 +221,7 @@ class SignupViewController: UIViewController {
         let isEnabled = isNicknameValid && isEmailValid && isPasswordValid && isCheckPasswordValid && isPrivacyPolicyChecked && isNicknameChecked && isEmailChecked
 
         if isEnabled {
-            FirebaseManager.shared.registerUser(email: email, password: password, nickname: nickname, isPrivacyPolicyChecked: isPrivacyPolicyChecked) { success, error in
+            firebaseAuthManager.registerUser(email: email, password: password, nickname: nickname, isPrivacyPolicyChecked: isPrivacyPolicyChecked) { success, error in
                 self.signupView.activityIndicator.stopAnimating()
                 
                 if let error = error {
