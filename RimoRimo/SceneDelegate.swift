@@ -20,7 +20,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         let marimoViewController: UIViewController
-        
+
+        guard UserDefaults.shared.bool(forKey: "isNotInitial") else {
+            marimoViewController = PageViewController(transitionStyle: .scroll,
+                                                      navigationOrientation: .horizontal)
+            window?.rootViewController = marimoViewController
+            window?.makeKeyAndVisible()
+            return
+        }
+
         if let userEmail = UserDefaults.standard.string(forKey: saveAutoLoginInfo), !userEmail.isEmpty {
             marimoViewController = TabBarViewController()
             window?.rootViewController = marimoViewController

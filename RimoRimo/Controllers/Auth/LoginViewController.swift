@@ -136,6 +136,8 @@ class LoginViewController: UIViewController {
     private func navigateToTabBar() {
         let vc = TabBarViewController()
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(vc)
+
+        UserDefaults.shared.set(true, forKey: "isNotInitial")
     }
 }
 
