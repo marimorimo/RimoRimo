@@ -72,7 +72,12 @@ class SignupView: UIView {
     
     lazy var checkIconButton = UIFactory_.makeImageButton(image: "circle", tintColor: MySpecialColors.Gray3)
     private lazy var privacyPolicyLabel = UIFactory_.makeLabel(text: "[필수] 개인정보 처리 방침 확인하기", textColor: MySpecialColors.Black, font: UIFont.pretendard(style: .regular, size: 14, isScaled: true), textAlignment: .center)
-    private lazy var arrowIcon = UIFactory_.makeImageButton(image: "chevron.right", tintColor: MySpecialColors.MainColor)
+    
+    private lazy var arrowIcon: UIImageView = UIImageView().then {
+         $0.image = UIImage(systemName: "chevron.right")
+         $0.contentMode = .scaleAspectFit
+         $0.tintColor = MySpecialColors.MainColor
+     }
     
     private lazy var privacyPolicyStack: UIStackView = UIFactory_.makeStackView(
         arrangedSubviews: [checkIconButton, privacyPolicyLabel, arrowIcon],
@@ -201,7 +206,7 @@ class SignupView: UIView {
         }
         
         arrowIcon.snp.makeConstraints {
-            $0.width.equalTo(24)
+            $0.height.equalTo(24)
         }
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handlePrivacyPolicyStackTapped))
