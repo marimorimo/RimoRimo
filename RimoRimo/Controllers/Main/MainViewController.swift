@@ -115,6 +115,11 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         super.viewWillDisappear(animated)
         AnimationHelper.removeBouncingAnimation(from: imageView)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
 
     // MARK: - setup Buttons
     private func setupButtons() {
@@ -172,7 +177,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         let timeString = makeTimeString(hour: time.0, min: time.1, sec: time.2)
         stopwatchView.timeLabel.text = timeString
         
-        interval = (targetTimeData ?? 7.0) * 3600 // 테스트 시 60 | 배포 시 3600
+        interval = (targetTimeData ?? 7.0) * 60 // 테스트 시 60 | 배포 시 3600
         
         if value >= Int(interval) {
             stopwatchView.successView.isHidden = false
@@ -281,7 +286,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     // MARK: - Image Timer Connection
     private func calculateCurrentGroup(difference: TimeInterval) -> (currentGroup: Int, totalGroups: Int) {
-        interval = (targetTimeData ?? 7.0) * 3600 // 테스트 시 60 | 배포 시 3600
+        interval = (targetTimeData ?? 7.0) * 60 // 테스트 시 60 | 배포 시 3600
         // print("intervalinterval \(interval)")
         let totalGroups = 5
         let intervalBetweenImages = interval / Double(totalGroups - 1)
