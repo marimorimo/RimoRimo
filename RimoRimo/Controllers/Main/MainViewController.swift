@@ -75,10 +75,17 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         currentUid = FirebaseMainManager.shared.currentUid
 
-        activityIndicatorHelper.activityIndicator.startAnimating()
         fetchUserDataAndBindUI()
         getTimerUserDefaults()
         setupButtons()
+        
+        activityIndicatorHelper.activityIndicator.startAnimating()
+        firebaseMainManager.checkAndResetTimerIfNeeded(currentUid: currentUid) {
+            // 오늘 날짜 데이터가 없다면 타이머 초기화
+            self.resetSessionData()
+            self.activityIndicatorHelper.activityIndicator.stopAnimating()
+            print("resetSessionData 초기화")
+        }
     }
     
     private func loadTimer() {
@@ -226,6 +233,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 let restartTime = calcRestartTime(start: startTime!, stop: stop)
                 setStopTime(date: nil)
                 setStartTime(date: restartTime)
+                
             } else {
                 setStartTime(date: Date())
             }
@@ -303,21 +311,22 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         var constant: CGFloat = 0
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
-            if UIScreen.main.nativeBounds.height == 2436 {
-                constant = -244 - CGFloat(index * 20) // iPhone X, XS, 11 Pro, 12 Mini
-            } else if UIScreen.main.nativeBounds.height == 2796 || UIScreen.main.nativeBounds.height == 1792 {
-                constant = -244 - CGFloat(index * 50) // iPhone XS Max, 11 Pro Max, 12, 12 Pro
-            } else if UIScreen.main.nativeBounds.height == 2556 { // iPhone 15Pro
+            let screenHeight = UIScreen.main.nativeBounds.height
+            if screenHeight == 2436 {
+                constant = -244 - CGFloat(index * 24) // iPhone X, XS, 11 Pro, 12 Mini
+            } else if screenHeight == 2796 || screenHeight == 1792 {
+                constant = -244 - CGFloat(index * 44) // iPhone XS Max, 11 Pro Max, 11, 12, 12 Pro, iPhone XR
+            } else if screenHeight == 2556 { // iPhone 15Pro
                 constant = -244 - CGFloat(index * 34)
             } else {
-                constant = -244 - CGFloat(index * 20) // Other iPhones
+                constant = -244 - CGFloat(index * 24) // Other iPhones
             }
         default:
-            constant = -244 - CGFloat(index * 30)
+            constant = -244 - CGFloat(index * 24)
         }
         return constant
     }
-    
+
     // MARK: - Date & Time Formatter
     private func getCurrentFormattedDate() -> String {
         let formatter = DateFormatter()
