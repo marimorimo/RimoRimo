@@ -139,7 +139,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     func setStopTime(date: Date?) {
         stopTime = date
         userDefaults.set(stopTime, forKey: STOP_TIME_KEY)
-        pauseTimerData()
+        
     }
     
     func setTimerCounting(_ value: Bool) {

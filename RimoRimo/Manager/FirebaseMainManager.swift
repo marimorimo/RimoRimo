@@ -29,7 +29,7 @@ class FirebaseMainManager {
         let db = Firestore.firestore()
         let docRef = db.collection("user-info").document(uid)
         
-        docRef.addSnapshotListener { (documentSnapshot, error) in
+        docRef.getDocument { (documentSnapshot, error) in
             if let error = error {
                 completion(nil, error)
                 return
