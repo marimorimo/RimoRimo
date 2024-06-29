@@ -2,7 +2,7 @@
 //  FirebaseMainManager.swift
 //  RimoRimo-Refactoring
 //
-//  Created by 밀가루 on 6/28/24.
+//  Created by wxxd-fxrest on 6/28/24.
 //
 
 import Foundation
@@ -110,4 +110,36 @@ class FirebaseMainManager {
               completion(.success(()))
           }
       }
+    
+    func checkAndResetTimerIfNeeded(currentUid: String?, resetTimer: @escaping () -> Void) {
+        guard let uid = currentUid else {
+            print("유저 정보를 찾을 수 없음")
+            return
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let currentDate = Date()
+        let day = formatter.string(from: currentDate)
+        
+        let documentRef = db.collection("user-info").document(uid).collection("study-sessions").document(day)
+        
+        documentRef.getDocument { (documentSnapshot, error) in
+            if let error = error {
+                print("Error getting document: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = documentSnapshot, document.exists {
+                // 문서가 존재할 때의 처리
+                print("오늘 날짜인 문서가 이미 존재합니다.")
+            } else {
+                // 문서가 존재하지 않을 때의 처리
+                print("오늘 날짜인 문서가 존재하지 않습니다. 타이머를 초기화합니다.")
+                
+                // 타이머 초기화
+                resetTimer()
+            }
+        }
+    }
 }
