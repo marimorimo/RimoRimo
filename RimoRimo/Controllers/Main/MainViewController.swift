@@ -20,6 +20,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let STOP_TIME_KEY = "stopTime"
     private let COUNTING_KEY = "countingKey"
     private let NOTIFICATION_KEY = "RimoRimoDayNotification"
+    private let RESET_ALERT_KEY = "RimoRimoTimerReset"
     
     // MARK: - Timer Properties
     private var timerIsCounting: Bool = false
@@ -52,7 +53,6 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     // MARK: - Alert UI
     private let alertPaths = AlertPaths()
-    private let alertOnboarding = AlertOnboarding()
     
     // MARK: - Marimo Image Properties
     private lazy var imageView = UIImageView().then {
@@ -244,6 +244,9 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             }
             startTimer()
             startTimerButtonTapped()
+            
+            let dynamicText = "자정(12시) 전에 꼭 집중 모드를 중단해 주세요!"
+            let alertOnboarding = AlertOnboarding(onboardingText: dynamicText)
             alertOnboarding.setAlertView(in: self)
         }
     }
@@ -502,7 +505,10 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     private func updateIsStudy(_ isStudy: Bool, day: String, path: String) {
-        let data: [String: Any] = ["isStudy": isStudy]
+        let data: [String: Any] = [
+            "isStudy": isStudy,
+            "total-time": ""
+        ]
         
         firebaseMainManager.updateData(path: path, day: day, data: data) { result in
             switch result {
@@ -575,7 +581,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         }
     }
     
-    private func resetSessionData() {
+    func resetSessionData() {
         setStopTime(date: nil)
         setStartTime(date: nil)
         stopwatchView.timeLabel.text = makeTimeString(hour: 0, min: 0, sec: 0)
@@ -633,7 +639,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             }
         }
     }
-    
+
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert])
     }

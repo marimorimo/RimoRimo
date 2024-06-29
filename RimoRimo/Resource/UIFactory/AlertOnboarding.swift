@@ -13,13 +13,12 @@ class AlertOnboarding {
     private let onboardingView = AlertUIFactory.alertView()
     private let onboardingText: UILabel
     
-    init() {
-        self.onboardingText = AlertUIFactory.alertSubTitle(subTitleText: "자정(12시) 전에 꼭 집중 모드를 중단해 주세요!", textColor: MySpecialColors.Gray4, fontSize: 14)
+    init(onboardingText: String) {
+        self.onboardingText = AlertUIFactory.alertSubTitle(subTitleText: onboardingText, textColor: MySpecialColors.Gray4, fontSize: 14)
     }
     
     func setAlertView(in viewController: UIViewController) {
         guard let view = viewController.view else {
-            print("ViewController's view is not ready.")
             return
         }
         
