@@ -20,7 +20,6 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let STOP_TIME_KEY = "stopTime"
     private let COUNTING_KEY = "countingKey"
     private let NOTIFICATION_KEY = "RimoRimoDayNotification"
-    private let RESET_ALERT_KEY = "RimoRimoTimerReset"
     
     // MARK: - Timer Properties
     private var timerIsCounting: Bool = false
@@ -34,8 +33,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private var targetTimeData: Double = 0
     private var currentGroup = 1
     private var isStudy: Bool = false
-    private var totalTimeElapsed: TimeInterval = 0
     private let formatter = DateFormatter()
+    private var lastTime: String?
     private var currentSessionID: String?
     private var currentUid: String?
     private var studySessionDocumentPath: String? {
@@ -70,6 +69,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubviews(imageView)
+        activityIndicatorHelper.activityIndicator.startAnimating()
+
         notificationCenter.delegate = self
         requestNotificationAuthorization()
         
@@ -79,29 +80,8 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         getTimerUserDefaults()
         setupButtons()
         
-        activityIndicatorHelper.activityIndicator.startAnimating()
-        firebaseMainManager.checkAndResetTimerIfNeeded(currentUid: currentUid) {
-            // 오늘 날짜 데이터가 없다면 타이머 초기화
-            self.resetSessionData()
-            self.activityIndicatorHelper.activityIndicator.stopAnimating()
-            print("resetSessionData 초기화")
-        }
-    }
-    
-    private func loadTimer() {
-        if timerIsCounting {
-            startTimer()
-            scheduleNotification() // 알람
-        } else {
-            stopTimer()
-            if let start = startTime {
-                if let stop = stopTime {
-                    let time = calcRestartTime(start: start, stop: stop)
-                    let difference = Date().timeIntervalSince(time)
-                    setTimeLabel(Int(difference))
-                }
-            }
-        }
+        checkAndResetTimerIfNeeded()
+        scheduleMidnightTimer()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -176,7 +156,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         let time = secToHoursMinSec(value)
         let timeString = makeTimeString(hour: time.0, min: time.1, sec: time.2)
         stopwatchView.timeLabel.text = timeString
-        
+         
         interval = (targetTimeData ?? 7.0) * 3600 // 테스트 시 60 | 배포 시 3600
         
         if value >= Int(interval) {
@@ -334,6 +314,119 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         }
         return constant
     }
+    
+    // MARK: - Midnight Timer Reset
+    func scheduleMidnightTimer() {
+        print("scheduleMidnightTimer 호출")
+        let now = Date()
+        let calendar = Calendar.current
+        
+        // 오늘 자정의 Date 객체 생성
+        var midnightComponents = calendar.dateComponents([.year, .month, .day], from: now)
+        midnightComponents.hour = 0
+        midnightComponents.minute = 0
+        midnightComponents.second = 0
+        
+        // 오늘 자정의 Date
+        guard let midnight = calendar.date(from: midnightComponents) else {
+            print("자정 시간을 계산할 수 없음")
+            return
+        }
+        
+        // 현재 시간보다 뒤에 있는 자정 시간 계산
+        let nextMidnight: Date
+        if now > midnight {
+            // 내일 자정으로 설정
+            nextMidnight = calendar.date(byAdding: .day, value: 1, to: midnight)!
+        } else {
+            // 오늘 자정으로 설정
+            nextMidnight = midnight
+        }
+        
+        let timeInterval = nextMidnight.timeIntervalSince(now)
+        
+        // 자정에 한 번 실행될 타이머 설정
+        Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(midnightTimerFired), userInfo: nil, repeats: false)
+    }
+
+    @objc func midnightTimerFired() {
+        checkAndResetTimerIfNeeded()
+        
+        // 매일 자정에 반복될 타이머 설정
+        Timer.scheduledTimer(timeInterval: 86400, target: self, selector: #selector(checkAndResetTimer), userInfo: nil, repeats: true)
+    }
+    
+    @objc func checkAndResetTimer() {
+        checkAndResetTimerIfNeeded()
+        print("checkAndResetTimerIfNeeded 호출")
+    }
+
+    func checkAndResetTimerIfNeeded() {
+        guard let path = studySessionDocumentPath else {
+            print("집중 모드 데이터 저장 실패: deleteTodayStudySessionData / 사용자 정보를 확인할 수 없음")
+            return
+        }
+        
+        let userDefaults = UserDefaults.standard
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        // 현재 날짜 문자열
+        let currentDateString = formatter.string(from: Date())
+        
+        // 저장된 시작 시간
+        guard let savedStartTime = userDefaults.object(forKey: START_TIME_KEY) as? Date else {
+            print("저장된 시작 시간이 없음")
+            return
+        }
+        
+        let savedDateString = formatter.string(from: savedStartTime)
+                
+        // 저장된 날짜와 현재 날짜가 일치하지 않으면 타이머 리셋
+        if currentDateString != savedDateString {
+            print("날짜가 일치하지 않음, 타이머를 재설정 중")
+            
+            if timerIsCounting {
+                // 타이머가 실행 중일 때
+                DispatchQueue.global().async {
+                    self.firebaseMainManager.deleteData(path: path, day: savedDateString) { result in
+                        switch result {
+                        case .success:
+                            print("집중 모드 데이터 삭제 성공")
+                            // 메인 스레드에서 UI 업데이트
+                            DispatchQueue.main.async {
+                                self.resetUI()
+                                self.clearUserDefaults()
+                                self.currentGroup = 1
+                                self.updateImageView()
+                            }
+                        case .failure(let error):
+                            print("집중 모드 데이터 삭제 오류: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            } else {
+                // 타이머가 중지된 상태일 때
+                DispatchQueue.main.async {
+                    self.resetUI()
+                    self.clearUserDefaults()
+                    self.currentGroup = 1
+                    self.updateImageView()
+                }
+            }
+        } else {
+            print("시작 시간이 없음")
+        }
+    }
+    
+    func resetUI() {
+        stopTime = nil
+        userDefaults.set(stopTime, forKey: STOP_TIME_KEY)
+        setStartTime(date: nil)
+        stopwatchView.timeLabel.text = makeTimeString(hour: 0, min: 0, sec: 0)
+        stopwatchView.successView.isHidden = true
+        stopwatchView.cheeringLabel.isHidden = false
+    }
 
     // MARK: - Date & Time Formatter
     private func getCurrentFormattedDate() -> String {
@@ -372,7 +465,6 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             
             if let imageName = data["profile-image"] as? String {
                 self.profileImageName = imageName
-                // print("profileImageName \(self.profileImageName)")
             } else {
                 print("No profile-image")
                 self.profileImageName = "Group 9"
@@ -387,19 +479,33 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                     let difference = Date().timeIntervalSince(time) // 현재 시간과의 차이 계산
                     
                     interval = (targetTimeData ?? 7.0) * 3600
-                    // print("loadTimerState\(interval)")
                     
                     let (currentGroup, totalGroups) = calculateCurrentGroup(difference: difference)
                     self.currentGroup = currentGroup
                 }
                 updateImageView()
                 loadTimer()
-                // print("targetTimeString: \(targetTimeData)")
             } else {
                 print("No target-time")
             }
         }
         activityIndicatorHelper.activityIndicator.stopAnimating()
+    }
+    
+    private func loadTimer() {
+        if timerIsCounting {
+            startTimer()
+            scheduleNotification() // 알람
+        } else {
+            stopTimer()
+            if let start = startTime {
+                if let stop = stopTime {
+                    let time = calcRestartTime(start: start, stop: stop)
+                    let difference = Date().timeIntervalSince(time)
+                    setTimeLabel(Int(difference))
+                }
+            }
+        }
     }
     
     // MARK: - D-Day 변환
@@ -531,30 +637,24 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
             return
         }
         
-        let currentDate = Date()
-        let elapsedTime = currentDate.timeIntervalSince(startTime) + totalTimeElapsed
-        
-        totalTimeElapsed = elapsedTime
-        
         let day = getCurrentFormattedDate()
         
+        let currentDate = Date()
         formatter.dateFormat = "HH:mm:ss"
-        let lastTime = formatter.string(from: currentDate)
-        let formattedTotalTime = formatTime(elapsedTime)
+        lastTime = formatter.string(from: currentDate)
         
         let data: [String: Any] = [
             "isStudy": false,
             "marimo-state": currentGroup,
             "marimo-name": profileImageName,
             "last-time": lastTime,
-            "total-time": formattedTotalTime
+            "total-time": stopwatchView.timeLabel.text
         ]
         
         firebaseMainManager.updateData(path: path, day: day, data: data) { result in
             switch result {
             case .success:
                 print("상태 업데이트 성공")
-                self.totalTimeElapsed = 0.0
             case .failure(let error):
                 print("상태를 업데이트하는 중에 오류 발생: \(error.localizedDescription)")
             }
